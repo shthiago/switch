@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "switch"
+version = "0.1.0"
+description = "Transpiler from SPARQL to Cypher"
+authors = ["Thiago Sant Helena <shthiago@users.noreply.github.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pytest = "^6.2.5"
+pylint = "^2.11.1"
+ply = "^3.11"
+loguru = "^0.5.3"
+Jinja2 = "^3.0.2"
+
+[tool.poetry.dev-dependencies]
+autopep8 = "^1.5.7"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,76 @@
+# Functions on dates and times
+# Se o parâmetro for uma string, chama datetime com ela antes
+'NOW' NIL                             -> datetime()
+'YEAR' '(' Expression ')'             -> arg0.year
+'MONTH' '(' Expression ')'            -> arg0.month
+'DAY' '(' Expression ')'              -> arg0.day
+'HOURS' '(' Expression ')'            -> arg0.hour
+'MINUTES' '(' Expression ')'          -> arg0.minute
+'SECONDS' '(' Expression ')'          -> arg0.second
+'TIMEZONE' '(' Expression ')'         -> arg0.timezone
+'TZ' '(' Expression ')'               -> arg0.timezone
+
+# Hash functions
+
+# Functions over numerics
+'ABS' '(' Expression ')'                                -> abs(arg0)
+'ROUND' '(' Expression ')'                              -> round(arg0)
+'CEIL' '(' Expression ')'                               -> ceil(arg0)
+'FLOOR' '(' Expression ')'                              -> floor(arg0)
+'RAND' NIL                                              -> rand()
+
+# Functional Forms
+'COALESCE' ExpressionList                               -> coalesce()
+
+# String Functions
+'STRLEN' '(' Expression ')'                                                    -> size(arg0)
+'SUBSTR' '(' Expression ',' Expression ( ',' Expression )? ')'                 -> substring(arg0, arg1) or substring(arg0, arg1, arg2)
+'UCASE' '(' Expression ')'                                                     -> toUpper(arg0)
+'LCASE' '(' Expression ')'                                                     -> toLower(arg0)
+'STRSTARTS' '(' Expression ',' Expression ')'                                  -> substring(arg0, 0, size(arg1)) == arg1
+'STRENDS' '(' Expression ',' Expression ')'                                    -> substring(arg0, size(arg0) - size(arg1)) == arg1
+'CONTAINS' '(' Expression ',' Expression ')'                                   -> arg0 =~ ('.*' + arg1 + '.*')
+'CONCAT' ExpressionList                                                        -> arg0 + ... + argn
+'REGEX' '(' Expression ',' Expression ( ',' Expression )? ')'                  -> arg0 =~ arg1   # Remover arg2?
+'REPLACE' '(' Expression ',' Expression ',' Expression ( ',' Expression )? ')' -> replace(arg0, arg1, arg2) # Remover arg3?
+
+## Aggregations
+'COUNT' '(' 'DISTINCT'? ( '*' | Expression ) ')'                               -> count()
+'SUM' '(' 'DISTINCT'? Expression ')'                                           -> sum()
+'MIN' '(' 'DISTINCT'? Expression ')'                                           -> min()
+'MAX' '(' 'DISTINCT'? Expression ')'                                           -> max()
+'AVG' '(' 'DISTINCT'? Expression ')'                                           -> avg()
+
+
+
+'STRBEFORE' '(' Expression ',' Expression ')'                                  -> X
+'STRAFTER' '(' Expression ',' Expression ')'                                   -> X
+'ENCODE_FOR_URI' '(' Expression ')'                                            -> X
+'LANGMATCHES' '(' Expression ',' Expression ')'                                -> X
+'SAMPLE' '(' 'DISTINCT'? Expression ')'                                        -> X                                     
+'GROUP_CONCAT' '(' 'DISTINCT'? Expression ( ';' 'SEPARATOR' '=' String )? ')'  -> X
+'EXISTS' GroupGraphPattern                              -> X
+'NOT' 'EXISTS' GroupGraphPattern                        -> X
+'sameTerm' '(' Expression ',' Expression ')'            -> X
+'isIRI' '(' Expression ')'                      -> X
+'isURI' '(' Expression ')'                      -> X
+'isBLANK' '(' Expression ')'                    -> X
+'isLITERAL' '(' Expression ')'                  -> X
+'isNUMERIC' '(' Expression ')'                  -> X
+'STR' '(' Expression ')'                        -> X
+'LANG' '(' Expression ')'                       -> X
+'DATATYPE' '(' Expression ')'                   -> X
+'IRI' '(' Expression ')'                        -> X
+'URI' '(' Expression ')'                        -> X
+'BNODE' ( '(' Expression ')' | NIL )            -> X
+'STRDT' '(' Expression ',' Expression ')'       -> X
+'STRLANG' '(' Expression ',' Expression ')'     -> X
+'UUID' NIL                                      -> X
+'STRUUID' NIL                                   -> X
+'BOUND' '(' Var ')'                                     -> X
+'IF' '(' Expression ',' Expression ',' Expression ')'   -> X
+'MD5' '(' Expression ')'      -> X
+'SHA1' '(' Expression ')'     -> X
+'SHA256' '(' Expression ')'   -> X
+'SHA384' '(' Expression ')'   -> X
+'SHA512' '(' Expression ')'   -> X

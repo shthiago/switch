@@ -1,6 +1,7 @@
 from ply import yacc
 
 from .lexer import SelectSparqlLexer
+from .structures import nodes
 
 
 class SelectSparqlParser:
@@ -20,7 +21,7 @@ class SelectSparqlParser:
         # TODO
 
     def p_production_2(self, p):
-        """Query ::= Prologue SelectQuery ValuesClause"""
+        """Query ::= Prologue SelectQuery"""
         # TODO
 
     def p_production_4(self, p):
@@ -243,14 +244,6 @@ class SelectSparqlParser:
         """OffsetClause ::= KW_OFFSET INTEGER"""
         # TODO
 
-    def p_production_76(self, p):
-        """ValuesClause ::= KW_VALUES DataBlock"""
-        # TODO
-
-    def p_production_77(self, p):
-        """ValuesClause ::= empty"""
-        # TODO
-
     def p_production_79(self, p):
         """GroupGraphPattern ::= SYMB_LCB GroupGraphPatternSub SYMB_RCB"""
         # TODO
@@ -319,108 +312,8 @@ class SelectSparqlParser:
         """GraphPatternNotTriples ::= Filter"""
         # TODO
 
-    def p_production_99(self, p):
-        """GraphPatternNotTriples ::= Bind"""
-        # TODO
-
-    def p_production_100(self, p):
-        """GraphPatternNotTriples ::= InlineData"""
-        # TODO
-
     def p_production_102(self, p):
         """OptionalGraphPattern ::= KW_OPTIONAL GroupGraphPattern"""
-        # TODO
-
-    def p_production_104(self, p):
-        """Bind ::= KW_BIND SYMB_LP Expression KW_AS Var SYMB_RP"""
-        # TODO
-
-    def p_production_106(self, p):
-        """InlineData ::= KW_VALUES DataBlock"""
-        # TODO
-
-    def p_production_108(self, p):
-        """DataBlock ::= InlineDataOneVar"""
-        # TODO
-
-    def p_production_109(self, p):
-        """DataBlock ::= InlineDataFull"""
-        # TODO
-
-    def p_production_111(self, p):
-        """InlineDataOneVar ::= Var SYMB_LCB InlineDataOneVarAux SYMB_RCB"""
-        # TODO
-
-    def p_production_112(self, p):
-        """InlineDataOneVarAux ::= DataBlockValue InlineDataOneVarAux"""
-        # TODO
-
-    def p_production_113(self, p):
-        """InlineDataOneVarAux ::= empty"""
-        # TODO
-
-    def p_production_115(self, p):
-        """InlineDataFull ::= InlineDataFullAux1 SYMB_LCB InlineDataFullAux3 SYMB_RCB"""
-        # TODO
-
-    def p_production_116(self, p):
-        """InlineDataFullAux1 ::= NIL"""
-        # TODO
-
-    def p_production_117(self, p):
-        """InlineDataFullAux1 ::= SYMB_LP InlineDataFullAux2 SYMB_RP"""
-        # TODO
-
-    def p_production_118(self, p):
-        """InlineDataFullAux2 ::= Var InlineDataFullAux2"""
-        # TODO
-
-    def p_production_119(self, p):
-        """InlineDataFullAux2 ::= empty"""
-        # TODO
-
-    def p_production_120(self, p):
-        """InlineDataFullAux3 ::= InlineDataFullAux4 InlineDataFullAux3"""
-        # TODO
-
-    def p_production_121(self, p):
-        """InlineDataFullAux3 ::= empty"""
-        # TODO
-
-    def p_production_122(self, p):
-        """InlineDataFullAux4 ::= SYMB_LP InlineDataFullAux5 SYMB_RP"""
-        # TODO
-
-    def p_production_123(self, p):
-        """InlineDataFullAux4 ::= NIL"""
-        # TODO
-
-    def p_production_124(self, p):
-        """InlineDataFullAux5 ::= DataBlockValue InlineDataFullAux5"""
-        # TODO
-
-    def p_production_125(self, p):
-        """InlineDataFullAux5 ::= empty"""
-        # TODO
-
-    def p_production_127(self, p):
-        """DataBlockValue ::= iri"""
-        # TODO
-
-    def p_production_128(self, p):
-        """DataBlockValue ::= RDFLiteral"""
-        # TODO
-
-    def p_production_129(self, p):
-        """DataBlockValue ::= NumericLiteral"""
-        # TODO
-
-    def p_production_130(self, p):
-        """DataBlockValue ::= BooleanLiteral"""
-        # TODO
-
-    def p_production_131(self, p):
-        """DataBlockValue ::= KW_UNDEF"""
         # TODO
 
     def p_production_133(self, p):
@@ -445,27 +338,27 @@ class SelectSparqlParser:
 
     def p_production_141(self, p):
         """Constraint ::= BrackettedExpression"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_142(self, p):
         """Constraint ::= BuiltInCall"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_144(self, p):
         """ExpressionList ::= NIL"""
-        # TODO
+        p[0] = []
 
     def p_production_145(self, p):
         """ExpressionList ::= SYMB_LP Expression ExpressionListAux SYMB_RP"""
-        # TODO
+        p[0] = p[2].extend(p[3])
 
     def p_production_146(self, p):
         """ExpressionListAux ::= SYMB_COMMA Expression ExpressionListAux"""
-        # TODO
+        p[0] = p[2].extend(p[3])
 
     def p_production_147(self, p):
         """ExpressionListAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_149(self, p):
         """PropertyListNotEmpty ::= Verb ObjectList PropertyListNotEmptyAux2"""
@@ -844,7 +737,7 @@ class SelectSparqlParser:
         # TODO
 
     def p_production_280(self, p):
-        """RelationalExpression ::= NumericExpression"""
+        """RelationalExpression ::= NumericExpression RelationalExpressionAux"""
         # TODO
 
     def p_production_281(self, p):
@@ -887,44 +780,20 @@ class SelectSparqlParser:
         """NumericExpression ::= AdditiveExpression"""
         # TODO
 
+    def p_production_292(self, p):
+        """AdditiveExpression        ::= MultiplicativeExpression AdditiveExpressionAux1"""
+        # TODO
+
     def p_production_293(self, p):
-        """AdditiveExpression ::= MultiplicativeExpression"""
+        """AdditiveExpressionAux1    ::= '+' MultiplicativeExpression AdditiveExpressionAux1"""
         # TODO
 
     def p_production_294(self, p):
-        """AdditiveExpressionAux1 ::= AdditiveExpressionAux2 AdditiveExpressionAux1"""
+        """AdditiveExpressionAux1    ::= '-' MultiplicativeExpression AdditiveExpressionAux1"""
         # TODO
 
     def p_production_295(self, p):
-        """AdditiveExpressionAux1 ::= empty"""
-        # TODO
-
-    def p_production_296(self, p):
-        """AdditiveExpressionAux2 ::= SYMB_PLUS MultiplicativeExpression"""
-        # TODO
-
-    def p_production_297(self, p):
-        """AdditiveExpressionAux2 ::= SYMB_MINUS MultiplicativeExpression"""
-        # TODO
-
-    def p_production_298(self, p):
-        """AdditiveExpressionAux2 ::= AdditiveExpressionAux3 AdditiveExpressionAux4"""
-        # TODO
-
-    def p_production_299(self, p):
-        """AdditiveExpressionAux3 ::= NumericLiteralPositive"""
-        # TODO
-
-    def p_production_300(self, p):
-        """AdditiveExpressionAux3 ::= NumericLiteralNegative"""
-        # TODO
-
-    def p_production_301(self, p):
-        """AdditiveExpressionAux4 ::= SYMB_ASTERISK UnaryExpression AdditiveExpressionAux4"""
-        # TODO
-
-    def p_production_302(self, p):
-        """AdditiveExpressionAux4 ::= SYMB_SLASH UnaryExpression AdditiveExpressionAux4"""
+        """AdditiveExpressionAux1    ::= empty"""
         # TODO
 
     def p_production_304(self, p):
@@ -977,19 +846,21 @@ class SelectSparqlParser:
 
     def p_production_318(self, p):
         """PrimaryExpression ::= NumericLiteral"""
-        # TODO
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.NUM_LITERAL,
+                                       p[1])
 
     def p_production_319(self, p):
         """PrimaryExpression ::= BooleanLiteral"""
-        # TODO
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.BOOL_LITERAL,
+                                       p[1])
 
     def p_production_320(self, p):
         """PrimaryExpression ::= Var"""
-        # TODO
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.VAR, p[1])
 
     def p_production_322(self, p):
         """BrackettedExpression ::= SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = p[2]
 
     def p_production_324(self, p):
         """BuiltInCall ::= Aggregate"""
@@ -997,27 +868,27 @@ class SelectSparqlParser:
 
     def p_production_325(self, p):
         """BuiltInCall ::= FUNC_RAND NIL"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('RAND', [])
 
     def p_production_326(self, p):
         """BuiltInCall ::= FUNC_ABS SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('ABS', [p[3]])
 
     def p_production_327(self, p):
         """BuiltInCall ::= FUNC_CEIL SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('CEIL', [p[3]])
 
     def p_production_328(self, p):
         """BuiltInCall ::= FUNC_FLOOR SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('FLOOR', [p[3]])
 
     def p_production_329(self, p):
         """BuiltInCall ::= FUNC_ROUND SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('ROUND', [p[3]])
 
     def p_production_330(self, p):
         """BuiltInCall ::= FUNC_CONCAT ExpressionList"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('CONCAT', p[2])
 
     def p_production_331(self, p):
         """BuiltInCall ::= SubstringExpression"""
@@ -1185,75 +1056,75 @@ class SelectSparqlParser:
 
     def p_production_378(self, p):
         """NumericLiteral ::= NumericLiteralUnsigned"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_379(self, p):
         """NumericLiteral ::= NumericLiteralPositive"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_380(self, p):
         """NumericLiteral ::= NumericLiteralNegative"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_382(self, p):
         """NumericLiteralUnsigned ::= INTEGER"""
-        # TODO
+        p[0] = int(p[1])
 
     def p_production_383(self, p):
         """NumericLiteralUnsigned ::= DECIMAL"""
-        # TODO
+        p[0] = float(p[1])
 
     def p_production_384(self, p):
         """NumericLiteralUnsigned ::= DOUBLE"""
-        # TODO
+        p[0] = float(p[1])
 
     def p_production_386(self, p):
         """NumericLiteralPositive ::= INTEGER_POSITIVE"""
-        # TODO
+        p[0] = int(p[1])
 
     def p_production_387(self, p):
         """NumericLiteralPositive ::= DECIMAL_POSITIVE"""
-        # TODO
+        p[0] = float(p[1])
 
     def p_production_388(self, p):
         """NumericLiteralPositive ::= DOUBLE_POSITIVE"""
-        # TODO
+        p[0] = float(p[1])
 
     def p_production_390(self, p):
         """NumericLiteralNegative ::= INTEGER_NEGATIVE"""
-        # TODO
+        p[0] = int(p[1])
 
     def p_production_391(self, p):
         """NumericLiteralNegative ::= DECIMAL_NEGATIVE"""
-        # TODO
+        p[0] = float(p[1])
 
     def p_production_392(self, p):
         """NumericLiteralNegative ::= DOUBLE_NEGATIVE"""
-        # TODO
+        p[0] = float(p[1])
 
     def p_production_394(self, p):
         """BooleanLiteral ::= SYMB_TRUE"""
-        # TODO
+        p[0] = True
 
     def p_production_395(self, p):
         """BooleanLiteral ::= SYMB_FALSE"""
-        # TODO
+        p[0] = False
 
     def p_production_397(self, p):
         """String ::= STRING_LITERAL1"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_398(self, p):
         """String ::= STRING_LITERAL2"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_399(self, p):
         """String ::= STRING_LITERAL_LONG1"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_400(self, p):
         """String ::= STRING_LITERAL_LONG2"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_402(self, p):
         """iri ::= IRIREF"""

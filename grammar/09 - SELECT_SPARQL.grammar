@@ -1,410 +1,93 @@
 QueryUnit                 ::= Query
-
 Query                     ::= Prologue SelectQuery ValuesClause
-
-Prologue                  ::= BaseDecl Prologue
-Prologue                  ::= PrefixDecl Prologue
-Prologue                  ::= &
-
+Prologue                  ::= ( BaseDecl | PrefixDecl )*
 BaseDecl                  ::= 'BASE' IRIREF
-
-
 PrefixDecl                ::= 'PREFIX' PNAME_NS IRIREF
-
 SelectQuery               ::= SelectClause WhereClause SolutionModifier
-
-SelectClause              ::= 'SELECT' SelectClauseAux1
-SelectClauseAux1          ::= SelectClauseAux2
-SelectClauseAux1          ::= 'DISTINCT' SelectClauseAux2
-SelectClauseAux1          ::= 'REDUCED' SelectClauseAux2
-SelectClauseAux2          ::= '*'
-SelectClauseAux2          ::= Var SelectClauseAux3
-SelectClauseAux2          ::= '(' Expression 'AS' Var ')' SelectClauseAux3
-SelectClauseAux3          ::= Var SelectClauseAux3
-SelectClauseAux3          ::= '(' Expression 'AS' Var ')' SelectClauseAux3
-SelectClauseAux3          ::= &
-
-WhereClause               ::= GroupGraphPattern
-WhereClause               ::= 'WHERE' GroupGraphPattern
-
-SolutionModifier          ::= SolutionModifierAux1 SolutionModifierAux2 SolutionModifierAux3 SolutionModifierAux4
-SolutionModifierAux1      ::= &
-SolutionModifierAux1      ::= GroupClause
-SolutionModifierAux2      ::= &
-SolutionModifierAux2      ::= HavingClause
-SolutionModifierAux3      ::= &
-SolutionModifierAux3      ::= OrderClause
-SolutionModifierAux4      ::= &
-SolutionModifierAux4      ::= LimitOffsetClauses
-
-GroupClause               ::= 'GROUP' 'BY' GroupCondition GroupClauseAux
-GroupClauseAux            ::= &
-GroupClauseAux            ::= GroupCondition GroupClauseAux
-
-GroupCondition            ::= BuiltInCall
-GroupCondition            ::= (' Expression GroupConditionAux ')'
-GroupCondition            ::= Var
-GroupConditionAux         ::= 'AS' Var
-GroupConditionAux         ::= &
-
-HavingClause              ::= 'HAVING' HavingCondition HavingClauseAux
-HavingClauseAux           ::= &
-HavingClauseAux           ::= HavingClauseAux
-
+SelectClause              ::= 'SELECT' ( 'DISTINCT' | 'REDUCED' )? ( ( Var | ( '(' Expression 'AS' Var ')' ) )+ | '*' )
+WhereClause               ::= 'WHERE'? GroupGraphPattern
+SolutionModifier          ::= ( GroupClause )? ( HavingClause )? ( OrderClause )? ( LimitOffsetClauses )?
+GroupClause               ::= 'GROUP' 'BY' ( GroupCondition )+
+GroupCondition            ::= BuiltInCall | '(' Expression ( 'AS' Var )? ')' | Var
+HavingClause              ::= 'HAVING' ( HavingCondition )+
 HavingCondition           ::= Constraint
-
-OrderClause               ::= 'ORDER' 'BY' OrderCondition OrderClauseAux
-OrderClauseAux            ::= &
-OrderClauseAux            ::= OrderCondition OrderClauseAux
-
-OrderCondition            ::= Constraint
-OrderCondition            ::= Var 
-OrderCondition            ::= OrderConditionAux BrackettedExpression
-OrderConditionAux         ::= 'ASC'
-OrderConditionAux         ::= 'DESC'
-
-LimitOffsetClauses        ::= LimitClause LimitOffsetClausesAux1
-LimitOffsetClauses        ::= OffsetClause LimitOffsetClausesAux2
-LimitOffsetClausesAux1    ::= &
-LimitOffsetClausesAux1    ::= OffsetClause
-LimitOffsetClausesAux2    ::= &
-LimitOffsetClausesAux2    ::= LimitClause
-
+OrderClause               ::= 'ORDER' 'BY' ( OrderCondition )+
+OrderCondition            ::= ( ( 'ASC' | 'DESC' ) BrackettedExpression ) | ( Constraint | Var )
+LimitOffsetClauses        ::= LimitClause ( OffsetClause )? | OffsetClause ( LimitClause )?
 LimitClause               ::= 'LIMIT' INTEGER
-
 OffsetClause              ::= 'OFFSET' INTEGER
-
-ValuesClause              ::= 'VALUES' DataBlock
-ValuesClause              ::= &
-
-GroupGraphPattern         ::= '{' GroupGraphPatternSub '}'
-
-GroupGraphPatternSub      ::= GroupGraphPatternSubAux1 GroupGraphPatternSubAux2
-GroupGraphPatternSubAux1  ::= TriplesBlock
-GroupGraphPatternSubAux1  ::= &
-GroupGraphPatternSubAux2  ::= GraphPatternNotTriples GroupGraphPatternSubAux3 GroupGraphPatternSubAux1 GroupGraphPatternSubAux2
-GroupGraphPatternSubAux2  ::= &
-GroupGraphPatternSubAux3  ::= '.'
-GroupGraphPatternSubAux3  ::= &
-
-TriplesBlock              ::= TriplesSameSubjectPath TriplesBlockAux1
-TriplesBlockAux1          ::=  '.' TriplesBlockAux2
-TriplesBlockAux1          ::= &
-TriplesBlockAux2          ::= TriplesBlock
-TriplesBlockAux2          ::= &
-
-GraphPatternNotTriples    ::= GroupOrUnionGraphPattern 
-GraphPatternNotTriples    ::= OptionalGraphPattern 
-GraphPatternNotTriples    ::= MinusGraphPattern 
-GraphPatternNotTriples    ::= Filter 
-GraphPatternNotTriples    ::= Bind 
-GraphPatternNotTriples    ::= InlineData
-
+ValuesClause              ::= ( 'VALUES' DataBlock )?
+GroupGraphPattern         ::= '{' ( GroupGraphPatternSub ) '}'
+GroupGraphPatternSub      ::= ( TriplesBlock )? ( GraphPatternNotTriples '.'? ( TriplesBlock )? )*
+TriplesBlock              ::= TriplesSameSubjectPath ( '.' ( TriplesBlock )? )?
+GraphPatternNotTriples    ::= GroupOrUnionGraphPattern | OptionalGraphPattern | MinusGraphPattern | Filter | Bind | InlineData
 OptionalGraphPattern      ::= 'OPTIONAL' GroupGraphPattern
-
 Bind                      ::= 'BIND' '(' Expression 'AS' Var ')'
-
 InlineData                ::= 'VALUES' DataBlock
-
-DataBlock                 ::= InlineDataOneVar
-DataBlock                 ::= InlineDataFull
-
-InlineDataOneVar          ::= Var '{' InlineDataOneVarAux '}'
-InlineDataOneVarAux       ::= DataBlockValue InlineDataOneVarAux
-InlineDataOneVarAux       ::= &
-
-InlineDataFull            ::= InlineDataFullAux1 '{' InlineDataFullAux3 '}'
-InlineDataFullAux1        ::= NIL
-InlineDataFullAux1        ::= '(' InlineDataFullAux2 ')'
-InlineDataFullAux2        ::= Var InlineDataFullAux2
-InlineDataFullAux2        ::= &
-InlineDataFullAux3        ::= InlineDataFullAux4 InlineDataFullAux3
-InlineDataFullAux3        ::= &
-InlineDataFullAux4        ::= '(' InlineDataFullAux5 ')'
-InlineDataFullAux4        ::= NIL
-InlineDataFullAux5        ::= DataBlockValue InlineDataFullAux5
-InlineDataFullAux5        ::= &
-
-DataBlockValue            ::= iri
-DataBlockValue            ::= RDFLiteral
-DataBlockValue            ::= NumericLiteral
-DataBlockValue            ::= BooleanLiteral
-DataBlockValue            ::= 'UNDEF'
-
+DataBlock                 ::= InlineDataOneVar | InlineDataFull
+InlineDataOneVar          ::= Var '{' DataBlockValue* '}'
+InlineDataFull            ::= ( NIL | '(' ( Var )* ')' ) '{' ( '(' ( DataBlockValue )* ')' | NIL )* '}'
+DataBlockValue            ::= iri | RDFLiteral | NumericLiteral | BooleanLiteral | 'UNDEF'
 MinusGraphPattern         ::= 'MINUS' GroupGraphPattern
-
-GroupOrUnionGraphPattern  ::= GroupGraphPattern GroupOrUnionGraphPatternAux
-GroupOrUnionGraphPatternAux ::= 'UNION' GroupGraphPattern GroupOrUnionGraphPatternAux
-GroupOrUnionGraphPatternAux ::= &
-
+GroupOrUnionGraphPattern  ::= GroupGraphPattern ( 'UNION' GroupGraphPattern )*
 Filter                    ::= 'FILTER' Constraint
-
-Constraint                ::= BrackettedExpression
-Constraint                ::= BuiltInCall
-
-ExpressionList            ::= NIL
-ExpressionList            ::= '(' Expression ExpressionListAux ')'
-ExpressionListAux         ::= ',' Expression ExpressionListAux
-ExpressionListAux         ::= &
-
-PropertyListNotEmpty      ::= Verb ObjectList PropertyListNotEmptyAux2
-PropertyListNotEmptyAux1  ::= Verb ObjectList
-PropertyListNotEmptyAux1  ::= &
-PropertyListNotEmptyAux2  ::= ';' PropertyListNotEmptyAux1 PropertyListNotEmptyAux2
-PropertyListNotEmptyAux2  ::= &
-
-Verb                      ::= VarOrIri
-Verb                      ::= 'a'
-
-ObjectList                ::= Object ObjectListAux
-ObjectListAux             ::= ',' Object ObjectListAux
-ObjectListAux             ::= &
-
+Constraint                ::= BrackettedExpression | BuiltInCall
+ExpressionList            ::= NIL | '(' Expression ( ',' Expression )* ')'
+PropertyListNotEmpty      ::= Verb ObjectList ( ';' ( Verb ObjectList )? )*
+Verb                      ::= VarOrIri | 'a'
+ObjectList                ::= Object ( ',' Object )*
 Object                    ::= GraphNode
-
-TriplesSameSubjectPath    ::= VarOrTerm PropertyListPathNotEmpty
-TriplesSameSubjectPath    ::= TriplesNodePath PropertyListPath
-
-PropertyListPath          ::= PropertyListPathNotEmpty
-PropertyListPath          ::= &
-
-PropertyListPathNotEmpty     ::= PropertyListPathNotEmptyAux1 ObjectListPath PropertyListPathNotEmptyAux2
-PropertyListPathNotEmptyAux1 ::= VerbPath
-PropertyListPathNotEmptyAux1 ::= VerbSimple
-PropertyListPathNotEmptyAux2 ::= ';' PropertyListPathNotEmptyAux3
-PropertyListPathNotEmptyAux2 ::= &
-PropertyListPathNotEmptyAux3 ::= PropertyListPathNotEmptyAux1 ObjectList
-PropertyListPathNotEmptyAux3 ::= &
-
+TriplesSameSubjectPath    ::= VarOrTerm PropertyListPathNotEmpty | TriplesNodePath PropertyListPath
+PropertyListPath          ::= ( PropertyListPathNotEmpty )?
+PropertyListPathNotEmpty  ::= ( VerbPath | VerbSimple ) ObjectListPath ( ';' ( ( VerbPath | VerbSimple ) ObjectList )? )*
 VerbPath                  ::= Path
-
 VerbSimple                ::= Var
-
-ObjectListPath            ::= ObjectPath ObjectListPathAux
-ObjectListPathAux         ::= ',' ObjectPath
-ObjectListPathAux         ::= &
-
+ObjectListPath            ::= ObjectPath ( ',' ObjectPath )*
 ObjectPath                ::= GraphNodePath
-
 Path                      ::= PathAlternative
-
-PathAlternative           ::= PathSequence PathAlternativeAux
-PathAlternativeAux        ::= '|' PathSequence PathAlternativeAux
-PathAlternativeAux        ::= &
-
-PathSequence              ::= PathEltOrInverse PathSequenceAux
-PathSequenceAux           ::= '/' PathEltOrInverse PathSequenceAux
-PathSequenceAux           ::= &
-
-PathElt                   ::= PathPrimary PathEltAux
-PathEltAux                ::= PathMod
-PathEltAux                ::= &
-
-PathEltOrInverse          ::= PathElt
-PathEltOrInverse          ::= '^' PathElt
-
-PathMod                   ::= '?'
-PathMod                   ::= '*'
-PathMod                   ::= '+'
-
-PathPrimary               ::= iri 
-PathPrimary               ::= 'a' 
-PathPrimary               ::= '!' PathNegatedPropertySet 
-PathPrimary               ::= '(' Path ')'
-
-
-PathNegatedPropertySet    ::= PathOneInPropertySet
-PathNegatedPropertySet    ::= '(' PathNegatedPropertySetAux1 ')'
-PathNegatedPropertySetAux1    ::= PathOneInPropertySet PathNegatedPropertySetAux2
-PathNegatedPropertySetAux1    ::= &
-PathNegatedPropertySetAux2    ::= '|' PathOneInPropertySet PathNegatedPropertySetAux2
-PathNegatedPropertySetAux2    ::= &
-
-PathOneInPropertySet      ::= iri
-PathOneInPropertySet      ::= 'a'
-PathOneInPropertySet      ::= '^' PathOneInPropertySetAux
-PathOneInPropertySetAux   ::= iri
-PathOneInPropertySetAux   ::= 'a'
-
-TriplesNode               ::= Collection
-TriplesNode               ::= BlankNodePropertyList
-
+PathAlternative           ::= PathSequence ( '|' PathSequence )*
+PathSequence              ::= PathEltOrInverse ( '/' PathEltOrInverse )*
+PathElt                   ::= PathPrimary ( PathMod )?
+PathEltOrInverse          ::= PathElt | '^' PathElt
+PathMod                   ::= '?' | '*' | '+'
+PathPrimary               ::= iri | 'a' | '!' PathNegatedPropertySet | '(' Path ')'
+PathNegatedPropertySet    ::= PathOneInPropertySet | '(' ( PathOneInPropertySet ( '|' PathOneInPropertySet )* )? ')'
+PathOneInPropertySet      ::= iri | 'a' | '^' ( iri | 'a' )
+TriplesNode               ::= Collection | BlankNodePropertyList
 BlankNodePropertyList     ::= '[' PropertyListNotEmpty ']'
-
-TriplesNodePath           ::= CollectionPath
-TriplesNodePath           ::= BlankNodePropertyListPath
-
+TriplesNodePath           ::= CollectionPath | BlankNodePropertyListPath
 BlankNodePropertyListPath ::= '[' PropertyListPathNotEmpty ']'
-
-Collection                ::= '(' GraphNode CollectionAux ')'
-CollectionAux             ::= GraphNode CollectionAux
-CollectionAux             ::= &
-
-CollectionPath            ::= '(' GraphNodePath CollectionPathAux ')'
-CollectionPathAux         ::= GraphNodePath CollectionPathAux
-CollectionPathAux         ::= &
-
-GraphNode                 ::= TriplesNode
-GraphNode                 ::= VarOrTerm
-
-GraphNodePath             ::= VarOrTerm
-GraphNodePath             ::= TriplesNodePath
-
-VarOrTerm                 ::= Var
-VarOrTerm                 ::= GraphTerm
-
-VarOrIri                  ::= Var
-VarOrIri                  ::= iri
-
-Var                       ::= VAR1
-Var                       ::= VAR2
-
-GraphTerm                 ::= iri
-GraphTerm                 ::= RDFLiteral
-GraphTerm                 ::= NumericLiteral
-GraphTerm                 ::= BooleanLiteral
-GraphTerm                 ::= BlankNode
-GraphTerm                 ::= NIL
-
+Collection                ::= '(' ( GraphNode )+ ')'
+CollectionPath            ::= '(' ( GraphNodePath )+ ')'
+GraphNode                 ::= VarOrTerm | TriplesNode
+GraphNodePath             ::= VarOrTerm | TriplesNodePath
+VarOrTerm                 ::= Var | GraphTerm
+VarOrIri                  ::= Var | iri
+Var                       ::= VAR1 | VAR2
+GraphTerm                 ::= iri | RDFLiteral | NumericLiteral | BooleanLiteral | BlankNode | NIL
 Expression                ::= ConditionalOrExpression
-
-ConditionalOrExpression   ::= ConditionalAndExpression ConditionalOrExpressionAux
-ConditionalOrExpressionAux ::= '||' ConditionalAndExpression ConditionalOrExpressionAux
-ConditionalOrExpressionAux ::= &
-
-ConditionalAndExpression  ::= ValueLogical ConditionalAndExpressionAux
-ConditionalAndExpressionAux ::= '&&' ValueLogical ConditionalAndExpressionAux
-ConditionalAndExpressionAux ::= &
-
+ConditionalOrExpression   ::= ConditionalAndExpression ( '||' ConditionalAndExpression )*
+ConditionalAndExpression  ::= ValueLogical ( '&&' ValueLogical )*
 ValueLogical              ::= RelationalExpression
-
-RelationalExpression      ::= NumericExpression 
-RelationalExpressionAux   ::= '=' NumericExpression 
-RelationalExpressionAux   ::= '!=' NumericExpression 
-RelationalExpressionAux   ::= '<' NumericExpression 
-RelationalExpressionAux   ::= '>' NumericExpression 
-RelationalExpressionAux   ::= '<=' NumericExpression 
-RelationalExpressionAux   ::= '>=' NumericExpression 
-RelationalExpressionAux   ::= 'IN' ExpressionList 
-RelationalExpressionAux   ::= 'NOT' 'IN' ExpressionList
-RelationalExpressionAux   ::= &
-
+RelationalExpression      ::= NumericExpression ( '=' NumericExpression | '!=' NumericExpression | '<' NumericExpression | '>' NumericExpression | '<=' NumericExpression | '>=' NumericExpression | 'IN' ExpressionList | 'NOT' 'IN' ExpressionList )?
 NumericExpression         ::= AdditiveExpression
-
-AdditiveExpression        ::= MultiplicativeExpression 
-AdditiveExpressionAux1    ::= AdditiveExpressionAux2 AdditiveExpressionAux1
-AdditiveExpressionAux1    ::= &
-AdditiveExpressionAux2    ::= '+' MultiplicativeExpression
-AdditiveExpressionAux2    ::= '-' MultiplicativeExpression
-AdditiveExpressionAux2    ::= AdditiveExpressionAux3 AdditiveExpressionAux4
-AdditiveExpressionAux3    ::= NumericLiteralPositive
-AdditiveExpressionAux3    ::= NumericLiteralNegative
-AdditiveExpressionAux4    ::= '*' UnaryExpression AdditiveExpressionAux4
-AdditiveExpressionAux4    ::= '/' UnaryExpression AdditiveExpressionAux4
-
-MultiplicativeExpression  ::= UnaryExpression MultiplicativeExpressionAux
-MultiplicativeExpressionAux ::= '*' UnaryExpression MultiplicativeExpressionAux
-MultiplicativeExpressionAux ::= '/' UnaryExpression MultiplicativeExpressionAux
-MultiplicativeExpressionAux ::= &
-
-UnaryExpression           ::= '!' PrimaryExpression
-UnaryExpression           ::= '+' PrimaryExpression
-UnaryExpression           ::= '-' PrimaryExpression
-UnaryExpression           ::= PrimaryExpression
-
-PrimaryExpression         ::= BrackettedExpression 
-PrimaryExpression         ::= BuiltInCall 
-PrimaryExpression         ::= iri 
-PrimaryExpression         ::= RDFLiteral 
-PrimaryExpression         ::= NumericLiteral 
-PrimaryExpression         ::= BooleanLiteral 
-PrimaryExpression         ::= Var
-
+AdditiveExpression        ::= MultiplicativeExpression ( '+' MultiplicativeExpression | '-' MultiplicativeExpression )*
+MultiplicativeExpression  ::= UnaryExpression ( '*' UnaryExpression | '/' UnaryExpression )*
+UnaryExpression           ::= '!' PrimaryExpression | '+' PrimaryExpression | '-' PrimaryExpression | PrimaryExpression
+PrimaryExpression         ::= BrackettedExpression | BuiltInCall | iri | RDFLiteral | NumericLiteral | BooleanLiteral | Var
 BrackettedExpression      ::= '(' Expression ')'
-
-BuiltInCall               ::= Aggregate 
-BuiltInCall               ::= 'RAND' NIL 
-BuiltInCall               ::= 'ABS' '(' Expression ')' 
-BuiltInCall               ::= 'CEIL' '(' Expression ')' 
-BuiltInCall               ::= 'FLOOR' '(' Expression ')' 
-BuiltInCall               ::= 'ROUND' '(' Expression ')' 
-BuiltInCall               ::= 'CONCAT' ExpressionList 
-BuiltInCall               ::= SubstringExpression 
-BuiltInCall               ::= 'STRLEN' '(' Expression ')' 
-BuiltInCall               ::= StrReplaceExpression 
-BuiltInCall               ::= 'UCASE' '(' Expression ')' 
-BuiltInCall               ::= 'LCASE' '(' Expression ')' 
-BuiltInCall               ::= 'CONTAINS' '(' Expression ',' Expression ')' 
-BuiltInCall               ::= 'STRSTARTS' '(' Expression ',' Expression ')' 
-BuiltInCall               ::= 'STRENDS' '(' Expression ',' Expression ')' 
-BuiltInCall               ::= 'YEAR' '(' Expression ')' 
-BuiltInCall               ::= 'MONTH' '(' Expression ')' 
-BuiltInCall               ::= 'DAY' '(' Expression ')' 
-BuiltInCall               ::= 'HOURS' '(' Expression ')' 
-BuiltInCall               ::= 'MINUTES' '(' Expression ')' 
-BuiltInCall               ::= 'SECONDS' '(' Expression ')' 
-BuiltInCall               ::= 'TIMEZONE' '(' Expression ')' 
-BuiltInCall               ::= 'TZ' '(' Expression ')' 
-BuiltInCall               ::= 'NOW' NIL 
-BuiltInCall               ::= 'COALESCE' ExpressionList 
-BuiltInCall               ::= RegexExpression
-
-RegexExpression           ::= 'REGEX' '(' Expression ',' Expression RegexExpressionAux ')'
-RegexExpressionAux        ::= ',' Expression
-RegexExpressionAux        ::= &
-
-SubstringExpression       ::= 'SUBSTR' '(' Expression ',' Expression SubstringExpressionAux ')'
-SubstringExpressionAux    ::= ',' Expression
-SubstringExpressionAux    ::= &
-
-StrReplaceExpression      ::= 'REPLACE' '(' Expression ',' Expression ',' Expression StrReplaceExpressionAux ')'
-StrReplaceExpressionAux   ::= ',' Expression
-StrReplaceExpressionAux   ::= &
-
-Aggregate                 ::= 'COUNT' '(' AggregateAux1 AggregateAux2 ')'
-Aggregate                 ::= 'SUM' '(' AggregateAux1 Expression ')'
-Aggregate                 ::= 'MIN' '(' AggregateAux1 Expression ')'
-Aggregate                 ::= 'MAX' '(' AggregateAux1 Expression ')'
-Aggregate                 ::= 'AVG' '(' AggregateAux1 Expression ')'
-AggregateAux1             ::= 'DISTINCT'
-AggregateAux1             ::= &
-AggregateAux2             ::= '*'
-AggregateAux2             ::= Expression
-
-RDFLiteral                ::= String RDFLiteralAux1
-RDFLiteralAux1            ::= LANGTAG
-RDFLiteralAux1            ::= '^^' iri
-RDFLiteralAux1            ::= &
-
-NumericLiteral            ::= NumericLiteralUnsigned
-NumericLiteral            ::= NumericLiteralPositive
-NumericLiteral            ::= NumericLiteralNegative
-
-NumericLiteralUnsigned    ::= INTEGER 
-NumericLiteralUnsigned    ::= DECIMAL 
-NumericLiteralUnsigned    ::= DOUBLE
-
-NumericLiteralPositive    ::= INTEGER_POSITIVE 
-NumericLiteralPositive    ::= DECIMAL_POSITIVE 
-NumericLiteralPositive    ::= DOUBLE_POSITIVE
-
-NumericLiteralNegative    ::= INTEGER_NEGATIVE 
-NumericLiteralNegative    ::= DECIMAL_NEGATIVE 
-NumericLiteralNegative    ::= DOUBLE_NEGATIVE]
- 
-BooleanLiteral            ::= 'true'
-BooleanLiteral            ::= 'false'
-
-String                    ::= STRING_LITERAL1 
-String                    ::= STRING_LITERAL2 
-String                    ::= STRING_LITERAL_LONG1 
-String                    ::= STRING_LITERAL_LONG2
-
-iri                       ::= IRIREF 
-iri                       ::= PrefixedName
-
-PrefixedName              ::= PNAME_LN 
-PrefixedName              ::= PNAME_NS
-
-BlankNode                 ::= BLANK_NODE_LABEL 
-BlankNode                 ::= ANON
+BuiltInCall               ::= Aggregate | 'RAND' NIL | 'ABS' '(' Expression ')' | 'CEIL' '(' Expression ')' | 'FLOOR' '(' Expression ')' | 'ROUND' '(' Expression ')' | 'CONCAT' ExpressionList | SubstringExpression | 'STRLEN' '(' Expression ')' | StrReplaceExpression | 'UCASE' '(' Expression ')' | 'LCASE' '(' Expression ')' | 'CONTAINS' '(' Expression ',' Expression ')' | 'STRSTARTS' '(' Expression ',' Expression ')' | 'STRENDS' '(' Expression ',' Expression ')' | 'YEAR' '(' Expression ')' | 'MONTH' '(' Expression ')' | 'DAY' '(' Expression ')' | 'HOURS' '(' Expression ')' | 'MINUTES' '(' Expression ')' | 'SECONDS' '(' Expression ')' | 'TIMEZONE' '(' Expression ')' | 'TZ' '(' Expression ')' | 'NOW' NIL | 'COALESCE' ExpressionList | RegexExpression
+RegexExpression           ::= 'REGEX' '(' Expression ',' Expression ( ',' Expression )? ')'
+SubstringExpression       ::= 'SUBSTR' '(' Expression ',' Expression ( ',' Expression )? ')'
+StrReplaceExpression      ::= 'REPLACE' '(' Expression ',' Expression ',' Expression ( ',' Expression )? ')'
+Aggregate                 ::= 'COUNT' '(' 'DISTINCT'? ( '*' | Expression ) ')' | 'SUM' '(' 'DISTINCT'? Expression ')' | 'MIN' '(' 'DISTINCT'? Expression ')' | 'MAX' '(' 'DISTINCT'? Expression ')' | 'AVG' '(' 'DISTINCT'? Expression ')'
+RDFLiteral                ::= String ( LANGTAG | ( '^^' iri ) )?
+NumericLiteral            ::= NumericLiteralUnsigned | NumericLiteralPositive | NumericLiteralNegative
+NumericLiteralUnsigned    ::= INTEGER | DECIMAL | DOUBLE
+NumericLiteralPositive    ::= INTEGER_POSITIVE | DECIMAL_POSITIVE | DOUBLE_POSITIVE
+NumericLiteralNegative    ::= INTEGER_NEGATIVE | DECIMAL_NEGATIVE | DOUBLE_NEGATIVE
+BooleanLiteral            ::= 'true' | 'false'
+String                    ::= STRING_LITERAL1 | STRING_LITERAL2 | STRING_LITERAL_LONG1 | STRING_LITERAL_LONG2
+iri                       ::= IRIREF | PrefixedName
+PrefixedName              ::= PNAME_LN | PNAME_NS
+BlankNode                 ::= BLANK_NODE_LABEL | ANON

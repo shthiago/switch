@@ -18,5 +18,9 @@
     Razão: Simplificar a linguagem
 8. Remover não-terminais não utilizados no corpo de alguma produção.
     `Load`, `DeleteClause`, `GraphOrDefault`, `NamedGraphClause`, `DeleteData`, `Clear`, `Update1`, `Drop`, `ConstructTriples`, `Update`, `TriplesTemplate`, `ConstructTemplate`, `Copy`, `Add`, `InsertClause`, `Quads`, `DefaultGraphClause`, `GraphRefAll`, `TriplesSameSubject`, `ArgList`, `UsingClause`, `GraphRef`, `Move`, `Modify`, `Integer`, `DeleteWhere`, `UpdateUnit`, `QuadsNotTriples`, `QuadPattern`, `Create`, `InsertData`, `QuadData`, `SourceSelector`, `PropertyList`
-9. Normalizar as produções, substituindo as notações *, + e ? por novas produções que expressem a intenção porém apenas com produções simples.
+9. Remover `( NumericLiteralPositive | NumericLiteralNegative ) ( ( '*' UnaryExpression ) | ( '/' UnaryExpression ) )*` da produção de `AdditiveExpression`.
+    Razão: eliminar ambiguidade.
+10. Remover os não-terminais `InlineData`, `Bind` e  `ValuesClause`
+    Razão: simplificação, uma vez que Cypher não tem suporte para declaração de variáveis com valores específicos
+11. Normalizar as produções, substituindo as notações *, + e ? por novas produções que expressem a intenção porém apenas com produções simples.
     Razão: Ficará mais fácil de estabelecer as ações semânticas.

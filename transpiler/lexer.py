@@ -28,10 +28,7 @@ class SelectSparqlLexer():
         'DESC': 'KW_DESC',
         'LIMIT': 'KW_LIMIT',
         'OFFSET': 'KW_OFFSET',
-        'VALUES': 'KW_VALUES',
         'OPTIONAL': 'KW_OPTIONAL',
-        'BIND': 'KW_BIND',
-        'UNDEF': 'KW_UNDEF',
         'MINUS': 'KW_MINUS',
         'UNION': 'KW_UNION',
         'FILTER': 'KW_FILTER',
@@ -172,10 +169,7 @@ class SelectSparqlLexer():
     t_KW_DESC = r'DESC'
     t_KW_LIMIT = r'LIMIT'
     t_KW_OFFSET = r'OFFSET'
-    t_KW_VALUES = r'VALUES'
     t_KW_OPTIONAL = r'OPTIONAL'
-    t_KW_BIND = r'BIND'
-    t_KW_UNDEF = r'UNDEF'
     t_KW_MINUS = r'MINUS'
     t_KW_UNION = r'UNION'
     t_KW_FILTER = r'FILTER'

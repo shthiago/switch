@@ -16,6 +16,7 @@ class PrimaryType(Enum):
 class BuiltInFunction:
     name: str
     params: List['OrExpression']
+    modifiers: Optional[List[str]]
 
 
 @dataclass

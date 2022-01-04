@@ -666,193 +666,191 @@ class SelectSparqlParser:
 
     def p_production_255(self, p):
         """VarOrIri ::= Var"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_256(self, p):
         """VarOrIri ::= iri"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_258(self, p):
         """Var ::= VAR1"""
-        # TODO
+        p[0] = structures.Var(p[1], False)
 
     def p_production_259(self, p):
         """Var ::= VAR2"""
-        # TODO
+        p[0] = structures.Var(p[1], False)
 
     def p_production_261(self, p):
         """GraphTerm ::= iri"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_262(self, p):
         """GraphTerm ::= RDFLiteral"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_263(self, p):
         """GraphTerm ::= NumericLiteral"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_264(self, p):
         """GraphTerm ::= BooleanLiteral"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_265(self, p):
         """GraphTerm ::= BlankNode"""
-        # TODO
+        p[0] = None
 
     def p_production_266(self, p):
         """GraphTerm ::= NIL"""
-        # TODO
+        p[0] = None
 
     def p_production_268(self, p):
         """Expression ::= ConditionalOrExpression"""
-        # TODO
+        p[0] = nodes.ExpressionNode(p[1])
 
     def p_production_270(self, p):
         """ConditionalOrExpression ::= ConditionalAndExpression ConditionalOrExpressionAux"""
-        # TODO
+        p[0] = nodes.OrExpression(p[1], p[2])
 
     def p_production_271(self, p):
         """ConditionalOrExpressionAux ::= SYMB_OR ConditionalAndExpression ConditionalOrExpressionAux"""
-        # TODO
+        p[0] = [p[2], *p[3]]
 
     def p_production_272(self, p):
         """ConditionalOrExpressionAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_274(self, p):
         """ConditionalAndExpression ::= ValueLogical ConditionalAndExpressionAux"""
-        # TODO
+        p[0] = nodes.AndExpression(p[1], p[2])
 
     def p_production_275(self, p):
         """ConditionalAndExpressionAux ::= SYMB_AND ValueLogical ConditionalAndExpressionAux"""
-        # TODO
+        p[0] = [p[2], *p[3]]
 
     def p_production_276(self, p):
         """ConditionalAndExpressionAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_278(self, p):
         """ValueLogical ::= RelationalExpression"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_280(self, p):
         """RelationalExpression ::= NumericExpression RelationalExpressionAux"""
-        # TODO
+        p[0] = nodes.RelationalExpression(p[1], p[2])
 
     def p_production_281(self, p):
         """RelationalExpressionAux ::= SYMB_EQ NumericExpression"""
-        # TODO
+        p[0] = (nodes.LogOperator.EQ, p[2])
 
     def p_production_282(self, p):
         """RelationalExpressionAux ::= SYMB_NEQ NumericExpression"""
-        # TODO
+        p[0] = (nodes.LogOperator.NEQ, p[2])
 
     def p_production_283(self, p):
         """RelationalExpressionAux ::= SYMB_LT NumericExpression"""
-        # TODO
+        p[0] = (nodes.LogOperator.LT, p[2])
 
     def p_production_284(self, p):
         """RelationalExpressionAux ::= SYMB_GT NumericExpression"""
-        # TODO
+        p[0] = (nodes.LogOperator.GT, p[2])
 
     def p_production_285(self, p):
         """RelationalExpressionAux ::= SYMB_LTE NumericExpression"""
-        # TODO
+        p[0] = (nodes.LogOperator.LTE, p[2])
 
     def p_production_286(self, p):
         """RelationalExpressionAux ::= SYMB_GTE NumericExpression"""
-        # TODO
+        p[0] = (nodes.LogOperator.GTE, p[2])
 
     def p_production_287(self, p):
         """RelationalExpressionAux ::= KW_IN ExpressionList"""
-        # TODO
+        p[0] = (nodes.LogOperator.IN, p[2])
 
     def p_production_288(self, p):
         """RelationalExpressionAux ::= KW_NOT KW_IN ExpressionList"""
-        # TODO
+        p[0] = (nodes.LogOperator.NOT_IN, p[2])
 
     def p_production_289(self, p):
         """RelationalExpressionAux ::= empty"""
-        # TODO
+        p[0] = None
 
     def p_production_291(self, p):
         """NumericExpression ::= AdditiveExpression"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_292(self, p):
-        """AdditiveExpression        ::= MultiplicativeExpression AdditiveExpressionAux1"""
-        # TODO
+        """AdditiveExpression ::= MultiplicativeExpression AdditiveExpressionAux1"""
+        p[0] = nodes.AdditiveExpression(p[1], *p[2])
 
     def p_production_293(self, p):
-        """AdditiveExpressionAux1    ::= '+' MultiplicativeExpression AdditiveExpressionAux1"""
-        # TODO
+        """AdditiveExpressionAux1 ::= SYMB_PLUS MultiplicativeExpression AdditiveExpressionAux1"""
+        p[0] = [(nodes.AdditiveOperator.SUB, p[2]), *p[3]]
 
     def p_production_294(self, p):
-        """AdditiveExpressionAux1    ::= '-' MultiplicativeExpression AdditiveExpressionAux1"""
-        # TODO
+        """AdditiveExpressionAux1 ::= SYMB_MINUS MultiplicativeExpression AdditiveExpressionAux1"""
+        p[0] = [(nodes.AdditiveOperator.SUB, p[2]), *p[3]]
 
     def p_production_295(self, p):
-        """AdditiveExpressionAux1    ::= empty"""
-        # TODO
+        """AdditiveExpressionAux1 ::= empty"""
+        p[0] = []
 
     def p_production_304(self, p):
         """MultiplicativeExpression ::= UnaryExpression MultiplicativeExpressionAux"""
-        # TODO
+        p[0] = nodes.MultiplicativeExpression(p[1], p[2])
 
     def p_production_305(self, p):
         """MultiplicativeExpressionAux ::= SYMB_ASTERISK UnaryExpression MultiplicativeExpressionAux"""
-        # TODO
+        p[0] = [(nodes.MultiplicativeOperator.MULT, p[2]), *p[3]]
 
     def p_production_306(self, p):
         """MultiplicativeExpressionAux ::= SYMB_SLASH UnaryExpression MultiplicativeExpressionAux"""
-        # TODO
+        p[0] = [(nodes.MultiplicativeOperator.DIV, p[2]), *p[3]]
 
     def p_production_307(self, p):
         """MultiplicativeExpressionAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_309(self, p):
         """UnaryExpression ::= SYMB_EXCLAMATION PrimaryExpression"""
-        # TODO
+        p[0] = nodes.UnaryExpression(nodes.UnaryOperator.NOT, p[1])
 
     def p_production_310(self, p):
         """UnaryExpression ::= SYMB_PLUS PrimaryExpression"""
-        # TODO
+        p[0] = nodes.UnaryExpression(nodes.UnaryOperator.PLUS, p[1])
 
     def p_production_311(self, p):
         """UnaryExpression ::= SYMB_MINUS PrimaryExpression"""
-        # TODO
+        p[0] = nodes.UnaryExpression(nodes.UnaryOperator.MINUS, p[1])
 
     def p_production_312(self, p):
         """UnaryExpression ::= PrimaryExpression"""
-        # TODO
+        p[0] = nodes.UnaryExpression(None, p[1])
 
     def p_production_314(self, p):
         """PrimaryExpression ::= BrackettedExpression"""
-        # TODO
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.EXP, p[1])
 
     def p_production_315(self, p):
         """PrimaryExpression ::= BuiltInCall"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_316(self, p):
         """PrimaryExpression ::= iri"""
-        # TODO
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.IRI, p[1])
 
     def p_production_317(self, p):
         """PrimaryExpression ::= RDFLiteral"""
-        # TODO
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.RDF_LITERAL, p[1])
 
     def p_production_318(self, p):
         """PrimaryExpression ::= NumericLiteral"""
-        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.NUM_LITERAL,
-                                       p[1])
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.NUM_LITERAL, p[1])
 
     def p_production_319(self, p):
         """PrimaryExpression ::= BooleanLiteral"""
-        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.BOOL_LITERAL,
-                                       p[1])
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.BOOL_LITERAL, p[1])
 
     def p_production_320(self, p):
         """PrimaryExpression ::= Var"""
@@ -864,7 +862,7 @@ class SelectSparqlParser:
 
     def p_production_324(self, p):
         """BuiltInCall ::= Aggregate"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_325(self, p):
         """BuiltInCall ::= FUNC_RAND NIL"""
@@ -892,167 +890,173 @@ class SelectSparqlParser:
 
     def p_production_331(self, p):
         """BuiltInCall ::= SubstringExpression"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_332(self, p):
         """BuiltInCall ::= FUNC_STRLEN SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('STRLEN', [p[3]])
 
     def p_production_333(self, p):
         """BuiltInCall ::= StrReplaceExpression"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_334(self, p):
         """BuiltInCall ::= FUNC_UCASE SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('UCASE', [p[3]])
 
     def p_production_335(self, p):
         """BuiltInCall ::= FUNC_LCASE SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('LCASE', [p[3]])
 
     def p_production_336(self, p):
         """BuiltInCall ::= FUNC_CONTAINS SYMB_LP Expression SYMB_COMMA Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('CONTAINS', [p[3], p[5]])
 
     def p_production_337(self, p):
         """BuiltInCall ::= FUNC_STRSTARTS SYMB_LP Expression SYMB_COMMA Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('STRSTARTS', [p[3], p[5]])
 
     def p_production_338(self, p):
         """BuiltInCall ::= FUNC_STRENDS SYMB_LP Expression SYMB_COMMA Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('STRENDS', [p[3], p[5]])
 
     def p_production_339(self, p):
         """BuiltInCall ::= FUNC_YEAR SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('YEAR', [p[3]])
 
     def p_production_340(self, p):
         """BuiltInCall ::= FUNC_MONTH SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('MONTH', [p[3]])
 
     def p_production_341(self, p):
         """BuiltInCall ::= FUNC_DAY SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('DAY', [p[3]])
 
     def p_production_342(self, p):
         """BuiltInCall ::= FUNC_HOURS SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('HOURS', [p[3]])
 
     def p_production_343(self, p):
         """BuiltInCall ::= FUNC_MINUTES SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('MINUTES', [p[3]])
 
     def p_production_344(self, p):
         """BuiltInCall ::= FUNC_SECONDS SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('SECONDS', [p[3]])
 
     def p_production_345(self, p):
         """BuiltInCall ::= FUNC_TIMEZONE SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('TIMEZONE', [p[3]])
 
     def p_production_346(self, p):
         """BuiltInCall ::= FUNC_TZ SYMB_LP Expression SYMB_RP"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('TIMEZONE', [p[3]])
 
     def p_production_347(self, p):
         """BuiltInCall ::= FUNC_NOW NIL"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('NOW', [])
 
     def p_production_348(self, p):
         """BuiltInCall ::= FUNC_COALESCE ExpressionList"""
-        # TODO
+        p[0] = nodes.BuiltInFunction('COALESCE', p[2])
 
     def p_production_349(self, p):
         """BuiltInCall ::= RegexExpression"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_351(self, p):
         """RegexExpression ::= FUNC_REGEX SYMB_LP Expression SYMB_COMMA Expression RegexExpressionAux SYMB_RP"""
-        # TODO
+        params = [p[4], p[5]]
+        params.extend(p[6])
+        p[0] = nodes.BuiltInFunction('REGEX', p)
 
     def p_production_352(self, p):
         """RegexExpressionAux ::= SYMB_COMMA Expression"""
-        # TODO
+        p[0] = p[2]
 
     def p_production_353(self, p):
         """RegexExpressionAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_355(self, p):
         """SubstringExpression ::= FUNC_SUBSTR SYMB_LP Expression SYMB_COMMA Expression SubstringExpressionAux SYMB_RP"""
-        # TODO
+        params = [p[4], p[5]]
+        params.extend(p[6])
+        p[0] = nodes.BuiltInFunction('SUBSTR', params)
 
     def p_production_356(self, p):
         """SubstringExpressionAux ::= SYMB_COMMA Expression"""
-        # TODO
+        p[0] = p[2]
 
     def p_production_357(self, p):
         """SubstringExpressionAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_359(self, p):
         """StrReplaceExpression ::= FUNC_REPLACE SYMB_LP Expression SYMB_COMMA Expression SYMB_COMMA Expression StrReplaceExpressionAux SYMB_RP"""
-        # TODO
+        params = [p[4], p[5], p[7]]
+        params.extend(p[8])
+        p[0] = nodes.BuiltInFunction('REPLACE', params)
 
     def p_production_360(self, p):
         """StrReplaceExpressionAux ::= SYMB_COMMA Expression"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_361(self, p):
         """StrReplaceExpressionAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_363(self, p):
         """Aggregate ::= FUNC_COUNT SYMB_LP AggregateAux1 AggregateAux2 SYMB_RP"""
-        # TODO
+        p[0] = structures.BuiltInFunction('COUNT', [p[4]], p[3])
 
     def p_production_364(self, p):
         """Aggregate ::= FUNC_SUM SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        # TODO
+        p[0] = structures.BuiltInFunction('SUM', [p[4]], p[3])
 
     def p_production_365(self, p):
         """Aggregate ::= FUNC_MIN SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        # TODO
+        p[0] = structures.BuiltInFunction('MIN', [p[4]], p[3])
 
     def p_production_366(self, p):
         """Aggregate ::= FUNC_MAX SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        # TODO
+        p[0] = structures.BuiltInFunction('MAX', [p[4]], p[3])
 
     def p_production_367(self, p):
         """Aggregate ::= FUNC_AVG SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        # TODO
+        p[0] = structures.BuiltInFunction('AVG', [p[4]], p[3])
 
     def p_production_368(self, p):
         """AggregateAux1 ::= KW_DISTINCT"""
-        # TODO
+        p[0] = [p[1]]
 
     def p_production_369(self, p):
         """AggregateAux1 ::= empty"""
-        # TODO
+        p[0] = None
 
     def p_production_370(self, p):
         """AggregateAux2 ::= SYMB_ASTERISK"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_371(self, p):
         """AggregateAux2 ::= Expression"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_373(self, p):
         """RDFLiteral ::= String RDFLiteralAux1"""
-        # TODO
+        p[0] = p[1] + p[2]
 
     def p_production_374(self, p):
         """RDFLiteralAux1 ::= LANGTAG"""
-        # TODO
+        p[0] = '@' + p[1]
 
     def p_production_375(self, p):
         """RDFLiteralAux1 ::= SYMB_C2 iri"""
-        # TODO
+        p[0] = p[1] + p[2]
 
     def p_production_376(self, p):
         """RDFLiteralAux1 ::= empty"""
-        # TODO
+        p[0] = ''
 
     def p_production_378(self, p):
         """NumericLiteral ::= NumericLiteralUnsigned"""
@@ -1128,27 +1132,27 @@ class SelectSparqlParser:
 
     def p_production_402(self, p):
         """iri ::= IRIREF"""
-        # TODO
+        p[0] = structures.PrimaryExpression(structures.PrimaryType.IRI, p[1])
 
     def p_production_403(self, p):
         """iri ::= PrefixedName"""
-        # TODO
+        p[0] = structures.PrimaryExpression(structures.PrimaryType.IRI, p[1])
 
     def p_production_405(self, p):
         """PrefixedName ::= PNAME_LN"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_406(self, p):
         """PrefixedName ::= PNAME_NS"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_408(self, p):
         """BlankNode ::= BLANK_NODE_LABEL"""
-        # TODO
+        p[0] = ""
 
     def p_production_409(self, p):
         """BlankNode ::= ANON"""
-        # TODO
+        p[0] = ""
 
     def p_empty(self, p):
         """empty :"""

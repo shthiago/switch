@@ -2,6 +2,7 @@ from ply import yacc
 
 from .lexer import SelectSparqlLexer
 from .structures import nodes
+from .structures.query import Query
 
 
 class SelectSparqlParser:
@@ -12,6 +13,8 @@ class SelectSparqlParser:
         self.yacc = yacc.yacc(module=self,
                               check_recursion=False,
                               **kwargs)
+
+        self.query = Query()
 
     def parse(self, source_code: str) -> str:
         return self.yacc.parse(source_code, lexer=self.lexer)
@@ -302,23 +305,23 @@ class SelectSparqlParser:
 
     def p_production_96(self, p):
         """GraphPatternNotTriples ::= OptionalGraphPattern"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_97(self, p):
         """GraphPatternNotTriples ::= MinusGraphPattern"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_98(self, p):
         """GraphPatternNotTriples ::= Filter"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_102(self, p):
         """OptionalGraphPattern ::= KW_OPTIONAL GroupGraphPattern"""
-        # TODO
+        self.query.optional = structures.OptionalNode(p[2])
 
     def p_production_133(self, p):
         """MinusGraphPattern ::= KW_MINUS GroupGraphPattern"""
-        # TODO
+        self.minus = structures.MinusNode(p[2])
 
     def p_production_135(self, p):
         """GroupOrUnionGraphPattern ::= GroupGraphPattern GroupOrUnionGraphPatternAux"""
@@ -334,7 +337,7 @@ class SelectSparqlParser:
 
     def p_production_139(self, p):
         """Filter ::= KW_FILTER Constraint"""
-        # TODO
+        self.query.filter = structures.FilterNode(p[2])
 
     def p_production_141(self, p):
         """Constraint ::= BrackettedExpression"""
@@ -350,11 +353,15 @@ class SelectSparqlParser:
 
     def p_production_145(self, p):
         """ExpressionList ::= SYMB_LP Expression ExpressionListAux SYMB_RP"""
-        p[0] = p[2].extend(p[3])
+        exps = p[2]
+        exps.extend(p[3])
+        p[0] = exps
 
     def p_production_146(self, p):
         """ExpressionListAux ::= SYMB_COMMA Expression ExpressionListAux"""
-        p[0] = p[2].extend(p[3])
+        exps = p[2]
+        exps.extend(p[3])
+        p[0] = exps
 
     def p_production_147(self, p):
         """ExpressionListAux ::= empty"""
@@ -362,31 +369,39 @@ class SelectSparqlParser:
 
     def p_production_149(self, p):
         """PropertyListNotEmpty ::= Verb ObjectList PropertyListNotEmptyAux2"""
-        # TODO
+        props = [(p[1], p[2])]
+        props.extend(p[3])
+
+        p[0] = props
 
     def p_production_150(self, p):
         """PropertyListNotEmptyAux1 ::= Verb ObjectList"""
-        # TODO
+        p[0] = (p[1], p[2])
 
     def p_production_151(self, p):
         """PropertyListNotEmptyAux1 ::= empty"""
-        # TODO
+        p[0] = None
 
     def p_production_152(self, p):
         """PropertyListNotEmptyAux2 ::= SYMB_SEMICOLON PropertyListNotEmptyAux1 PropertyListNotEmptyAux2"""
-        # TODO
+        props = p[3]
+
+        if p[3] is not None:
+            props.append(p[2])
+
+        p[0] = props
 
     def p_production_153(self, p):
         """PropertyListNotEmptyAux2 ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_155(self, p):
         """Verb ::= VarOrIri"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_156(self, p):
         """Verb ::= SYMB_a"""
-        # TODO
+        p[0] = "rdf:type"
 
     def p_production_158(self, p):
         """ObjectList ::= Object ObjectListAux"""
@@ -650,7 +665,7 @@ class SelectSparqlParser:
 
     def p_production_249(self, p):
         """GraphNodePath ::= VarOrTerm"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_250(self, p):
         """GraphNodePath ::= TriplesNodePath"""
@@ -658,11 +673,11 @@ class SelectSparqlParser:
 
     def p_production_252(self, p):
         """VarOrTerm ::= Var"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_253(self, p):
         """VarOrTerm ::= GraphTerm"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_255(self, p):
         """VarOrIri ::= Var"""

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
@@ -11,5 +11,5 @@ class Triple:
 
 @dataclass
 class GraphPattern:
-    and_triples: List[Triple]
-    or_block: List[GraphPattern]
+    and_triples: Optional[List[Triple]]
+    or_block: Optional[List['GraphPattern']]

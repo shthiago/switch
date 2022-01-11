@@ -49,7 +49,7 @@ GroupConditionAux         ::= &
 
 HavingClause              ::= 'HAVING' HavingCondition HavingClauseAux
 HavingClauseAux           ::= &
-HavingClauseAux           ::= HavingClauseAux
+HavingClauseAux           ::= HavingCondition HavingClauseAux
 
 HavingCondition           ::= Constraint
 

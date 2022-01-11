@@ -7,9 +7,9 @@ from .nodes import *
 
 @dataclass
 class Query:
-    filter: Optional[FilterNode]
-    minus: Optional[MinusNode]
-    optional: Optional[OptionalNode]
-    mandatory: Optional[GraphPattern]
-    variables: Optional[VarsNode]
-    modifier: Optional[ModifiersNode]
+    filter: Optional[FilterNode] = None
+    minus: Optional[MinusNode] = None
+    optional: Optional[OptionalNode] = None
+    mandatory: Optional[GraphPattern] = None
+    variables: VarsNode = VarsNode([])
+    modifiers: ModifiersNode = ModifiersNode()

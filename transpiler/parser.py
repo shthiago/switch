@@ -101,167 +101,179 @@ class SelectSparqlParser:
 
     def p_production_29(self, p):
         """SolutionModifier ::= SolutionModifierAux1 SolutionModifierAux2 SolutionModifierAux3 SolutionModifierAux4"""
-        # TODO
+        pass
 
     def p_production_30(self, p):
         """SolutionModifierAux1 ::= empty"""
-        # TODO
+        pass
 
     def p_production_31(self, p):
         """SolutionModifierAux1 ::= GroupClause"""
-        # TODO
+        pass
 
     def p_production_32(self, p):
         """SolutionModifierAux2 ::= empty"""
-        # TODO
+        pass
 
     def p_production_33(self, p):
         """SolutionModifierAux2 ::= HavingClause"""
-        # TODO
+        pass
 
     def p_production_34(self, p):
         """SolutionModifierAux3 ::= empty"""
-        # TODO
+        pass
 
     def p_production_35(self, p):
         """SolutionModifierAux3 ::= OrderClause"""
-        # TODO
+        pass
 
     def p_production_36(self, p):
         """SolutionModifierAux4 ::= empty"""
-        # TODO
+        pass
 
     def p_production_37(self, p):
         """SolutionModifierAux4 ::= LimitOffsetClauses"""
-        # TODO
+        pass
 
     def p_production_39(self, p):
         """GroupClause ::= KW_GROUP KW_BY GroupCondition GroupClauseAux"""
-        # TODO
+        conds = p[4]
+        conds.append(p[3])
+        self.query.modifiers.group = nodes.GroupClauseNode(conds)
 
     def p_production_40(self, p):
         """GroupClauseAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_41(self, p):
         """GroupClauseAux ::= GroupCondition GroupClauseAux"""
-        # TODO
+        conds = p[2]
+        conds.append(p[1])
+        p[0] = conds
 
     def p_production_43(self, p):
         """GroupCondition ::= BuiltInCall"""
-        # TODO
+        p[0] = nodes.GroupCondition(value=p[1])
 
     def p_production_44(self, p):
         """GroupCondition ::= SYMB_LP Expression GroupConditionAux SYMB_RP"""
-        # TODO
+        p[0] = nodes.GroupCondition(value=p[2], alias=p[3])
 
     def p_production_45(self, p):
         """GroupCondition ::= Var"""
-        # TODO
+        p[0] = nodes.GroupCondition(value=p[1])
 
     def p_production_46(self, p):
         """GroupConditionAux ::= KW_AS Var"""
-        # TODO
+        p[0] = p[2]
 
     def p_production_47(self, p):
         """GroupConditionAux ::= empty"""
-        # TODO
+        p[0] = None
 
     def p_production_49(self, p):
         """HavingClause ::= KW_HAVING HavingCondition HavingClauseAux"""
-        # TODO
+        conds = p[3]
+        conds.append(p[2])
+        self.query.modifiers.having = nodes.HavingClauseNode(conds)
 
     def p_production_50(self, p):
         """HavingClauseAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_51(self, p):
-        """HavingClauseAux ::= HavingClauseAux"""
-        # TODO
+        """HavingClauseAux ::= HavingCondition HavingClauseAux"""
+        conds = p[2]
+        conds.append(p[1])
+        p[0] = conds
 
     def p_production_53(self, p):
         """HavingCondition ::= Constraint"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_55(self, p):
         """OrderClause ::= KW_ORDER KW_BY OrderCondition OrderClauseAux"""
-        # TODO
+        conds = p[4]
+        conds.append(p[3])
+        self.query.modifiers.order = nodes.OrderClauseNode(conds)
 
     def p_production_56(self, p):
         """OrderClauseAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_57(self, p):
         """OrderClauseAux ::= OrderCondition OrderClauseAux"""
-        # TODO
+        conds = p[2]
+        conds.append(p[1])
+        p[0] = conds
 
     def p_production_59(self, p):
         """OrderCondition ::= Constraint"""
-        # TODO
+        p[0] = nodes.OrderCondition(exp=p[1])
 
     def p_production_60(self, p):
         """OrderCondition ::= Var"""
-        # TODO
+        p[0] = nodes.OrderCondition(var=p[1])
 
     def p_production_61(self, p):
         """OrderCondition ::= OrderConditionAux BrackettedExpression"""
-        # TODO
+        p[0] = nodes.OrderCondition(order=p[1], exp=p[2])
 
     def p_production_62(self, p):
         """OrderConditionAux ::= KW_ASC"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_63(self, p):
         """OrderConditionAux ::= KW_DESC"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_65(self, p):
         """LimitOffsetClauses ::= LimitClause LimitOffsetClausesAux1"""
-        # TODO
+        pass
 
     def p_production_66(self, p):
         """LimitOffsetClauses ::= OffsetClause LimitOffsetClausesAux2"""
-        # TODO
+        pass
 
     def p_production_67(self, p):
         """LimitOffsetClausesAux1 ::= empty"""
-        # TODO
+        pass
 
     def p_production_68(self, p):
         """LimitOffsetClausesAux1 ::= OffsetClause"""
-        # TODO
+        pass
 
     def p_production_69(self, p):
         """LimitOffsetClausesAux2 ::= empty"""
-        # TODO
+        pass
 
     def p_production_70(self, p):
         """LimitOffsetClausesAux2 ::= LimitClause"""
-        # TODO
+        pass
 
     def p_production_72(self, p):
         """LimitClause ::= KW_LIMIT INTEGER"""
-        # TODO
+        self.query.modifiers.limit = p[2]
 
     def p_production_74(self, p):
         """OffsetClause ::= KW_OFFSET INTEGER"""
-        # TODO
+        self.query.modifiers.offset = p[2]
 
     def p_production_79(self, p):
         """GroupGraphPattern ::= SYMB_LCB GroupGraphPatternSub SYMB_RCB"""
-        # TODO
+        p[0] = p[2]
 
     def p_production_81(self, p):
         """GroupGraphPatternSub ::= GroupGraphPatternSubAux1 GroupGraphPatternSubAux2"""
-        # TODO
+        pattern = nodes.GraphPattern(p[1], p[2])
 
     def p_production_82(self, p):
         """GroupGraphPatternSubAux1 ::= TriplesBlock"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_83(self, p):
         """GroupGraphPatternSubAux1 ::= empty"""
-        # TODO
+        pass
 
     def p_production_84(self, p):
         """GroupGraphPatternSubAux2 ::= GraphPatternNotTriples GroupGraphPatternSubAux3 GroupGraphPatternSubAux1 GroupGraphPatternSubAux2"""
@@ -269,51 +281,55 @@ class SelectSparqlParser:
 
     def p_production_85(self, p):
         """GroupGraphPatternSubAux2 ::= empty"""
-        # TODO
+        pass
 
     def p_production_86(self, p):
         """GroupGraphPatternSubAux3 ::= SYMB_DOT"""
-        # TODO
+        pass
 
     def p_production_87(self, p):
         """GroupGraphPatternSubAux3 ::= empty"""
-        # TODO
+        pass
 
     def p_production_89(self, p):
         """TriplesBlock ::= TriplesSameSubjectPath TriplesBlockAux1"""
-        # TODO
+        triples = p[1]
+        if p[2] is not None:
+            triples.extend(p[2])
+
+        p[0] = triples
 
     def p_production_90(self, p):
         """TriplesBlockAux1 ::= SYMB_DOT TriplesBlockAux2"""
-        # TODO
+        p[0] = p[2]
 
     def p_production_91(self, p):
         """TriplesBlockAux1 ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_92(self, p):
         """TriplesBlockAux2 ::= TriplesBlock"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_93(self, p):
         """TriplesBlockAux2 ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_95(self, p):
         """GraphPatternNotTriples ::= GroupOrUnionGraphPattern"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_96(self, p):
         """GraphPatternNotTriples ::= OptionalGraphPattern"""
-        p[0] = p[1]
+        pass
 
     def p_production_97(self, p):
         """GraphPatternNotTriples ::= MinusGraphPattern"""
-        p[0] = p[1]
+        pass
 
     def p_production_98(self, p):
         """GraphPatternNotTriples ::= Filter"""
-        p[0] = p[1]
+        pass
 
     def p_production_102(self, p):
         """OptionalGraphPattern ::= KW_OPTIONAL GroupGraphPattern"""
@@ -321,7 +337,7 @@ class SelectSparqlParser:
 
     def p_production_133(self, p):
         """MinusGraphPattern ::= KW_MINUS GroupGraphPattern"""
-        self.minus = structures.MinusNode(p[2])
+        self.query.minus = structures.MinusNode(p[2])
 
     def p_production_135(self, p):
         """GroupOrUnionGraphPattern ::= GroupGraphPattern GroupOrUnionGraphPatternAux"""
@@ -337,7 +353,7 @@ class SelectSparqlParser:
 
     def p_production_139(self, p):
         """Filter ::= KW_FILTER Constraint"""
-        self.query.filter = structures.FilterNode(p[2])
+        self.query.filter = nodes.FilterNode(p[2])
 
     def p_production_141(self, p):
         """Constraint ::= BrackettedExpression"""
@@ -421,7 +437,11 @@ class SelectSparqlParser:
 
     def p_production_164(self, p):
         """TriplesSameSubjectPath ::= VarOrTerm PropertyListPathNotEmpty"""
-        # TODO
+        triples = []
+        for prop, obj in p[2]:
+            triples.append(nodes.Triple(p[1], prop, obj))
+
+        p[0] = triples
 
     def p_production_165(self, p):
         """TriplesSameSubjectPath ::= TriplesNodePath PropertyListPath"""
@@ -473,19 +493,23 @@ class SelectSparqlParser:
 
     def p_production_182(self, p):
         """ObjectListPath ::= ObjectPath ObjectListPathAux"""
-        # TODO
+        objs = [p[1]]
+        if p[2] is not None:
+            objs.append(p[2])
+
+        p[0] = objs
 
     def p_production_183(self, p):
         """ObjectListPathAux ::= SYMB_COMMA ObjectPath"""
-        # TODO
+        p[0] = p[2]
 
     def p_production_184(self, p):
         """ObjectListPathAux ::= empty"""
-        # TODO
+        pass
 
     def p_production_186(self, p):
         """ObjectPath ::= GraphNodePath"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_188(self, p):
         """Path ::= PathAlternative"""
@@ -673,7 +697,7 @@ class SelectSparqlParser:
 
     def p_production_252(self, p):
         """VarOrTerm ::= Var"""
-        p[0] = p[1]
+        p[0] = p[1].name
 
     def p_production_253(self, p):
         """VarOrTerm ::= GraphTerm"""
@@ -689,11 +713,11 @@ class SelectSparqlParser:
 
     def p_production_258(self, p):
         """Var ::= VAR1"""
-        p[0] = structures.Var(p[1], False)
+        p[0] = nodes.Var(p[1], False)
 
     def p_production_259(self, p):
         """Var ::= VAR2"""
-        p[0] = structures.Var(p[1], False)
+        p[0] = nodes.Var(p[1], False)
 
     def p_production_261(self, p):
         """GraphTerm ::= iri"""

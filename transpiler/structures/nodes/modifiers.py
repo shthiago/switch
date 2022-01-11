@@ -1,15 +1,45 @@
 """Modifiers node"""
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union, List
 
-import expression
-import graph_pattern
+from .expression import ExpressionNode, BuiltInFunction
+from .variables import Var
+
+
+@dataclass
+class GroupCondition:
+    value: Union[Var, ExpressionNode, BuiltInFunction]
+    alias: Optional[str] = None
+
+
+@dataclass
+class GroupClauseNode:
+    conditions: List[GroupCondition]
+
+
+@dataclass
+class OrderCondition:
+    exp: Optional[Union[ExpressionNode,
+                        BuiltInFunction]] = None
+    var: Optional[str] = None
+    order: str = 'DESC'
+
+
+@dataclass
+class OrderNode:
+    conditions: List[OrderCondition]
+
+
+@dataclass
+class HavingClauseNode:
+    constraints: List[Union[ExpressionNode,
+                            BuiltInFunction]]
+
 
 @dataclass
 class ModifiersNode:
-    group: Optional[expression.ExpressionNode]
-    having: Optional[expression.ExpressionNode]
-    order_asc: Optional[str]
-    order_desc: Optional[str] 
-    limit: Optional[int]
-    offset: Optional[int]
+    group: Optional[GroupClauseNode] = None
+    having: Optional[HavingClauseNode] = None
+    order: Optional[OrderNode] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None

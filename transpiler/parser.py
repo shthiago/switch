@@ -265,7 +265,20 @@ class SelectSparqlParser:
 
     def p_production_81(self, p):
         """GroupGraphPatternSub ::= GroupGraphPatternSubAux1 GroupGraphPatternSubAux2"""
-        pattern = nodes.GraphPattern(p[1], p[2])
+        and_triples = []
+        or_block = None
+
+        if p[1] is not None:
+            and_triples.extend(p[1])
+
+        if p[2] is not None:
+            if p[2]['and_block'] is not None:
+                and_triples.extend(p[2]['and_block'])
+
+            if p[2]['or_block'] is not None:
+                or_block = p[2]['or_block']
+
+        p[0] = nodes.GraphPattern(and_triples, or_block)
 
     def p_production_82(self, p):
         """GroupGraphPatternSubAux1 ::= TriplesBlock"""
@@ -277,7 +290,11 @@ class SelectSparqlParser:
 
     def p_production_84(self, p):
         """GroupGraphPatternSubAux2 ::= GraphPatternNotTriples GroupGraphPatternSubAux3 GroupGraphPatternSubAux1 GroupGraphPatternSubAux2"""
-        # TODO
+        data = {
+            'and_block': p[3],
+            'or_block': p[1]
+        }
+        p[0] = data
 
     def p_production_85(self, p):
         """GroupGraphPatternSubAux2 ::= empty"""
@@ -341,15 +358,20 @@ class SelectSparqlParser:
 
     def p_production_135(self, p):
         """GroupOrUnionGraphPattern ::= GroupGraphPattern GroupOrUnionGraphPatternAux"""
-        # TODO
+        patterns = p[2]
+        patterns.append(p[1])
+
+        p[0] = patterns
 
     def p_production_136(self, p):
         """GroupOrUnionGraphPatternAux ::= KW_UNION GroupGraphPattern GroupOrUnionGraphPatternAux"""
-        # TODO
+        patterns = p[3]
+        patterns.append(p[2])
+        p[0] = patterns
 
     def p_production_137(self, p):
         """GroupOrUnionGraphPatternAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_139(self, p):
         """Filter ::= KW_FILTER Constraint"""
@@ -421,19 +443,25 @@ class SelectSparqlParser:
 
     def p_production_158(self, p):
         """ObjectList ::= Object ObjectListAux"""
-        # TODO
+        obj_list = p[2]
+        obj_list.append(p[1])
+
+        p[0] = obj_list
 
     def p_production_159(self, p):
         """ObjectListAux ::= SYMB_COMMA Object ObjectListAux"""
-        # TODO
+        obj_list = p[3]
+        obj_list.append(p[2])
+
+        p[0] = obj_list
 
     def p_production_160(self, p):
         """ObjectListAux ::= empty"""
-        # TODO
+        p[0] = []
 
     def p_production_162(self, p):
         """Object ::= GraphNode"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_164(self, p):
         """TriplesSameSubjectPath ::= VarOrTerm PropertyListPathNotEmpty"""
@@ -685,7 +713,7 @@ class SelectSparqlParser:
 
     def p_production_247(self, p):
         """GraphNode ::= VarOrTerm"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_249(self, p):
         """GraphNodePath ::= VarOrTerm"""

@@ -709,7 +709,7 @@ class SelectSparqlParser:
 
     def p_production_246(self, p):
         """GraphNode ::= TriplesNode"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_247(self, p):
         """GraphNode ::= VarOrTerm"""
@@ -721,7 +721,7 @@ class SelectSparqlParser:
 
     def p_production_250(self, p):
         """GraphNodePath ::= TriplesNodePath"""
-        # TODO
+        p[0] = p[1]
 
     def p_production_252(self, p):
         """VarOrTerm ::= Var"""

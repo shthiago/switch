@@ -141,3 +141,4 @@ cython_debug/
 *.out
 
 dataset/
+neo4j/

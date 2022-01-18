@@ -1,10 +1,11 @@
 #! /bin/bash
+# Setup Docker running Neo4j, with the neosemantics extension and if the dataset is ready, load it
 
 CONTAINERNAME=$1
 
-# Setup Docker running Neo4j, with the neosemantics extension and if the dataset is ready, load it
 echo "Downloading neosemantics"
 mkdir -p neo4j/plugins/
+mkdir -p dataset
 wget https://github.com/neo4j-labs/neosemantics/releases/download/4.4.0.0/neosemantics-4.4.0.0.jar -P neo4j/plugins/
 
 echo "Running docker image"
@@ -26,7 +27,11 @@ sleep 15
 docker exec $CONTAINERNAME bash -c 'echo "CREATE CONSTRAINT n10s_unique_uri ON (r:Resource) ASSERT r.uri IS UNIQUE;" | cypher-shell'
 docker exec $CONTAINERNAME bash -c 'echo "CALL n10s.graphconfig.init();" | cypher-shell'
 
-echo "Loading dataset"
-docker exec $CONTAINERNAME bash -c 'echo "CALL n10s.rdf.import.fetch(\"file:///dataset/dataset.rdf\", \"RDF/XML\");" | cypher-shell'
+if test -f "dataset/dataset.rdf"; then
+    echo "Loading dataset"
+    docker exec $CONTAINERNAME bash -c 'echo "CALL n10s.rdf.import.fetch(\"file:///dataset/dataset.rdf\", \"RDF/XML\");" | cypher-shell'
+else
+    echo "Dataset not ready"
+fi
 
 echo "Done!"

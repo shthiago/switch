@@ -1,6 +1,7 @@
 """Main node for the structure"""
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
+
 
 from .nodes import *
 
@@ -11,5 +12,5 @@ class Query:
     minus: Optional[MinusNode] = None
     optional: Optional[OptionalNode] = None
     mandatory: Optional[GraphPattern] = None
-    variables: VarsNode = VarsNode([])
-    modifiers: ModifiersNode = ModifiersNode()
+    variables: List[Var] = field(default_factory=list)
+    modifiers: ModifiersNode = field(default_factory=ModifiersNode)

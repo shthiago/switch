@@ -1,7 +1,6 @@
 """Main node for the structure"""
 from dataclasses import dataclass, field
-from typing import Optional
-
+from typing import Optional, List
 
 from .nodes import *
 
@@ -14,3 +13,14 @@ class Query:
     mandatory: Optional[GraphPattern] = None
     variables: List[Var] = field(default_factory=list)
     modifiers: ModifiersNode = field(default_factory=ModifiersNode)
+
+    def __eq__(self, other):
+        if not isinstance(other, Query):
+            return False
+
+        return self.filter == other.filter \
+            and self.minus == other.minus \
+            and self.optional == other.optional \
+            and self.mandatory == other.mandatory \
+            and set(self.variables) == set(other.variables) \
+            and self.modifiers == other.modifiers

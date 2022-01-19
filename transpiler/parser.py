@@ -476,7 +476,11 @@ class SelectSparqlParser:
 
     def p_production_162(self, p):
         """Object : GraphNode"""
-        p[0] = p[1]
+        if isinstance(p[1], str):
+            p[0] = p[1]
+
+        else:
+            raise NotImplementedError
 
     def p_production_164(self, p):
         """TriplesSameSubjectPath : VarOrTerm PropertyListPathNotEmpty"""
@@ -518,8 +522,7 @@ class SelectSparqlParser:
 
     def p_production_173(self, p):
         """PropertyListPathNotEmptyAux2 : SYMB_SEMICOLON PropertyListPathNotEmptyAux3"""
-        # TODO
-        raise NotImplementedError
+        p[0] = p[2]
 
     def p_production_174(self, p):
         """PropertyListPathNotEmptyAux2 : empty"""
@@ -527,13 +530,14 @@ class SelectSparqlParser:
 
     def p_production_175(self, p):
         """PropertyListPathNotEmptyAux3 : PropertyListPathNotEmptyAux1 ObjectList"""
-        # TODO
-        raise NotImplementedError
+        subs = []
+        for obj in p[2]:
+            subs.append((p[1], obj))
+        p[0] = subs
 
     def p_production_176(self, p):
         """PropertyListPathNotEmptyAux3 : empty"""
-        # TODO
-        raise NotImplementedError
+        p[0] = []
 
     def p_production_178(self, p):
         """VerbPath : Path"""

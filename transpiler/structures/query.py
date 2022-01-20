@@ -8,8 +8,8 @@ from .nodes import *
 @dataclass
 class Query:
     filter: Optional[FilterNode] = None
-    minus: Optional[MinusNode] = None
-    optional: Optional[OptionalNode] = None
+    minus: Optional[GraphPattern] = None
+    optional: Optional[GraphPattern] = None
     mandatory: Optional[GraphPattern] = None
     variables: List[Var] = field(default_factory=list)
     modifiers: ModifiersNode = field(default_factory=ModifiersNode)

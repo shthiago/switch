@@ -284,14 +284,14 @@ class SelectSparqlParser:
     def p_production_81(self, p):
         """GroupGraphPatternSub : GroupGraphPatternSubAux1 GroupGraphPatternSubAux2"""
         and_triples = p[1]
-        or_block = None
+        or_block = []
 
         if p[2] is not None:
             if p[2]['and_block'] is not None:
                 and_triples.extend(p[2]['and_block'])
 
             if p[2]['or_block'] is not None:
-                or_block = p[2]['or_block']
+                or_block.extend(p[2]['or_block'])
 
         p[0] = nodes.GraphPattern(and_triples, or_block)
 
@@ -365,11 +365,11 @@ class SelectSparqlParser:
 
     def p_production_102(self, p):
         """OptionalGraphPattern : KW_OPTIONAL GroupGraphPattern"""
-        self.query.optional = structures.OptionalNode(p[2])
+        self.query.optional = p[2]
 
     def p_production_133(self, p):
         """MinusGraphPattern : KW_MINUS GroupGraphPattern"""
-        self.query.minus = structures.MinusNode(p[2])
+        self.query.minus = p[2]
 
     def p_production_135(self, p):
         """GroupOrUnionGraphPattern : GroupGraphPattern GroupOrUnionGraphPatternAux"""
@@ -814,7 +814,9 @@ class SelectSparqlParser:
         """Var : VAR1
                | VAR2"""
         p[0] = nodes.Var(p[1], False)
-        self.query.variables.append(p[0])
+
+        if p[0] not in self.query.variables:
+            self.query.variables.append(p[0])
 
     def p_production_261(self, p):
         """GraphTerm : iri"""

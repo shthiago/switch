@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional
 
 
@@ -14,18 +14,15 @@ class Triple:
 
 @dataclass
 class GraphPattern:
-    and_triples: Optional[List[Triple]]
-    or_block: Optional[List['GraphPattern']] = None
+    and_triples: List[Triple] = field(default_factory=list)
+    or_block: List['GraphPattern'] = field(default_factory=list)
 
     def __eq__(self, other):
         if not isinstance(other, GraphPattern):
             return False
 
-        if self.or_block is None and other.or_block is None:
-            return set(self.and_triples) == set(other.and_triples)
+        return set(self.and_triples) == set(other.and_triples) \
+            and set(other.or_block) == set(other.or_block)
 
-        elif self.or_block is not None and other.or_block is not None:
-            return set(self.and_triples) == set(other.and_triples) \
-                and set(other.or_block) == set(other.or_block)
-
-        return False
+    def __hash__(self):
+        return hash(str(self))

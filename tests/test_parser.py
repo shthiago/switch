@@ -187,3 +187,24 @@ def test_query_minus(switch_parser: SelectSparqlParser):
         }''')
 
     assert result == answer  # nosec
+
+
+def test_query_prefixed(switch_parser: SelectSparqlParser):
+    """Try to parse a simple query using a prefix"""
+    answer = query.Query(
+        mandatory=nodes.GraphPattern(
+            and_triples=[nodes.Triple('?s', 'nmspc:name', '?o')]),
+        variables=[
+            nodes.Var('?s', selected=True),
+            nodes.Var('?o', selected=False),
+        ],
+        namespaces=[nodes.Namespace('nmspc:', '<http://name.io#>')]
+    )
+
+    result = switch_parser.parse('''
+        PREFIX nmspc: <http://name.io#>
+        SELECT ?s WHERE {
+            ?s nmspc:name  ?o
+        }''')
+
+    assert result == answer  # nosec

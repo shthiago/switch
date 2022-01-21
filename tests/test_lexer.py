@@ -5,9 +5,8 @@ from transpiler import lexer
 
 def test_detect_keyowrds(switch_lexer: lexer.SelectSparqlLexer):
     """Check if lexer recognizes all keywords"""
+    print(switch_lexer.keywords)
     for value, token_type in switch_lexer.keywords.items():
-        switch_lexer.input(value.lower())
-        assert switch_lexer.token().type == token_type
         switch_lexer.input(value.upper())
         assert switch_lexer.token().type == token_type
 
@@ -15,9 +14,6 @@ def test_detect_keyowrds(switch_lexer: lexer.SelectSparqlLexer):
 def test_detect_builtins(switch_lexer: lexer.SelectSparqlLexer):
     """Check if lexer recognizes all built in calls"""
     for value, token_type in switch_lexer.builtin_calls.items():
-        switch_lexer.input(value.lower())
-        assert switch_lexer.token().type == token_type
-
         switch_lexer.input(value.upper())
         assert switch_lexer.token().type == token_type
 

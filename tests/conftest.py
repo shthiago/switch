@@ -10,4 +10,4 @@ def switch_lexer() -> lexer.SelectSparqlLexer:
 
 @pytest.fixture
 def switch_parser() -> parser.SelectSparqlParser:
-    return parser.SelectSparqlParser()
+    return parser.SelectSparqlParser(debug=True)

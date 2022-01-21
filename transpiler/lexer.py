@@ -81,7 +81,7 @@ class SelectSparqlLexer():
         'DECIMAL', 'DECIMAL_NEGATIVE', 'DECIMAL_POSITIVE',
         'DOUBLE', 'DOUBLE_NEGATIVE', 'DOUBLE_POSITIVE',
         'INTEGER', 'INTEGER_NEGATIVE', 'INTEGER_POSITIVE', 'IRIREF',
-        'LANGTAG', 'NIL', 'PNAME_LN', 'PNAME_NS', 'PN_LOCAL',
+        'LANGTAG', 'NIL', 'PNAME_LN', 'PNAME_NS',
         'STRING_LITERAL1', 'STRING_LITERAL2', 'STRING_LITERAL_LONG1', 'STRING_LITERAL_LONG2',
         'VAR1', 'VAR2',
         # Symbols
@@ -116,19 +116,6 @@ class SelectSparqlLexer():
 
     # Regexes
 
-    def t_PN_LOCAL(self, token: lex.Token):
-        default = 'PN_LOCAL'
-        value = token.value.upper()
-
-        token.type = self.keywords.get(value, default)
-
-        if token.type == default:
-            token.type = self.builtin_calls.get(value, default)
-
-        return token
-
-    t_PN_LOCAL.__doc__ = PN_LOCAL
-
     t_IRIREF = r'<([^<>"{}|^`\\ ])*>'
     t_INTEGER = r'[0-9]+'
     t_LANGTAG = r'@[a-zA-Z]+(-[a-zA-Z0-9]+)*'
@@ -148,7 +135,7 @@ class SelectSparqlLexer():
     t_ANON = r'\[\]'
     t_STRING_LITERAL1 = r'\'.*\''
     t_STRING_LITERAL2 = r'".*"'
-    t_PNAME_NS = r'(' + PN_PREFIX + r')?:'
+    t_PNAME_NS = PN_PREFIX + r':'
     t_PNAME_LN = t_PNAME_NS + PN_LOCAL
     t_BLANK_NODE_LABEL = r'_:((' + PN_CHARS_U + \
         r')|[0-9])(((' + PN_CHARS + r')|.)(' + \

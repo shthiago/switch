@@ -46,8 +46,7 @@ class SelectSparqlParser:
 
     def p_production_5(self, p):
         """Prologue : PrefixDecl Prologue"""
-        # TODO
-        raise NotImplementedError
+        pass
 
     def p_production_6(self, p):
         """Prologue : empty"""
@@ -60,8 +59,7 @@ class SelectSparqlParser:
 
     def p_production_11(self, p):
         """PrefixDecl : KW_PREFIX PNAME_NS IRIREF"""
-        # TODO
-        raise NotImplementedError
+        self.query.namespaces.append(nodes.Namespace(p[2], p[3]))
 
     def p_production_13(self, p):
         """SelectQuery : SelectClause WhereClause SolutionModifier"""
@@ -513,8 +511,7 @@ class SelectSparqlParser:
 
     def p_production_171(self, p):
         """PropertyListPathNotEmptyAux1 : VerbPath"""
-        # TODO
-        raise NotImplementedError
+        p[0] = p[1].value
 
     def p_production_172(self, p):
         """PropertyListPathNotEmptyAux1 : VerbSimple"""
@@ -541,8 +538,7 @@ class SelectSparqlParser:
 
     def p_production_178(self, p):
         """VerbPath : Path"""
-        # TODO
-        raise NotImplementedError
+        p[0] = p[1]
 
     def p_production_180(self, p):
         """VerbSimple : Var"""
@@ -570,13 +566,11 @@ class SelectSparqlParser:
 
     def p_production_188(self, p):
         """Path : PathAlternative"""
-        # TODO
-        raise NotImplementedError
+        p[0] = p[1]
 
     def p_production_190(self, p):
         """PathAlternative : PathSequence PathAlternativeAux"""
-        # TODO
-        raise NotImplementedError
+        p[0] = p[1]
 
     def p_production_191(self, p):
         """PathAlternativeAux : SYMB_PIPE PathSequence PathAlternativeAux"""
@@ -586,12 +580,12 @@ class SelectSparqlParser:
     def p_production_192(self, p):
         """PathAlternativeAux : empty"""
         # TODO
-        raise NotImplementedError
+        pass
 
     def p_production_194(self, p):
         """PathSequence : PathEltOrInverse PathSequenceAux"""
         # TODO
-        raise NotImplementedError
+        p[0] = p[1]
 
     def p_production_195(self, p):
         """PathSequenceAux : SYMB_SLASH PathEltOrInverse PathSequenceAux"""
@@ -601,12 +595,12 @@ class SelectSparqlParser:
     def p_production_196(self, p):
         """PathSequenceAux : empty"""
         # TODO
-        raise NotImplementedError
+        pass
 
     def p_production_198(self, p):
         """PathElt : PathPrimary PathEltAux"""
         # TODO
-        raise NotImplementedError
+        p[0] = p[1]
 
     def p_production_199(self, p):
         """PathEltAux : PathMod"""
@@ -616,12 +610,12 @@ class SelectSparqlParser:
     def p_production_200(self, p):
         """PathEltAux : empty"""
         # TODO
-        raise NotImplementedError
+        pass
 
     def p_production_202(self, p):
         """PathEltOrInverse : PathElt"""
         # TODO
-        raise NotImplementedError
+        p[0] = p[1]
 
     def p_production_203(self, p):
         """PathEltOrInverse : SYMB_CIRCUMFLEX PathElt"""
@@ -645,8 +639,7 @@ class SelectSparqlParser:
 
     def p_production_209(self, p):
         """PathPrimary : iri"""
-        # TODO
-        raise NotImplementedError
+        p[0] = p[1]
 
     def p_production_210(self, p):
         """PathPrimary : SYMB_a"""
@@ -1146,23 +1139,23 @@ class SelectSparqlParser:
 
     def p_production_363(self, p):
         """Aggregate : FUNC_COUNT SYMB_LP AggregateAux1 AggregateAux2 SYMB_RP"""
-        p[0] = structures.BuiltInFunction('COUNT', [p[4]], p[3])
+        p[0] = nodes.BuiltInFunction('COUNT', [p[4]], p[3])
 
     def p_production_364(self, p):
         """Aggregate : FUNC_SUM SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = structures.BuiltInFunction('SUM', [p[4]], p[3])
+        p[0] = nodes.BuiltInFunction('SUM', [p[4]], p[3])
 
     def p_production_365(self, p):
         """Aggregate : FUNC_MIN SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = structures.BuiltInFunction('MIN', [p[4]], p[3])
+        p[0] = nodes.BuiltInFunction('MIN', [p[4]], p[3])
 
     def p_production_366(self, p):
         """Aggregate : FUNC_MAX SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = structures.BuiltInFunction('MAX', [p[4]], p[3])
+        p[0] = nodes.BuiltInFunction('MAX', [p[4]], p[3])
 
     def p_production_367(self, p):
         """Aggregate : FUNC_AVG SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = structures.BuiltInFunction('AVG', [p[4]], p[3])
+        p[0] = nodes.BuiltInFunction('AVG', [p[4]], p[3])
 
     def p_production_368(self, p):
         """AggregateAux1 : KW_DISTINCT"""
@@ -1270,11 +1263,11 @@ class SelectSparqlParser:
 
     def p_production_402(self, p):
         """iri : IRIREF"""
-        p[0] = structures.PrimaryExpression(structures.PrimaryType.IRI, p[1])
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.IRI, p[1])
 
     def p_production_403(self, p):
         """iri : PrefixedName"""
-        p[0] = structures.PrimaryExpression(structures.PrimaryType.IRI, p[1])
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.IRI, p[1])
 
     def p_production_405(self, p):
         """PrefixedName : PNAME_LN"""

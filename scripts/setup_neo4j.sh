@@ -9,16 +9,22 @@ mkdir -p dataset
 wget https://github.com/neo4j-labs/neosemantics/releases/download/4.4.0.0/neosemantics-4.4.0.0.jar -P neo4j/plugins/
 
 echo "Running docker image"
+mkdir -p neo4j/data
+mkdir -p neo4j/logs
+mkdir -p neo4j/import
+mkdir -p neo4j/plugins
+
 docker run  --name $CONTAINERNAME \
             -p7474:7474 -p7687:7687 \
             -d \
+            --user="$(id -u):$(id -g)" \
             -v $(pwd)/neo4j/data:/data \
             -v $(pwd)/neo4j/logs:/logs \
             -v $(pwd)/neo4j/import:/var/lib/neo4j/import \
             -v $(pwd)/neo4j/plugins:/var/lib/neo4j/plugins \
             -v $(pwd)/dataset/:/dataset \
             --env NEO4J_AUTH=none \
-            neo4j:latest
+            neo4j:latest 
 sleep 5
 
 echo "Setting up neosemantics"

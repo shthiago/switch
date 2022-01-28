@@ -281,17 +281,12 @@ class SelectSparqlParser:
 
     def p_production_81(self, p):
         """GroupGraphPatternSub : GroupGraphPatternSubAux1 GroupGraphPatternSubAux2"""
-        and_triples = p[1]
-        or_block = []
+        and_triples = p[1] or []
+        and_triples.extend(p[2].pop('triples'))
 
-        if p[2] is not None:
-            if p[2]['and_block'] is not None:
-                and_triples.extend(p[2]['and_block'])
-
-            if p[2]['or_block'] is not None:
-                or_block.extend(p[2]['or_block'])
-
-        p[0] = nodes.GraphPattern(and_triples, or_block)
+        p[0] = nodes.GraphPattern(
+            and_triples=and_triples,
+            **p[2])
 
     def p_production_82(self, p):
         """GroupGraphPatternSubAux1 : TriplesBlock"""
@@ -299,19 +294,27 @@ class SelectSparqlParser:
 
     def p_production_83(self, p):
         """GroupGraphPatternSubAux1 : empty"""
-        p[0] = []
+        pass
 
     def p_production_84(self, p):
         """GroupGraphPatternSubAux2 : GraphPatternNotTriples GroupGraphPatternSubAux3 GroupGraphPatternSubAux1 GroupGraphPatternSubAux2"""
-        data = {
-            'and_block': p[3],
-            'or_block': p[1]
-        }
+        data = p[4]
+        data[p[1]['type']].append(p[1]['value'])
+
+        if p[3] is not None:
+            data['triples'].extend(p[3])
+
         p[0] = data
 
     def p_production_85(self, p):
         """GroupGraphPatternSubAux2 : empty"""
-        pass
+        p[0] = {
+            'or_blocks': [],
+            'filters': [],
+            'minus': [],
+            'optionals': [],
+            'triples': []
+        }
 
     def p_production_86(self, p):
         """GroupGraphPatternSubAux3 : SYMB_DOT"""
@@ -347,27 +350,39 @@ class SelectSparqlParser:
 
     def p_production_95(self, p):
         """GraphPatternNotTriples : GroupOrUnionGraphPattern"""
-        p[0] = p[1]
+        p[0] = {
+            'type': 'or_blocks',
+            'value': p[1]
+        }
 
     def p_production_96(self, p):
         """GraphPatternNotTriples : OptionalGraphPattern"""
-        pass
+        p[0] = {
+            'type': 'optionals',
+            'value': p[1]
+        }
 
     def p_production_97(self, p):
         """GraphPatternNotTriples : MinusGraphPattern"""
-        pass
+        p[0] = {
+            'type': 'minus',
+            'value': p[1]
+        }
 
     def p_production_98(self, p):
         """GraphPatternNotTriples : Filter"""
-        pass
+        p[0] = {
+            'type': 'filters',
+            'value': p[1]
+        }
 
     def p_production_102(self, p):
         """OptionalGraphPattern : KW_OPTIONAL GroupGraphPattern"""
-        self.query.optional = p[2]
+        p[0] = p[2]
 
     def p_production_133(self, p):
         """MinusGraphPattern : KW_MINUS GroupGraphPattern"""
-        self.query.minus = p[2]
+        p[0] = p[2]
 
     def p_production_135(self, p):
         """GroupOrUnionGraphPattern : GroupGraphPattern GroupOrUnionGraphPatternAux"""

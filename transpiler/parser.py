@@ -71,7 +71,7 @@ class SelectSparqlParser:
 
     def p_production_16(self, p):
         """SelectClauseAux1 : SelectClauseAux2"""
-        pass
+        self.query.returning = p[1]
 
     def p_production_17(self, p):
         """SelectClauseAux1 : KW_DISTINCT SelectClauseAux2"""
@@ -85,27 +85,27 @@ class SelectSparqlParser:
 
     def p_production_19(self, p):
         """SelectClauseAux2 : SYMB_ASTERISK"""
-        self.selecteds = "*"
+        p[0] = [nodes.SelectedVar(value='*')]
 
     def p_production_20(self, p):
         """SelectClauseAux2 : Var SelectClauseAux3"""
-        self.selecteds.append(p[1].name)
+        p[0] = [nodes.SelectedVar(value=p[1].name), *p[2]]
 
     def p_production_21(self, p):
         """SelectClauseAux2 : SYMB_LP Expression KW_AS Var SYMB_RP SelectClauseAux3"""
-        self.selecteds.append(p[4].name)
+        p[0] = [nodes.SelectedVar(value=p[2], alias=p[4].name), *p[6]]
 
     def p_production_22(self, p):
         """SelectClauseAux3 : Var SelectClauseAux3"""
-        self.selecteds.append(p[1].name)
+        p[0] = [nodes.SelectedVar(value=p[1].name), *p[2]]
 
     def p_production_23(self, p):
         """SelectClauseAux3 : SYMB_LP Expression KW_AS Var SYMB_RP SelectClauseAux3"""
-        self.selecteds.append(p[4].name)
+        p[0] = [nodes.SelectedVar(value=p[2], alias=p[4].name), *p[6]]
 
     def p_production_24(self, p):
         """SelectClauseAux3 : empty"""
-        pass
+        p[0] = []
 
     def p_production_26(self, p):
         """WhereClause : GroupGraphPattern"""
@@ -153,8 +153,7 @@ class SelectSparqlParser:
 
     def p_production_39(self, p):
         """GroupClause : KW_GROUP KW_BY GroupCondition GroupClauseAux"""
-        conds = p[4]
-        conds.append(p[3])
+        conds = [p[3], *p[4]]
         self.query.modifiers.group = nodes.GroupClauseNode(conds)
 
     def p_production_40(self, p):
@@ -163,8 +162,7 @@ class SelectSparqlParser:
 
     def p_production_41(self, p):
         """GroupClauseAux : GroupCondition GroupClauseAux"""
-        conds = p[2]
-        conds.append(p[1])
+        conds = [p[1], *p[2]]
         p[0] = conds
 
     def p_production_43(self, p):
@@ -177,7 +175,7 @@ class SelectSparqlParser:
 
     def p_production_45(self, p):
         """GroupCondition : Var"""
-        p[0] = nodes.GroupCondition(value=p[1])
+        p[0] = nodes.GroupCondition(value=p[1].name)
 
     def p_production_46(self, p):
         """GroupConditionAux : KW_AS Var"""
@@ -209,9 +207,8 @@ class SelectSparqlParser:
 
     def p_production_55(self, p):
         """OrderClause : KW_ORDER KW_BY OrderCondition OrderClauseAux"""
-        conds = p[4]
-        conds.append(p[3])
-        self.query.modifiers.order = nodes.OrderClauseNode(conds)
+        conds = [p[3], *p[4]]
+        self.query.modifiers.order = nodes.OrderNode(conds)
 
     def p_production_56(self, p):
         """OrderClauseAux : empty"""
@@ -219,8 +216,7 @@ class SelectSparqlParser:
 
     def p_production_57(self, p):
         """OrderClauseAux : OrderCondition OrderClauseAux"""
-        conds = p[2]
-        conds.append(p[1])
+        conds = [p[1], *p[2]]
         p[0] = conds
 
     def p_production_59(self, p):
@@ -229,7 +225,7 @@ class SelectSparqlParser:
 
     def p_production_60(self, p):
         """OrderCondition : Var"""
-        p[0] = nodes.OrderCondition(var=p[1])
+        p[0] = nodes.OrderCondition(var=p[1].name)
 
     def p_production_61(self, p):
         """OrderCondition : OrderConditionAux BrackettedExpression"""
@@ -269,11 +265,11 @@ class SelectSparqlParser:
 
     def p_production_72(self, p):
         """LimitClause : KW_LIMIT INTEGER"""
-        self.query.modifiers.limit = p[2]
+        self.query.modifiers.limit = int(p[2])
 
     def p_production_74(self, p):
         """OffsetClause : KW_OFFSET INTEGER"""
-        self.query.modifiers.offset = p[2]
+        self.query.modifiers.offset = int(p[2])
 
     def p_production_79(self, p):
         """GroupGraphPattern : SYMB_LCB GroupGraphPatternSub SYMB_RCB"""
@@ -403,7 +399,7 @@ class SelectSparqlParser:
 
     def p_production_139(self, p):
         """Filter : KW_FILTER Constraint"""
-        self.query.filter = nodes.FilterNode(p[2])
+        p[0] = nodes.FilterNode(p[2])
 
     def p_production_141(self, p):
         """Constraint : BrackettedExpression"""
@@ -821,7 +817,7 @@ class SelectSparqlParser:
     def p_production_258(self, p):
         """Var : VAR1
                | VAR2"""
-        p[0] = nodes.Var(p[1], False)
+        p[0] = nodes.Var(p[1])
 
         if p[0] not in self.query.variables:
             self.query.variables.append(p[0])
@@ -928,7 +924,7 @@ class SelectSparqlParser:
 
     def p_production_292(self, p):
         """AdditiveExpression : MultiplicativeExpression AdditiveExpressionAux1"""
-        p[0] = nodes.AdditiveExpression(p[1], *p[2])
+        p[0] = nodes.AdditiveExpression(p[1], p[2])
 
     def p_production_293(self, p):
         """AdditiveExpressionAux1 : SYMB_PLUS MultiplicativeExpression AdditiveExpressionAux1"""
@@ -960,19 +956,19 @@ class SelectSparqlParser:
 
     def p_production_309(self, p):
         """UnaryExpression : SYMB_EXCLAMATION PrimaryExpression"""
-        p[0] = nodes.UnaryExpression(nodes.UnaryOperator.NOT, p[1])
+        p[0] = nodes.UnaryExpression(value=p[1], op=nodes.UnaryOperator.NOT)
 
     def p_production_310(self, p):
         """UnaryExpression : SYMB_PLUS PrimaryExpression"""
-        p[0] = nodes.UnaryExpression(nodes.UnaryOperator.PLUS, p[1])
+        p[0] = nodes.UnaryExpression(value=p[1], op=nodes.UnaryOperator.PLUS)
 
     def p_production_311(self, p):
         """UnaryExpression : SYMB_MINUS PrimaryExpression"""
-        p[0] = nodes.UnaryExpression(nodes.UnaryOperator.MINUS, p[1])
+        p[0] = nodes.UnaryExpression(value=p[1], op=nodes.UnaryOperator.MINUS)
 
     def p_production_312(self, p):
         """UnaryExpression : PrimaryExpression"""
-        p[0] = nodes.UnaryExpression(None, p[1])
+        p[0] = nodes.UnaryExpression(p[1])
 
     def p_production_314(self, p):
         """PrimaryExpression : BrackettedExpression"""
@@ -1000,7 +996,7 @@ class SelectSparqlParser:
 
     def p_production_320(self, p):
         """PrimaryExpression : Var"""
-        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.VAR, p[1])
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.VAR, p[1].name)
 
     def p_production_322(self, p):
         """BrackettedExpression : SYMB_LP Expression SYMB_RP"""
@@ -1154,27 +1150,27 @@ class SelectSparqlParser:
 
     def p_production_363(self, p):
         """Aggregate : FUNC_COUNT SYMB_LP AggregateAux1 AggregateAux2 SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('COUNT', [p[4]], p[3])
+        p[0] = nodes.BuiltInFunction('COUNT', [p[4]])
 
     def p_production_364(self, p):
         """Aggregate : FUNC_SUM SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('SUM', [p[4]], p[3])
+        p[0] = nodes.BuiltInFunction('SUM', [p[4]])
 
     def p_production_365(self, p):
         """Aggregate : FUNC_MIN SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('MIN', [p[4]], p[3])
+        p[0] = nodes.BuiltInFunction('MIN', [p[4]])
 
     def p_production_366(self, p):
         """Aggregate : FUNC_MAX SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('MAX', [p[4]], p[3])
+        p[0] = nodes.BuiltInFunction('MAX', [p[4]])
 
     def p_production_367(self, p):
         """Aggregate : FUNC_AVG SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('AVG', [p[4]], p[3])
+        p[0] = nodes.BuiltInFunction('AVG', [p[4]])
 
     def p_production_368(self, p):
         """AggregateAux1 : KW_DISTINCT"""
-        p[0] = [p[1]]
+        raise NotImplementedError
 
     def p_production_369(self, p):
         """AggregateAux1 : empty"""

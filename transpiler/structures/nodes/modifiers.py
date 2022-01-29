@@ -8,7 +8,7 @@ from .variables import Var
 
 @dataclass
 class GroupCondition:
-    value: Union[Var, ExpressionNode, BuiltInFunction]
+    value: Union[str, ExpressionNode, BuiltInFunction]
     alias: Optional[str] = None
 
 

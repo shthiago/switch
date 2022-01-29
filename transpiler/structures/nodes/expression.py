@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional, Tuple, Union
 from enum import Enum, auto
 
@@ -16,7 +16,6 @@ class PrimaryType(Enum):
 class BuiltInFunction:
     name: str
     params: List['OrExpression']
-    modifiers: Optional[List[str]]
 
 
 @dataclass
@@ -33,8 +32,8 @@ class UnaryOperator(Enum):
 
 @dataclass
 class UnaryExpression:
-    op: UnaryOperator
     value: PrimaryExpression
+    op: Optional[UnaryOperator] = None
 
 
 class MultiplicativeOperator(Enum):
@@ -45,7 +44,8 @@ class MultiplicativeOperator(Enum):
 @dataclass
 class MultiplicativeExpression:
     base: UnaryExpression
-    others: List[Tuple[MultiplicativeOperator, UnaryExpression]]
+    others: List[Tuple[MultiplicativeOperator, UnaryExpression]
+                 ] = field(default_factory=list)
 
 
 class AdditiveOperator(Enum):
@@ -56,7 +56,8 @@ class AdditiveOperator(Enum):
 @dataclass
 class AdditiveExpression:
     base: MultiplicativeExpression
-    others: List[Tuple[AdditiveOperator, MultiplicativeExpression]]
+    others: List[Tuple[AdditiveOperator, MultiplicativeExpression]
+                 ] = field(default_factory=list)
 
 
 class LogOperator(Enum):
@@ -73,19 +74,19 @@ class LogOperator(Enum):
 @dataclass
 class RelationalExpression:
     first: AdditiveExpression
-    second: Optional[Tuple[LogOperator, AdditiveExpression]]
+    second: Optional[Tuple[LogOperator, AdditiveExpression]] = None
 
 
 @dataclass
 class AndExpression:
     base: RelationalExpression
-    others: List[RelationalExpression]
+    others: List[RelationalExpression] = field(default_factory=list)
 
 
 @dataclass
 class OrExpression:
     base: AndExpression
-    others: List[AndExpression]
+    others: List[AndExpression] = field(default_factory=list)
 
 
 @dataclass

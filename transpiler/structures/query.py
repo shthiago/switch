@@ -11,6 +11,7 @@ class Query:
     variables: List[Var] = field(default_factory=list)
     modifiers: ModifiersNode = field(default_factory=ModifiersNode)
     namespaces: List[Namespace] = field(default_factory=list)
+    returning: List[SelectedVar] = field(default_factory=list)
 
     def __eq__(self, other):
         if not isinstance(other, Query):
@@ -19,4 +20,5 @@ class Query:
         return self.mandatory == other.mandatory \
             and set(self.variables) == set(other.variables) \
             and self.modifiers == other.modifiers \
-            and set(self.namespaces) == set(other.namespaces)
+            and set(self.namespaces) == set(other.namespaces) \
+            and self.returning == other.returning

@@ -12,9 +12,7 @@ class SelectSparqlParser:
         self.lexer = SelectSparqlLexer()
         self.tokens = self.lexer.tokens
 
-        self.yacc = yacc.yacc(module=self,
-                              check_recursion=False,
-                              **kwargs)
+        self.yacc = yacc.yacc(module=self, check_recursion=False, **kwargs)
 
         self.query = Query()
         self.selecteds: Union[List[str], str] = []
@@ -28,7 +26,9 @@ class SelectSparqlParser:
         if self.selecteds == "*":
             is_selected = lambda *args: True
         else:
-            def is_selected(name): return name in self.selecteds
+
+            def is_selected(name):
+                return name in self.selecteds
 
         for var in self.query.variables:
             if is_selected(var.name):
@@ -85,7 +85,7 @@ class SelectSparqlParser:
 
     def p_production_19(self, p):
         """SelectClauseAux2 : SYMB_ASTERISK"""
-        p[0] = [nodes.SelectedVar(value='*')]
+        p[0] = [nodes.SelectedVar(value="*")]
 
     def p_production_20(self, p):
         """SelectClauseAux2 : Var SelectClauseAux3"""
@@ -278,11 +278,9 @@ class SelectSparqlParser:
     def p_production_81(self, p):
         """GroupGraphPatternSub : GroupGraphPatternSubAux1 GroupGraphPatternSubAux2"""
         and_triples = p[1] or []
-        and_triples.extend(p[2].pop('triples'))
+        and_triples.extend(p[2].pop("triples"))
 
-        p[0] = nodes.GraphPattern(
-            and_triples=and_triples,
-            **p[2])
+        p[0] = nodes.GraphPattern(and_triples=and_triples, **p[2])
 
     def p_production_82(self, p):
         """GroupGraphPatternSubAux1 : TriplesBlock"""
@@ -295,21 +293,21 @@ class SelectSparqlParser:
     def p_production_84(self, p):
         """GroupGraphPatternSubAux2 : GraphPatternNotTriples GroupGraphPatternSubAux3 GroupGraphPatternSubAux1 GroupGraphPatternSubAux2"""
         data = p[4]
-        data[p[1]['type']].append(p[1]['value'])
+        data[p[1]["type"]].append(p[1]["value"])
 
         if p[3] is not None:
-            data['triples'].extend(p[3])
+            data["triples"].extend(p[3])
 
         p[0] = data
 
     def p_production_85(self, p):
         """GroupGraphPatternSubAux2 : empty"""
         p[0] = {
-            'or_blocks': [],
-            'filters': [],
-            'minus': [],
-            'optionals': [],
-            'triples': []
+            "or_blocks": [],
+            "filters": [],
+            "minus": [],
+            "optionals": [],
+            "triples": [],
         }
 
     def p_production_86(self, p):
@@ -346,31 +344,19 @@ class SelectSparqlParser:
 
     def p_production_95(self, p):
         """GraphPatternNotTriples : GroupOrUnionGraphPattern"""
-        p[0] = {
-            'type': 'or_blocks',
-            'value': p[1]
-        }
+        p[0] = {"type": "or_blocks", "value": p[1]}
 
     def p_production_96(self, p):
         """GraphPatternNotTriples : OptionalGraphPattern"""
-        p[0] = {
-            'type': 'optionals',
-            'value': p[1]
-        }
+        p[0] = {"type": "optionals", "value": p[1]}
 
     def p_production_97(self, p):
         """GraphPatternNotTriples : MinusGraphPattern"""
-        p[0] = {
-            'type': 'minus',
-            'value': p[1]
-        }
+        p[0] = {"type": "minus", "value": p[1]}
 
     def p_production_98(self, p):
         """GraphPatternNotTriples : Filter"""
-        p[0] = {
-            'type': 'filters',
-            'value': p[1]
-        }
+        p[0] = {"type": "filters", "value": p[1]}
 
     def p_production_102(self, p):
         """OptionalGraphPattern : KW_OPTIONAL GroupGraphPattern"""
@@ -816,7 +802,7 @@ class SelectSparqlParser:
 
     def p_production_258(self, p):
         """Var : VAR1
-               | VAR2"""
+        | VAR2"""
         p[0] = nodes.Var(p[1])
 
         if p[0] not in self.query.variables:
@@ -1008,27 +994,27 @@ class SelectSparqlParser:
 
     def p_production_325(self, p):
         """BuiltInCall : FUNC_RAND NIL"""
-        p[0] = nodes.BuiltInFunction('RAND', [])
+        p[0] = nodes.BuiltInFunction("RAND", [])
 
     def p_production_326(self, p):
         """BuiltInCall : FUNC_ABS SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('ABS', [p[3]])
+        p[0] = nodes.BuiltInFunction("ABS", [p[3]])
 
     def p_production_327(self, p):
         """BuiltInCall : FUNC_CEIL SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('CEIL', [p[3]])
+        p[0] = nodes.BuiltInFunction("CEIL", [p[3]])
 
     def p_production_328(self, p):
         """BuiltInCall : FUNC_FLOOR SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('FLOOR', [p[3]])
+        p[0] = nodes.BuiltInFunction("FLOOR", [p[3]])
 
     def p_production_329(self, p):
         """BuiltInCall : FUNC_ROUND SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('ROUND', [p[3]])
+        p[0] = nodes.BuiltInFunction("ROUND", [p[3]])
 
     def p_production_330(self, p):
         """BuiltInCall : FUNC_CONCAT ExpressionList"""
-        p[0] = nodes.BuiltInFunction('CONCAT', p[2])
+        p[0] = nodes.BuiltInFunction("CONCAT", p[2])
 
     def p_production_331(self, p):
         """BuiltInCall : SubstringExpression"""
@@ -1036,7 +1022,7 @@ class SelectSparqlParser:
 
     def p_production_332(self, p):
         """BuiltInCall : FUNC_STRLEN SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('STRLEN', [p[3]])
+        p[0] = nodes.BuiltInFunction("STRLEN", [p[3]])
 
     def p_production_333(self, p):
         """BuiltInCall : StrReplaceExpression"""
@@ -1044,63 +1030,63 @@ class SelectSparqlParser:
 
     def p_production_334(self, p):
         """BuiltInCall : FUNC_UCASE SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('UCASE', [p[3]])
+        p[0] = nodes.BuiltInFunction("UCASE", [p[3]])
 
     def p_production_335(self, p):
         """BuiltInCall : FUNC_LCASE SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('LCASE', [p[3]])
+        p[0] = nodes.BuiltInFunction("LCASE", [p[3]])
 
     def p_production_336(self, p):
         """BuiltInCall : FUNC_CONTAINS SYMB_LP Expression SYMB_COMMA Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('CONTAINS', [p[3], p[5]])
+        p[0] = nodes.BuiltInFunction("CONTAINS", [p[3], p[5]])
 
     def p_production_337(self, p):
         """BuiltInCall : FUNC_STRSTARTS SYMB_LP Expression SYMB_COMMA Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('STRSTARTS', [p[3], p[5]])
+        p[0] = nodes.BuiltInFunction("STRSTARTS", [p[3], p[5]])
 
     def p_production_338(self, p):
         """BuiltInCall : FUNC_STRENDS SYMB_LP Expression SYMB_COMMA Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('STRENDS', [p[3], p[5]])
+        p[0] = nodes.BuiltInFunction("STRENDS", [p[3], p[5]])
 
     def p_production_339(self, p):
         """BuiltInCall : FUNC_YEAR SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('YEAR', [p[3]])
+        p[0] = nodes.BuiltInFunction("YEAR", [p[3]])
 
     def p_production_340(self, p):
         """BuiltInCall : FUNC_MONTH SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('MONTH', [p[3]])
+        p[0] = nodes.BuiltInFunction("MONTH", [p[3]])
 
     def p_production_341(self, p):
         """BuiltInCall : FUNC_DAY SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('DAY', [p[3]])
+        p[0] = nodes.BuiltInFunction("DAY", [p[3]])
 
     def p_production_342(self, p):
         """BuiltInCall : FUNC_HOURS SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('HOURS', [p[3]])
+        p[0] = nodes.BuiltInFunction("HOURS", [p[3]])
 
     def p_production_343(self, p):
         """BuiltInCall : FUNC_MINUTES SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('MINUTES', [p[3]])
+        p[0] = nodes.BuiltInFunction("MINUTES", [p[3]])
 
     def p_production_344(self, p):
         """BuiltInCall : FUNC_SECONDS SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('SECONDS', [p[3]])
+        p[0] = nodes.BuiltInFunction("SECONDS", [p[3]])
 
     def p_production_345(self, p):
         """BuiltInCall : FUNC_TIMEZONE SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('TIMEZONE', [p[3]])
+        p[0] = nodes.BuiltInFunction("TIMEZONE", [p[3]])
 
     def p_production_346(self, p):
         """BuiltInCall : FUNC_TZ SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('TIMEZONE', [p[3]])
+        p[0] = nodes.BuiltInFunction("TIMEZONE", [p[3]])
 
     def p_production_347(self, p):
         """BuiltInCall : FUNC_NOW NIL"""
-        p[0] = nodes.BuiltInFunction('NOW', [])
+        p[0] = nodes.BuiltInFunction("NOW", [])
 
     def p_production_348(self, p):
         """BuiltInCall : FUNC_COALESCE ExpressionList"""
-        p[0] = nodes.BuiltInFunction('COALESCE', p[2])
+        p[0] = nodes.BuiltInFunction("COALESCE", p[2])
 
     def p_production_349(self, p):
         """BuiltInCall : RegexExpression"""
@@ -1110,7 +1096,7 @@ class SelectSparqlParser:
         """RegexExpression : FUNC_REGEX SYMB_LP Expression SYMB_COMMA Expression RegexExpressionAux SYMB_RP"""
         params = [p[4], p[5]]
         params.extend(p[6])
-        p[0] = nodes.BuiltInFunction('REGEX', p)
+        p[0] = nodes.BuiltInFunction("REGEX", p)
 
     def p_production_352(self, p):
         """RegexExpressionAux : SYMB_COMMA Expression"""
@@ -1124,7 +1110,7 @@ class SelectSparqlParser:
         """SubstringExpression : FUNC_SUBSTR SYMB_LP Expression SYMB_COMMA Expression SubstringExpressionAux SYMB_RP"""
         params = [p[4], p[5]]
         params.extend(p[6])
-        p[0] = nodes.BuiltInFunction('SUBSTR', params)
+        p[0] = nodes.BuiltInFunction("SUBSTR", params)
 
     def p_production_356(self, p):
         """SubstringExpressionAux : SYMB_COMMA Expression"""
@@ -1138,7 +1124,7 @@ class SelectSparqlParser:
         """StrReplaceExpression : FUNC_REPLACE SYMB_LP Expression SYMB_COMMA Expression SYMB_COMMA Expression StrReplaceExpressionAux SYMB_RP"""
         params = [p[4], p[5], p[7]]
         params.extend(p[8])
-        p[0] = nodes.BuiltInFunction('REPLACE', params)
+        p[0] = nodes.BuiltInFunction("REPLACE", params)
 
     def p_production_360(self, p):
         """StrReplaceExpressionAux : SYMB_COMMA Expression"""
@@ -1150,23 +1136,23 @@ class SelectSparqlParser:
 
     def p_production_363(self, p):
         """Aggregate : FUNC_COUNT SYMB_LP AggregateAux1 AggregateAux2 SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('COUNT', [p[4]])
+        p[0] = nodes.BuiltInFunction("COUNT", [p[4]])
 
     def p_production_364(self, p):
         """Aggregate : FUNC_SUM SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('SUM', [p[4]])
+        p[0] = nodes.BuiltInFunction("SUM", [p[4]])
 
     def p_production_365(self, p):
         """Aggregate : FUNC_MIN SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('MIN', [p[4]])
+        p[0] = nodes.BuiltInFunction("MIN", [p[4]])
 
     def p_production_366(self, p):
         """Aggregate : FUNC_MAX SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('MAX', [p[4]])
+        p[0] = nodes.BuiltInFunction("MAX", [p[4]])
 
     def p_production_367(self, p):
         """Aggregate : FUNC_AVG SYMB_LP AggregateAux1 Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction('AVG', [p[4]])
+        p[0] = nodes.BuiltInFunction("AVG", [p[4]])
 
     def p_production_368(self, p):
         """AggregateAux1 : KW_DISTINCT"""
@@ -1190,7 +1176,7 @@ class SelectSparqlParser:
 
     def p_production_374(self, p):
         """RDFLiteralAux1 : LANGTAG"""
-        p[0] = '@' + p[1]
+        p[0] = "@" + p[1]
 
     def p_production_375(self, p):
         """RDFLiteralAux1 : SYMB_C2 iri"""
@@ -1198,7 +1184,7 @@ class SelectSparqlParser:
 
     def p_production_376(self, p):
         """RDFLiteralAux1 : empty"""
-        p[0] = ''
+        p[0] = ""
 
     def p_production_378(self, p):
         """NumericLiteral : NumericLiteralUnsigned"""
@@ -1301,5 +1287,5 @@ class SelectSparqlParser:
         pass
 
     def p_error(self, p):
-        print('ERROR!')
+        print("ERROR!")
         print(p)

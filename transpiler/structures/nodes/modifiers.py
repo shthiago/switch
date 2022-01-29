@@ -1,8 +1,8 @@
 """Modifiers node"""
 from dataclasses import dataclass
-from typing import Optional, Union, List
+from typing import List, Optional, Union
 
-from .expression import ExpressionNode, BuiltInFunction
+from .expression import BuiltInFunction, ExpressionNode
 from .variables import Var
 
 
@@ -19,10 +19,9 @@ class GroupClauseNode:
 
 @dataclass
 class OrderCondition:
-    exp: Optional[Union[ExpressionNode,
-                        BuiltInFunction]] = None
+    exp: Optional[Union[ExpressionNode, BuiltInFunction]] = None
     var: Optional[str] = None
-    order: str = 'DESC'
+    order: str = "DESC"
 
 
 @dataclass
@@ -32,8 +31,7 @@ class OrderNode:
 
 @dataclass
 class HavingClauseNode:
-    constraints: List[Union[ExpressionNode,
-                            BuiltInFunction]]
+    constraints: List[Union[ExpressionNode, BuiltInFunction]]
 
 
 @dataclass

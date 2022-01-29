@@ -1,6 +1,6 @@
 """Main node for the structure"""
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import List, Optional
 
 from .nodes import *
 
@@ -17,8 +17,10 @@ class Query:
         if not isinstance(other, Query):
             return False
 
-        return self.mandatory == other.mandatory \
-            and set(self.variables) == set(other.variables) \
-            and self.modifiers == other.modifiers \
-            and set(self.namespaces) == set(other.namespaces) \
+        return (
+            self.mandatory == other.mandatory
+            and set(self.variables) == set(other.variables)
+            and self.modifiers == other.modifiers
+            and set(self.namespaces) == set(other.namespaces)
             and self.returning == other.returning
+        )

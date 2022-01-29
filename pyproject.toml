@@ -13,6 +13,25 @@ ply = "^3.11"
 loguru = "^0.5.3"
 Jinja2 = "^3.0.2"
 
+[tool.black]
+line-length = 80
+target-version = ['py37']
+include = 'transpiler/'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.7"
 mypy = "^0.910"

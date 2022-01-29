@@ -976,7 +976,7 @@ class SelectSparqlParser:
 
     def p_production_315(self, p):
         """PrimaryExpression : BuiltInCall"""
-        p[0] = p[1]
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.FUNC, p[1])
 
     def p_production_316(self, p):
         """PrimaryExpression : iri"""

@@ -1,41 +1,92 @@
 """Check if every sparql function call is being processed"""
 from transpiler.parser import SelectSparqlParser
-from transpiler.structures import nodes, query
+from transpiler.structures.nodes import *
+from transpiler.structures.query import Query
 
 
 def test_query_rand(switch_parser: SelectSparqlParser):
     """Try to construct a query calling RAND function structure"""
-    answer = query.Query(
-        mandatory=nodes.GraphPattern(
-            and_triples=[nodes.Triple('?s', '?p', '?o')],
-            filters=[nodes.FilterNode(
-                nodes.ExpressionNode(
-                    nodes.OrExpression(
-                        nodes.AndExpression(nodes.RelationalExpression(
-                            first=nodes.AdditiveExpression(
-                                nodes.MultiplicativeExpression(
-                                    nodes.UnaryExpression(op=None,
-                                                          value=nodes.PrimaryExpression(
-                                                              type=nodes.PrimaryType.VAR,
-                                                              value='?o')))),
-                            second=(nodes.LogOperator.GT,
-                                    nodes.AdditiveExpression(
-                                        nodes.MultiplicativeExpression(
-                                            nodes.UnaryExpression(op=None,
-                                                                  value=nodes.BuiltInFunction('RAND', [])))))
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple('?s', '?p', '?o')],
+            filters=[FilterNode(
+                ExpressionNode(
+                    OrExpression(
+                        AndExpression(RelationalExpression(
+                            first=AdditiveExpression(
+                                MultiplicativeExpression(
+                                    UnaryExpression(op=None,
+                                                    value=PrimaryExpression(
+                                                        type=PrimaryType.VAR,
+                                                        value='?o')))),
+                            second=(LogOperator.GT,
+                                    AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(op=None,
+                                                            value=PrimaryExpression(
+                                                                type=PrimaryType.FUNC,
+                                                                value=BuiltInFunction('RAND', []))))))
                         )))))]),
         variables=[
-            nodes.Var('?s'),
-            nodes.Var('?p'),
-            nodes.Var('?o')
+            Var('?s'),
+            Var('?p'),
+            Var('?o')
         ],
-        returning=[nodes.SelectedVar(value='?s')]
+        returning=[SelectedVar(value='?s')]
     )
 
     result = switch_parser.parse("""
         SELECT ?s WHERE {
             ?s ?p ?o .
             FILTER(?o > RAND())
+        }
+    """)
+
+    assert answer == result  # nosec
+
+
+def test_query_abs(switch_parser: SelectSparqlParser):
+    """Test query using the ABS function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple('?s', '?p', '?o')],
+            filters=[FilterNode(
+                ExpressionNode(
+                    OrExpression(
+                        AndExpression(RelationalExpression(
+                            first=AdditiveExpression(
+                                MultiplicativeExpression(
+                                    UnaryExpression(value=PrimaryExpression(
+                                        type=PrimaryType.FUNC,
+                                        value=BuiltInFunction('ABS', [
+                                            ExpressionNode(
+                                                OrExpression(
+                                                    AndExpression(
+                                                        RelationalExpression(
+                                                            first=AdditiveExpression(
+                                                                MultiplicativeExpression(
+                                                                    UnaryExpression(value=PrimaryExpression(
+                                                                        type=PrimaryType.VAR,
+                                                                        value='?o'))))))))]))))),
+                            second=(LogOperator.GT,
+                                    AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(
+                                                value=PrimaryExpression(
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction('RAND', [])))))))))))]),
+        variables=[
+            Var('?s'),
+            Var('?p'),
+            Var('?o')
+        ],
+        returning=[SelectedVar(value='?s')]
+    )
+
+    result = switch_parser.parse("""
+        SELECT ?s WHERE {
+            ?s ?p ?o .
+            FILTER(ABS(?o) > RAND())
         }
     """)
 

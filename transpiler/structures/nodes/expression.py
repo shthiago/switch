@@ -10,6 +10,7 @@ class PrimaryType(Enum):
     NUM_LITERAL = auto()
     BOOL_LITERAL = auto()
     VAR = auto()
+    FUNC = auto()
 
 
 @dataclass

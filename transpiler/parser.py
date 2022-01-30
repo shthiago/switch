@@ -401,15 +401,11 @@ class SelectSparqlParser:
 
     def p_production_145(self, p):
         """ExpressionList : SYMB_LP Expression ExpressionListAux SYMB_RP"""
-        exps = p[2]
-        exps.extend(p[3])
-        p[0] = exps
+        p[0] = [p[2], *p[3]]
 
     def p_production_146(self, p):
         """ExpressionListAux : SYMB_COMMA Expression ExpressionListAux"""
-        exps = p[2]
-        exps.extend(p[3])
-        p[0] = exps
+        p[0] = [p[2], *p[3]]
 
     def p_production_147(self, p):
         """ExpressionListAux : empty"""

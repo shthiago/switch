@@ -981,3 +981,527 @@ def test_query_strends(switch_parser: SelectSparqlParser):
     )
 
     assert answer == result  # nosec
+
+
+def test_query_now(switch_parser: SelectSparqlParser):
+    """Test query using the NOW function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple("?s", "?p", "?o")],
+        ),
+        variables=[Var("?s"), Var("?now"), Var("?p"), Var("?o")],
+        returning=[
+            SelectedVar(value="?s"),
+            SelectedVar(
+                value=ExpressionNode(
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction("NOW"),
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                alias="?now",
+            ),
+        ],
+    )
+
+    result = switch_parser.parse(
+        """
+        SELECT ?s (NOW() AS ?now) WHERE {
+            ?s ?p ?o
+        }
+    """
+    )
+
+    assert answer == result  # nosec
+
+
+def test_query_year(switch_parser: SelectSparqlParser):
+    """Test query using the YEAR function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple("?s", "?p", "?o")],
+        ),
+        variables=[Var("?s"), Var("?year"), Var("?p"), Var("?o")],
+        returning=[
+            SelectedVar(value="?s"),
+            SelectedVar(
+                value=ExpressionNode(
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "YEAR",
+                                                    [
+                                                        ExpressionNode(
+                                                            OrExpression(
+                                                                AndExpression(
+                                                                    RelationalExpression(
+                                                                        first=AdditiveExpression(
+                                                                            MultiplicativeExpression(
+                                                                                UnaryExpression(
+                                                                                    value=PrimaryExpression(
+                                                                                        type=PrimaryType.VAR,
+                                                                                        value="?o",
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                alias="?year",
+            ),
+        ],
+    )
+
+    result = switch_parser.parse(
+        """
+        SELECT ?s (YEAR(?o) AS ?year) WHERE {
+            ?s ?p ?o
+        }
+    """
+    )
+
+    assert answer == result  # nosec
+
+
+def test_query_month(switch_parser: SelectSparqlParser):
+    """Test query using the MONTH function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple("?s", "?p", "?o")],
+        ),
+        variables=[Var("?s"), Var("?month"), Var("?p"), Var("?o")],
+        returning=[
+            SelectedVar(value="?s"),
+            SelectedVar(
+                value=ExpressionNode(
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "MONTH",
+                                                    [
+                                                        ExpressionNode(
+                                                            OrExpression(
+                                                                AndExpression(
+                                                                    RelationalExpression(
+                                                                        first=AdditiveExpression(
+                                                                            MultiplicativeExpression(
+                                                                                UnaryExpression(
+                                                                                    value=PrimaryExpression(
+                                                                                        type=PrimaryType.VAR,
+                                                                                        value="?o",
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                alias="?month",
+            ),
+        ],
+    )
+
+    result = switch_parser.parse(
+        """
+        SELECT ?s (MONTH(?o) AS ?month) WHERE {
+            ?s ?p ?o
+        }
+    """
+    )
+
+    assert answer == result  # nosec
+
+
+def test_query_minutes(switch_parser: SelectSparqlParser):
+    """Test query using the MINUTES function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple("?s", "?p", "?o")],
+        ),
+        variables=[Var("?s"), Var("?minute"), Var("?p"), Var("?o")],
+        returning=[
+            SelectedVar(value="?s"),
+            SelectedVar(
+                value=ExpressionNode(
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "MINUTES",
+                                                    [
+                                                        ExpressionNode(
+                                                            OrExpression(
+                                                                AndExpression(
+                                                                    RelationalExpression(
+                                                                        first=AdditiveExpression(
+                                                                            MultiplicativeExpression(
+                                                                                UnaryExpression(
+                                                                                    value=PrimaryExpression(
+                                                                                        type=PrimaryType.VAR,
+                                                                                        value="?o",
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                alias="?minute",
+            ),
+        ],
+    )
+
+    result = switch_parser.parse(
+        """
+        SELECT ?s (MINUTES(?o) AS ?minute) WHERE {
+            ?s ?p ?o
+        }
+    """
+    )
+
+    assert answer == result  # nosec
+
+
+def test_query_seconds(switch_parser: SelectSparqlParser):
+    """Test query using the SECONDS function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple("?s", "?p", "?o")],
+        ),
+        variables=[Var("?s"), Var("?seconds"), Var("?p"), Var("?o")],
+        returning=[
+            SelectedVar(value="?s"),
+            SelectedVar(
+                value=ExpressionNode(
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "SECONDS",
+                                                    [
+                                                        ExpressionNode(
+                                                            OrExpression(
+                                                                AndExpression(
+                                                                    RelationalExpression(
+                                                                        first=AdditiveExpression(
+                                                                            MultiplicativeExpression(
+                                                                                UnaryExpression(
+                                                                                    value=PrimaryExpression(
+                                                                                        type=PrimaryType.VAR,
+                                                                                        value="?o",
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                alias="?seconds",
+            ),
+        ],
+    )
+
+    result = switch_parser.parse(
+        """
+        SELECT ?s (SECONDS(?o) AS ?seconds) WHERE {
+            ?s ?p ?o
+        }
+    """
+    )
+
+    assert answer == result  # nosec
+
+
+def test_query_timezone(switch_parser: SelectSparqlParser):
+    """Test query using the TIMEZONE function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple("?s", "?p", "?o")],
+        ),
+        variables=[Var("?s"), Var("?tz"), Var("?p"), Var("?o")],
+        returning=[
+            SelectedVar(value="?s"),
+            SelectedVar(
+                value=ExpressionNode(
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "TIMEZONE",
+                                                    [
+                                                        ExpressionNode(
+                                                            OrExpression(
+                                                                AndExpression(
+                                                                    RelationalExpression(
+                                                                        first=AdditiveExpression(
+                                                                            MultiplicativeExpression(
+                                                                                UnaryExpression(
+                                                                                    value=PrimaryExpression(
+                                                                                        type=PrimaryType.VAR,
+                                                                                        value="?o",
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                alias="?tz",
+            ),
+        ],
+    )
+
+    result = switch_parser.parse(
+        """
+        SELECT ?s (TIMEZONE(?o) AS ?tz) WHERE {
+            ?s ?p ?o
+        }
+    """
+    )
+
+    assert answer == result  # nosec
+
+
+def test_query_tz(switch_parser: SelectSparqlParser):
+    """Test query using the TZ function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple("?s", "?p", "?o")],
+        ),
+        variables=[Var("?s"), Var("?tz"), Var("?p"), Var("?o")],
+        returning=[
+            SelectedVar(value="?s"),
+            SelectedVar(
+                value=ExpressionNode(
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "TZ",
+                                                    [
+                                                        ExpressionNode(
+                                                            OrExpression(
+                                                                AndExpression(
+                                                                    RelationalExpression(
+                                                                        first=AdditiveExpression(
+                                                                            MultiplicativeExpression(
+                                                                                UnaryExpression(
+                                                                                    value=PrimaryExpression(
+                                                                                        type=PrimaryType.VAR,
+                                                                                        value="?o",
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                alias="?tz",
+            ),
+        ],
+    )
+
+    result = switch_parser.parse(
+        """
+        SELECT ?s (TZ(?o) AS ?tz) WHERE {
+            ?s ?p ?o
+        }
+    """
+    )
+
+    assert answer == result  # nosec
+
+
+def test_query_coalesce(switch_parser: SelectSparqlParser):
+    """Test query using the COALESCE function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple("?s", "?p", "?o")],
+        ),
+        variables=[Var("?s"), Var("?tz"), Var("?p"), Var("?o")],
+        returning=[
+            SelectedVar(value="?s"),
+            SelectedVar(
+                value=ExpressionNode(
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "COALESCE",
+                                                    [
+                                                        ExpressionNode(
+                                                            OrExpression(
+                                                                AndExpression(
+                                                                    RelationalExpression(
+                                                                        first=AdditiveExpression(
+                                                                            MultiplicativeExpression(
+                                                                                UnaryExpression(
+                                                                                    value=PrimaryExpression(
+                                                                                        type=PrimaryType.VAR,
+                                                                                        value="?o",
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        ),
+                                                        ExpressionNode(
+                                                            OrExpression(
+                                                                AndExpression(
+                                                                    RelationalExpression(
+                                                                        first=AdditiveExpression(
+                                                                            MultiplicativeExpression(
+                                                                                UnaryExpression(
+                                                                                    value=PrimaryExpression(
+                                                                                        type=PrimaryType.STR_LITERAL,
+                                                                                        value="abacate",
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        ),
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                alias="?tz",
+            ),
+        ],
+    )
+
+    result = switch_parser.parse(
+        """
+        SELECT ?s (COALESCE(?o, "abacate") AS ?tz) WHERE {
+            ?s ?p ?o
+        }
+    """
+    )
+
+    assert answer == result  # nosec

@@ -16,7 +16,7 @@ class PrimaryType(Enum):
 @dataclass
 class BuiltInFunction:
     name: str
-    params: List["OrExpression"]
+    params: List["OrExpression"] = field(default_factory=list)
 
 
 @dataclass

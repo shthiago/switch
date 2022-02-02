@@ -1074,7 +1074,7 @@ class SelectSparqlParser:
 
     def p_production_346(self, p):
         """BuiltInCall : FUNC_TZ SYMB_LP Expression SYMB_RP"""
-        p[0] = nodes.BuiltInFunction("TIMEZONE", [p[3]])
+        p[0] = nodes.BuiltInFunction("TZ", [p[3]])
 
     def p_production_347(self, p):
         """BuiltInCall : FUNC_NOW NIL"""

@@ -729,3 +729,255 @@ def test_query_lcase(switch_parser: SelectSparqlParser):
     )
 
     assert answer == result  # nosec
+
+
+def test_query_contains(switch_parser: SelectSparqlParser):
+    """Test query using the CONTAINS function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple("?s", "?p", "?o")],
+            filters=[
+                FilterNode(
+                    ExpressionNode(
+                        OrExpression(
+                            AndExpression(
+                                RelationalExpression(
+                                    first=AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(
+                                                value=PrimaryExpression(
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction(
+                                                        "CONTAINS",
+                                                        [
+                                                            ExpressionNode(
+                                                                OrExpression(
+                                                                    AndExpression(
+                                                                        RelationalExpression(
+                                                                            first=AdditiveExpression(
+                                                                                MultiplicativeExpression(
+                                                                                    UnaryExpression(
+                                                                                        value=PrimaryExpression(
+                                                                                            type=PrimaryType.VAR,
+                                                                                            value="?o",
+                                                                                        )
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            ),
+                                                            ExpressionNode(
+                                                                OrExpression(
+                                                                    AndExpression(
+                                                                        RelationalExpression(
+                                                                            first=AdditiveExpression(
+                                                                                MultiplicativeExpression(
+                                                                                    UnaryExpression(
+                                                                                        value=PrimaryExpression(
+                                                                                            type=PrimaryType.STR_LITERAL,
+                                                                                            value="abacate",
+                                                                                        )
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            ),
+                                                        ],
+                                                    ),
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            ],
+        ),
+        variables=[Var("?s"), Var("?p"), Var("?o")],
+        returning=[SelectedVar(value="?s")],
+    )
+
+    result = switch_parser.parse(
+        """
+        SELECT ?s WHERE {
+            ?s ?p ?o .
+            FILTER(CONTAINS(?o, "abacate"))
+        }
+    """
+    )
+
+    assert answer == result  # nosec
+
+
+def test_query_strstarts(switch_parser: SelectSparqlParser):
+    """Test query using the STRSTARTS function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple("?s", "?p", "?o")],
+            filters=[
+                FilterNode(
+                    ExpressionNode(
+                        OrExpression(
+                            AndExpression(
+                                RelationalExpression(
+                                    first=AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(
+                                                value=PrimaryExpression(
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction(
+                                                        "STRSTARTS",
+                                                        [
+                                                            ExpressionNode(
+                                                                OrExpression(
+                                                                    AndExpression(
+                                                                        RelationalExpression(
+                                                                            first=AdditiveExpression(
+                                                                                MultiplicativeExpression(
+                                                                                    UnaryExpression(
+                                                                                        value=PrimaryExpression(
+                                                                                            type=PrimaryType.VAR,
+                                                                                            value="?o",
+                                                                                        )
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            ),
+                                                            ExpressionNode(
+                                                                OrExpression(
+                                                                    AndExpression(
+                                                                        RelationalExpression(
+                                                                            first=AdditiveExpression(
+                                                                                MultiplicativeExpression(
+                                                                                    UnaryExpression(
+                                                                                        value=PrimaryExpression(
+                                                                                            type=PrimaryType.STR_LITERAL,
+                                                                                            value="ab",
+                                                                                        )
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            ),
+                                                        ],
+                                                    ),
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            ],
+        ),
+        variables=[Var("?s"), Var("?p"), Var("?o")],
+        returning=[SelectedVar(value="?s")],
+    )
+
+    result = switch_parser.parse(
+        """
+        SELECT ?s WHERE {
+            ?s ?p ?o .
+            FILTER(STRSTARTS(?o, "ab"))
+        }
+    """
+    )
+
+    assert answer == result  # nosec
+
+
+def test_query_strends(switch_parser: SelectSparqlParser):
+    """Test query using the STRENDS function"""
+    answer = Query(
+        mandatory=GraphPattern(
+            and_triples=[Triple("?s", "?p", "?o")],
+            filters=[
+                FilterNode(
+                    ExpressionNode(
+                        OrExpression(
+                            AndExpression(
+                                RelationalExpression(
+                                    first=AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(
+                                                value=PrimaryExpression(
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction(
+                                                        "STRENDS",
+                                                        [
+                                                            ExpressionNode(
+                                                                OrExpression(
+                                                                    AndExpression(
+                                                                        RelationalExpression(
+                                                                            first=AdditiveExpression(
+                                                                                MultiplicativeExpression(
+                                                                                    UnaryExpression(
+                                                                                        value=PrimaryExpression(
+                                                                                            type=PrimaryType.VAR,
+                                                                                            value="?o",
+                                                                                        )
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            ),
+                                                            ExpressionNode(
+                                                                OrExpression(
+                                                                    AndExpression(
+                                                                        RelationalExpression(
+                                                                            first=AdditiveExpression(
+                                                                                MultiplicativeExpression(
+                                                                                    UnaryExpression(
+                                                                                        value=PrimaryExpression(
+                                                                                            type=PrimaryType.STR_LITERAL,
+                                                                                            value="te",
+                                                                                        )
+                                                                                    )
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            ),
+                                                        ],
+                                                    ),
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            ],
+        ),
+        variables=[Var("?s"), Var("?p"), Var("?o")],
+        returning=[SelectedVar(value="?s")],
+    )
+
+    result = switch_parser.parse(
+        """
+        SELECT ?s WHERE {
+            ?s ?p ?o .
+            FILTER(STRENDS(?o, "te"))
+        }
+    """
+    )
+
+    assert answer == result  # nosec

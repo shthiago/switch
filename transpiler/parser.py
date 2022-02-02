@@ -966,7 +966,7 @@ class SelectSparqlParser:
 
     def p_production_317(self, p):
         """PrimaryExpression : RDFLiteral"""
-        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.RDF_LITERAL, p[1])
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.STR_LITERAL, p[1])
 
     def p_production_318(self, p):
         """PrimaryExpression : NumericLiteral"""
@@ -1240,19 +1240,19 @@ class SelectSparqlParser:
 
     def p_production_397(self, p):
         """String : STRING_LITERAL1"""
-        p[0] = p[1]
+        p[0] = p[1][1:-1]
 
     def p_production_398(self, p):
         """String : STRING_LITERAL2"""
-        p[0] = p[1]
+        p[0] = p[1][1:-1]
 
     def p_production_399(self, p):
         """String : STRING_LITERAL_LONG1"""
-        p[0] = p[1]
+        p[0] = p[1][3:-3]
 
     def p_production_400(self, p):
         """String : STRING_LITERAL_LONG2"""
-        p[0] = p[1]
+        p[0] = p[1][3:-3]
 
     def p_production_402(self, p):
         """iri : IRIREF"""

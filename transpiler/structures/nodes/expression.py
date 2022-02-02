@@ -6,9 +6,9 @@ from typing import List, Optional, Tuple, Union
 class PrimaryType(Enum):
     EXP = auto()
     IRI = auto()
-    RDF_LITERAL = auto()
     NUM_LITERAL = auto()
     BOOL_LITERAL = auto()
+    STR_LITERAL = auto()
     VAR = auto()
     FUNC = auto()
 

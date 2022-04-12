@@ -7,6 +7,7 @@ echo "Downloading neosemantics"
 mkdir -p neo4j/plugins/
 mkdir -p dataset
 wget https://github.com/neo4j-labs/neosemantics/releases/download/4.4.0.0/neosemantics-4.4.0.0.jar -P neo4j/plugins/
+wget https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.1.0.0/apoc-4.1.0.0-all.jar -P neo4j/plugins
 
 echo "Running docker image"
 mkdir -p neo4j/data
@@ -24,7 +25,7 @@ docker run  --name $CONTAINERNAME \
             -v $(pwd)/neo4j/plugins:/var/lib/neo4j/plugins \
             -v $(pwd)/dataset/:/dataset \
             --env NEO4J_AUTH=none \
-            neo4j:latest 
+            neo4j:latest
 sleep 5
 
 echo "Setting up neosemantics"

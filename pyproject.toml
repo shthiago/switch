@@ -12,6 +12,7 @@ pylint = "^2.11.1"
 ply = "^3.11"
 loguru = "^0.5.3"
 Jinja2 = "^3.0.2"
+coverage = "^6.3.2"
 
 [tool.black]
 line-length = 80

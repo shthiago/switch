@@ -7,7 +7,6 @@ echo "Downloading neosemantics"
 mkdir -p neo4j/plugins/
 mkdir -p dataset
 wget https://github.com/neo4j-labs/neosemantics/releases/download/4.4.0.0/neosemantics-4.4.0.0.jar -P neo4j/plugins/
-wget https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.1.0.0/apoc-4.1.0.0-all.jar -P neo4j/plugins
 
 echo "Running docker image"
 mkdir -p neo4j/data
@@ -30,6 +29,9 @@ sleep 5
 
 echo "Setting up neosemantics"
 docker exec $CONTAINERNAME bash -c 'echo "dbms.unmanaged_extension_classes=n10s.endpoint=/rdf" >> /var/lib/neo4j/conf/neo4j.conf && neo4j restart'
+sleep 15
+echo "Starting container again..."
+docker start $CONTAINERNAME
 sleep 15
 docker exec $CONTAINERNAME bash -c 'echo "CREATE CONSTRAINT n10s_unique_uri ON (r:Resource) ASSERT r.uri IS UNIQUE;" | cypher-shell'
 docker exec $CONTAINERNAME bash -c 'echo "CALL n10s.graphconfig.init();" | cypher-shell'

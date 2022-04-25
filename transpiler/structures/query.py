@@ -1,6 +1,6 @@
 """Main node for the structure"""
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from .nodes import *
 
@@ -24,3 +24,4 @@ class Query:
             and set(self.namespaces) == set(other.namespaces)
             and self.returning == other.returning
         )
+

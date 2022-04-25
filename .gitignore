@@ -143,4 +143,4 @@ cython_debug/
 dataset/
 neo4j/
 
-transpiler/parsetab.py
+parsetab.py

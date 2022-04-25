@@ -17,7 +17,7 @@ shell: # Run a shell inside runnig container
 
 create-dataset: # Download the dataset
 	@echo "The dataset will be downloaded and mounted. This might take a while."
-	@python scripts/setup_test_dataset.py
+	@poetry run python scripts/setup_test_dataset.py
 
 test:
-	@pytest -vv tests/
+	@poetry run pytest -vv tests/

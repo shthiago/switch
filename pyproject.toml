@@ -15,6 +15,8 @@ Jinja2 = "^3.0.2"
 coverage = "^6.3.2"
 requests = "^2.27.1"
 rdflib = "^6.1.1"
+antlr4-python3-runtime = "^4.10"
+neo4j = "^4.4.2"
 
 [tool.black]
 line-length = 80

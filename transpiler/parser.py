@@ -17,7 +17,7 @@ class SelectSparqlParser:
         self.query = Query()
         self.selecteds: Union[List[str], str] = []
 
-    def parse(self, source_code: str) -> str:
+    def parse(self, source_code: str) -> Query:
         return self.yacc.parse(source_code, lexer=self.lexer)
 
     def p_production_0(self, p):

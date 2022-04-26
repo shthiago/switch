@@ -1,10 +1,9 @@
 from enum import Enum, auto
-from typing import List
+from typing import List, Optional
 
 from transpiler.structures.nodes.namespace import Namespace
 
 from .parser import SelectSparqlParser
-
 from .structures.query import Query, Triple
 
 
@@ -19,16 +18,16 @@ class CypherGenerator:
         self.parser = SelectSparqlParser()
 
     def get_triple_part_type(self, part: str) -> TriplePartType:
-        if part[0] == '?':
+        if part[0] == "?":
             return TriplePartType.VAR
 
-        elif ':' in part:
+        elif ":" in part:
             return TriplePartType.URI
 
         return TriplePartType.LIT
 
     def full_uri(self, abbev_uri: str) -> str:
-        nms, name = abbev_uri.split(':')
+        nms, name = abbev_uri.split(":")
         full_nms = self.namespaces[nms]
 
         return f'n10s.rdf.shortFormFromFullUri("{full_nms}") + "{name}"'
@@ -43,24 +42,30 @@ class CypherGenerator:
         filters = []
 
         if pred_type == TriplePartType.URI:
-            filters.append(f'key = {self.full_uri(triple.predicate)}')
-
+            filters.append(f"key = {self.full_uri(triple.predicate)}")
 
         if obj_type == TriplePartType.LIT:
             sub_var = self.cypher_var_for(triple.subject)
             filters.append(f'{sub_var}[key] = "{triple.object}"')
 
         if not filters:
-            return ''
+            return ""
 
-        base = 'WHERE '
+        base = "WHERE "
 
-        return base + ' AND '.join(filters) + ' '
+        return base + " AND ".join(filters) + " "
 
     def case_property(self, triple: Triple) -> str:
         where_clause = self.case_property_where_clause(triple)
+        subject = self.cypher_var_for(triple.subject)
 
-        f'[key in keys(BR) {where_clause}| [BR, key, BR[key]]]'
+        return f"[key in keys({subject}) {where_clause}| [{subject}, key, {subject}[key]]]"
+
+    def case_object(self, triple: Triple) -> Optional[str]:
+        subject_type = self.get_triple_part_type(triple.subject)
+
+        if subject_type == TriplePartType().LIT:
+            return None
 
     def setup_namespaces(self, namespaces: List[Namespace]):
         self.namespaces = {nm.abbrev: nm.full for nm in namespaces}
@@ -70,5 +75,3 @@ class CypherGenerator:
         query = self.parser.parse(sparql_query)
 
         self.setup_namespaces(query.namespaces)
-
-

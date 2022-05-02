@@ -1,11 +1,14 @@
 from enum import Enum, auto
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from transpiler.structures.nodes.namespace import Namespace
 
 from .parser import SelectSparqlParser
-from .structures.query import Query, Triple
+from .structures.query import Triple
 
+
+class CypherGenerationException(Exception):
+    """Failure on a generation process"""
 
 class TriplePartType(Enum):
     URI = auto()
@@ -17,7 +20,10 @@ class CypherGenerator:
     def __init__(self):
         self.parser = SelectSparqlParser()
 
-    def get_triple_part_type(self, part: str) -> TriplePartType:
+    def get_triple_part_type(self, part: Any) -> TriplePartType:
+        if not isinstance(part, str):
+            return TriplePartType.LIT
+
         if part[0] == "?":
             return TriplePartType.VAR
 
@@ -32,12 +38,25 @@ class CypherGenerator:
 
         return f'n10s.rdf.shortFormFromFullUri("{full_nms}") + "{name}"'
 
-    def cypher_var_for(self, triple_var: str) -> str:
-        return triple_var[1:]
+    def cypher_var_for(self, triple_part: str) -> str:
+        part_type = self.get_triple_part_type(triple_part)
+        if part_type == TriplePartType.VAR:
+            var = triple_part[1:]
+        
+        elif part_type == TriplePartType.URI:
+            var = triple_part.replace(':', '_')
+
+        else:
+            raise CypherGenerationException(f'Cannot generate var for a literal: {triple_part}')
+
+        return var
 
     def case_property_where_clause(self, triple: Triple) -> str:
         pred_type = self.get_triple_part_type(triple.predicate)
         obj_type = self.get_triple_part_type(triple.object)
+
+        if obj_type == TriplePartType == '':
+            return ''
 
         filters = []
 
@@ -49,13 +68,22 @@ class CypherGenerator:
             filters.append(f'{sub_var}[key] = "{triple.object}"')
 
         if not filters:
-            return ""
+            return ''
 
-        base = "WHERE "
+        base = 'WHERE '
 
-        return base + " AND ".join(filters) + " "
+        return base + ' AND '.join(filters) + ' '
 
-    def case_property(self, triple: Triple) -> str:
+    # def case_node_where_clause(self, triple: Triple) -> str:
+    #     obj_type = self.get_triple_part_type(triple.object)
+    #     if obj_type == TriplePartType
+
+    def case_property(self, triple: Triple) -> Optional[str]:
+        obj_type = self.get_triple_part_type(triple.object)
+
+        if obj_type == TriplePartType.URI:
+            return None
+
         where_clause = self.case_property_where_clause(triple)
         subject = self.cypher_var_for(triple.subject)
 

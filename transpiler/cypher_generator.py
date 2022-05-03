@@ -76,7 +76,7 @@ class CypherGenerator:
 
         return base + ' AND '.join(filters) + ' '
 
-    def case_node_where_clause(self, triple: Triple) -> str:
+    def case_object_where_clause(self, triple: Triple) -> str:
         obj_type = self.get_triple_part_type(triple.object)
         if obj_type == TriplePartType.LIT:
             return ''
@@ -108,13 +108,19 @@ class CypherGenerator:
         where_clause = self.case_property_where_clause(triple)
         subject = self.cypher_var_for(triple.subject)
 
-        return f"[key in keys({subject}) {where_clause}| [{subject}, key, {subject}[key]]]"
+        return f'[key in keys({subject}) {where_clause}| [{subject}, key, {subject}[key]]]'
 
     def case_object(self, triple: Triple) -> Optional[str]:
-        subject_type = self.get_triple_part_type(triple.subject)
+        object_type = self.get_triple_part_type(triple.object)
 
-        if subject_type == TriplePartType().LIT:
+        if object_type == TriplePartType.LIT:
             return None
+
+        where_clause = self.case_object_where_clause(triple)
+        subject = self.cypher_var_for(triple.subject)
+        obj = self.cypher_var_for(triple.object)
+
+        return f'[({subject})-[_relation]-({obj}) {where_clause}| [{subject}, _relation, {obj}]]'
 
     def setup_namespaces(self, namespaces: List[Namespace]):
         self.namespaces = {nm.abbrev: nm.full for nm in namespaces}

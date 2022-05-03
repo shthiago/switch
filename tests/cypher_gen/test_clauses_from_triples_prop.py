@@ -129,7 +129,7 @@ def test_gen_where_case_prop_uri_uri_uri(cypher_gen: CypherGenerator):
 
     where_clause = cypher_gen.case_property_where_clause(triple)
 
-    assert where_clause == 'WHERE key = n10s.rdf.shortFormFromFullUri("full") + "uri" '
+    assert where_clause == ''
 
 # Full clock generation
 

@@ -10,6 +10,7 @@ from .structures.query import Triple
 class CypherGenerationException(Exception):
     """Failure on a generation process"""
 
+
 class TriplePartType(Enum):
     URI = auto()
     VAR = auto()
@@ -42,21 +43,22 @@ class CypherGenerator:
         part_type = self.get_triple_part_type(triple_part)
         if part_type == TriplePartType.VAR:
             var = triple_part[1:]
-        
+
         elif part_type == TriplePartType.URI:
             var = triple_part.replace(':', '_')
 
         else:
-            raise CypherGenerationException(f'Cannot generate var for a literal: {triple_part}')
+            raise CypherGenerationException(
+                f'Cannot generate var for a literal: {triple_part}')
 
         return var
 
     def case_property_where_clause(self, triple: Triple) -> str:
-        pred_type = self.get_triple_part_type(triple.predicate)
         obj_type = self.get_triple_part_type(triple.object)
-
-        if obj_type == TriplePartType == '':
+        if obj_type == TriplePartType.URI:
             return ''
+
+        pred_type = self.get_triple_part_type(triple.predicate)
 
         filters = []
 
@@ -74,9 +76,28 @@ class CypherGenerator:
 
         return base + ' AND '.join(filters) + ' '
 
-    # def case_node_where_clause(self, triple: Triple) -> str:
-    #     obj_type = self.get_triple_part_type(triple.object)
-    #     if obj_type == TriplePartType
+    def case_node_where_clause(self, triple: Triple) -> str:
+        obj_type = self.get_triple_part_type(triple.object)
+        if obj_type == TriplePartType.LIT:
+            return ''
+
+        pred_type = self.get_triple_part_type(triple.predicate)
+
+        filters = []
+        if pred_type == TriplePartType.URI:
+            filters.append(
+                f'type(_relation) = {self.full_uri(triple.predicate)}')
+
+        if obj_type == TriplePartType.URI:
+            obj_var = self.cypher_var_for(triple.object)
+            filters.append(f'{obj_var}.uri = {self.full_uri(triple.object)}')
+
+        if not filters:
+            return ''
+
+        base = 'WHERE '
+
+        return base + ' AND '.join(filters) + ' '
 
     def case_property(self, triple: Triple) -> Optional[str]:
         obj_type = self.get_triple_part_type(triple.object)

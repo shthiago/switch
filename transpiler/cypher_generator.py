@@ -4,7 +4,7 @@ from typing import Any, List, Optional
 from transpiler.structures.nodes.namespace import Namespace
 
 from .parser import SelectSparqlParser
-from .structures.query import Triple
+from .structures.query import Query, Triple
 
 
 class CypherGenerationException(Exception):
@@ -149,7 +149,6 @@ class CypherGenerator:
 
         return 'WITH ' + ', '.join(with_parts)
 
-
     def match_clause(self, triple: Triple) -> str:
         subject_type = self.get_triple_part_type(triple.subject)
 
@@ -165,11 +164,37 @@ class CypherGenerator:
 
         return clause
 
+    def return_clause(self, query: Query) -> str:
+        variables = query.returning
+        return_parts = []
+        for var in variables:
+            if var.alias is None:
+                suffix = ''
+
+            else:
+                suffix = f' AS {self.cypher_var_for(var.alias)}'
+
+            if isinstance(var.value, str):
+                if var.value == '*':
+                    varname = '*'
+                else:
+                    varname = self.cypher_var_for(var.value)
+
+                return_parts.append(f'{varname}{suffix}')
+
+            else:
+                raise NotImplementedError
+
+        return 'RETURN ' + ', '.join(return_parts)
+
+    def parse_query(self, query: str) -> Query:
+        return self.parser.parse(query)
+
     def setup_namespaces(self, namespaces: List[Namespace]):
         self.namespaces = {nm.abbrev: nm.full for nm in namespaces}
 
     def generate(self, sparql_query: str) -> str:
         """Generate cypher from sparql"""
-        query = self.parser.parse(sparql_query)
+        query = self.parse_query(sparql_query)
 
         self.setup_namespaces(query.namespaces)

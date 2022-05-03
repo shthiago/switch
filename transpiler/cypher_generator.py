@@ -21,6 +21,8 @@ class CypherGenerator:
     def __init__(self):
         self.parser = SelectSparqlParser()
 
+        self.used_variables: List[str] = []
+
     def get_triple_part_type(self, part: Any) -> TriplePartType:
         if not isinstance(part, str):
             return TriplePartType.LIT
@@ -121,6 +123,31 @@ class CypherGenerator:
         obj = self.cypher_var_for(triple.object)
 
         return f'[({subject})-[_relation]-({obj}) {where_clause}| [{subject}, _relation, {obj}]]'
+
+    def with_clause(self, triple: Triple) -> Optional[str]:
+        parts = [triple.subject, triple.predicate, triple.object]
+        types = list(map(self.get_triple_part_type, parts))
+
+        used: List[str] = []
+        with_parts: List[str] = []
+        for i, (part, type_) in enumerate(zip(parts, types)):
+            if type_ == TriplePartType.VAR:
+                varname = self.cypher_var_for(part)
+                used.append(varname)
+                with_parts.append(f'triples[{i}] AS {varname}')
+
+        for var in reversed(self.used_variables):
+            if var not in used:
+                with_parts.insert(0, f'{var} AS {var}')
+
+        for used_var in used:
+            if used_var not in self.used_variables:
+                self.used_variables.append(used_var)
+
+        if not with_parts:
+            return None
+
+        return 'WITH ' + ', '.join(with_parts)
 
     def setup_namespaces(self, namespaces: List[Namespace]):
         self.namespaces = {nm.abbrev: nm.full for nm in namespaces}

@@ -5,6 +5,7 @@ from neo4j import GraphDatabase
 
 from transpiler import lexer, parser, cypher_generator
 
+
 @pytest.fixture
 def switch_lexer() -> lexer.SelectSparqlLexer:
     return lexer.SelectSparqlLexer()
@@ -18,6 +19,7 @@ def switch_parser() -> parser.SelectSparqlParser:
 @pytest.fixture
 def cypher_exec():
     driver = GraphDatabase.driver('neo4j://localhost:7687')
+
     def _caller(query: str):
         session = driver.session()
 
@@ -26,7 +28,7 @@ def cypher_exec():
 
     return _caller
 
-@pytest.fixture
+
+@pytest.fixture(scope='function')
 def cypher_gen() -> cypher_generator.CypherGenerator:
     return cypher_generator.CypherGenerator()
-

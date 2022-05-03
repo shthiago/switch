@@ -99,7 +99,7 @@ class CypherGenerator:
 
         return base + ' AND '.join(filters) + ' '
 
-    def case_property(self, triple: Triple) -> Optional[str]:
+    def filter_case_property(self, triple: Triple) -> Optional[str]:
         obj_type = self.get_triple_part_type(triple.object)
 
         if obj_type == TriplePartType.URI:
@@ -110,7 +110,7 @@ class CypherGenerator:
 
         return f'[key in keys({subject}) {where_clause}| [{subject}, key, {subject}[key]]]'
 
-    def case_object(self, triple: Triple) -> Optional[str]:
+    def filter_case_object(self, triple: Triple) -> Optional[str]:
         object_type = self.get_triple_part_type(triple.object)
 
         if object_type == TriplePartType.LIT:

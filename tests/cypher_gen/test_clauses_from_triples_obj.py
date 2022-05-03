@@ -129,7 +129,7 @@ def test_gen_all_var_var_var(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause == '[(s)-[_relation]-(o) | [s, _relation, o]]'
 
@@ -139,7 +139,7 @@ def test_gen_all_var_var_lit(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause is None
 
@@ -149,7 +149,7 @@ def test_gen_all_var_var_uri(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause == '[(s)-[_relation]-(abbrev_uri) WHERE abbrev_uri.uri = n10s.rdf.shortFormFromFullUri("full") + "uri" | [s, _relation, abbrev_uri]]'
 
@@ -159,7 +159,7 @@ def test_gen_all_var_uri_var(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause == '[(s)-[_relation]-(o) WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("full") + "uri" | [s, _relation, o]]'
 
@@ -169,7 +169,7 @@ def test_gen_all_var_uri_lit(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause is None
 
@@ -179,7 +179,7 @@ def test_gen_all_var_uri_uri(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause == '[(s)-[_relation]-(abbrev_uri) WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("full") + "uri" AND abbrev_uri.uri = n10s.rdf.shortFormFromFullUri("full") + "uri" | [s, _relation, abbrev_uri]]'
 
@@ -189,7 +189,7 @@ def test_gen_all_uri_var_var(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause == '[(abbrev_uri)-[_relation]-(o) | [abbrev_uri, _relation, o]]'
 
@@ -199,7 +199,7 @@ def test_gen_all_uri_var_lit(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause is None
 
@@ -209,7 +209,7 @@ def test_gen_all_uri_var_uri(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause == '[(abbrev_uri)-[_relation]-(abbrev_uri) WHERE abbrev_uri.uri = n10s.rdf.shortFormFromFullUri("full") + "uri" | [abbrev_uri, _relation, abbrev_uri]]'
 
@@ -219,7 +219,7 @@ def test_gen_all_uri_uri_var(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause == '[(abbrev_uri)-[_relation]-(o) WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("full") + "uri" | [abbrev_uri, _relation, o]]'
 
@@ -229,7 +229,7 @@ def test_gen_all_uri_uri_lit(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause is None
 
@@ -240,6 +240,6 @@ def test_gen_all_uri_uri_uri(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev='abbrev', full='full')]
     cypher_gen.setup_namespaces(namespaces)
 
-    full_clause = cypher_gen.case_object(triple)
+    full_clause = cypher_gen.filter_case_object(triple)
 
     assert full_clause == '[(abbrev_uri)-[_relation]-(abbrev_uri) WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("full") + "uri" AND abbrev_uri.uri = n10s.rdf.shortFormFromFullUri("full") + "uri" | [abbrev_uri, _relation, abbrev_uri]]'

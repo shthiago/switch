@@ -1,7 +1,7 @@
 """Test cases for Cypher code generation of the with clause that comes after each triple filter block"""
 
 from transpiler.cypher_generator import CypherGenerator
-from transpiler.structures.nodes import Namespace, Triple
+from transpiler.structures.nodes import Triple
 
 
 def test_with_clause_var_var_var(cypher_gen: CypherGenerator):

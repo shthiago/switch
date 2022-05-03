@@ -149,6 +149,22 @@ class CypherGenerator:
 
         return 'WITH ' + ', '.join(with_parts)
 
+
+    def match_clause(self, triple: Triple) -> str:
+        subject_type = self.get_triple_part_type(triple.subject)
+
+        if subject_type == TriplePartType.LIT:
+            raise CypherGenerationException('Subject cannot be a literal')
+
+        sub_var = self.cypher_var_for(triple.subject)
+
+        clause = f'MATCH ({sub_var})'
+
+        if subject_type == TriplePartType.URI:
+            clause += f' WHERE {sub_var}.uri = {self.full_uri(triple.subject)}'
+
+        return clause
+
     def setup_namespaces(self, namespaces: List[Namespace]):
         self.namespaces = {nm.abbrev: nm.full for nm in namespaces}
 

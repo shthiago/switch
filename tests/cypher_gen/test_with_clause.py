@@ -5,6 +5,7 @@ from transpiler.structures.nodes import Triple
 
 
 def test_with_clause_var_var_var(cypher_gen: CypherGenerator):
+    """All variables should be passewd forward in the WITH"""
     triple = Triple(subject='?s', predicate='?p', object='?o')
 
     clause = cypher_gen.with_clause(triple)
@@ -13,6 +14,7 @@ def test_with_clause_var_var_var(cypher_gen: CypherGenerator):
 
 
 def test_with_clause_var_var_lit(cypher_gen: CypherGenerator):
+    """Literals shall not be passed forward"""
     triple = Triple(subject='?s', predicate='?p', object='lit')
 
     clause = cypher_gen.with_clause(triple)
@@ -21,6 +23,7 @@ def test_with_clause_var_var_lit(cypher_gen: CypherGenerator):
 
 
 def test_with_clause_var_var_uri(cypher_gen: CypherGenerator):
+    """URIs shall not be passed forward"""
     triple = Triple(subject='?s', predicate='?p', object='abbrev:uri')
 
     clause = cypher_gen.with_clause(triple)
@@ -29,6 +32,7 @@ def test_with_clause_var_var_uri(cypher_gen: CypherGenerator):
 
 
 def test_with_clause_var_uri_var(cypher_gen: CypherGenerator):
+    """URIs shall not be passed forward"""
     triple = Triple(subject='?s', predicate='abbrev:uri', object='?o')
 
     clause = cypher_gen.with_clause(triple)
@@ -37,6 +41,7 @@ def test_with_clause_var_uri_var(cypher_gen: CypherGenerator):
 
 
 def test_with_clause_var_uri_lit(cypher_gen: CypherGenerator):
+    """URIs ahd literals shall not be passed forward"""
     triple = Triple(subject='?s', predicate='abbrev:uri', object='lit')
 
     clause = cypher_gen.with_clause(triple)
@@ -53,6 +58,7 @@ def test_with_clause_var_uri_uri(cypher_gen: CypherGenerator):
 
 
 def test_with_clause_uri_var_var(cypher_gen: CypherGenerator):
+    """URIs shall not be passed forward"""
     triple = Triple(subject='abbrev:uri', predicate='?p', object='?o')
 
     clause = cypher_gen.with_clause(triple)
@@ -61,6 +67,7 @@ def test_with_clause_uri_var_var(cypher_gen: CypherGenerator):
 
 
 def test_with_clause_uri_var_lit(cypher_gen: CypherGenerator):
+    """URIs and literals shall not be passed forward"""
     triple = Triple(subject='abbrev:uri', predicate='?p', object='lit')
 
     clause = cypher_gen.with_clause(triple)
@@ -69,6 +76,7 @@ def test_with_clause_uri_var_lit(cypher_gen: CypherGenerator):
 
 
 def test_with_clause_uri_var_uri(cypher_gen: CypherGenerator):
+    """URIs shall not be passed forward"""
     triple = Triple(subject='abbrev:uri', predicate='?p', object='abbrev:uri')
 
     clause = cypher_gen.with_clause(triple)
@@ -77,6 +85,7 @@ def test_with_clause_uri_var_uri(cypher_gen: CypherGenerator):
 
 
 def test_with_clause_uri_uri_var(cypher_gen: CypherGenerator):
+    """URIs shall not be passed forward"""
     triple = Triple(subject='abbrev:uri', predicate='abbrev:uri', object='?o')
 
     clause = cypher_gen.with_clause(triple)
@@ -85,6 +94,7 @@ def test_with_clause_uri_uri_var(cypher_gen: CypherGenerator):
 
 
 def test_with_clause_uri_uri_lit(cypher_gen: CypherGenerator):
+    """If nothing shall be passed forward, the clause shall be None"""
     triple = Triple(subject='abbrev:uri', predicate='abbrev:uri', object='lit')
 
     clause = cypher_gen.with_clause(triple)
@@ -93,6 +103,7 @@ def test_with_clause_uri_uri_lit(cypher_gen: CypherGenerator):
 
 
 def test_with_clause_uri_uri_uri(cypher_gen: CypherGenerator):
+    """If nothing shall be passed forward, the clause shall be None"""
     triple = Triple(subject='abbrev:uri',
                     predicate='abbrev:uri', object='abbrev:uri')
 
@@ -102,6 +113,7 @@ def test_with_clause_uri_uri_uri(cypher_gen: CypherGenerator):
 
 
 def test_two_consecutive_triples(cypher_gen: CypherGenerator):
+    """Variables used in previous triples (query order) shall be passed forward even if they are not used in the current triple"""
     first_triple = Triple(subject='abbrev:uri',
                           predicate='abbrev:uri', object='?o')
     second_triple = Triple(subject='?s', predicate='abbrev:uri', object='lit')
@@ -116,6 +128,7 @@ def test_two_consecutive_triples(cypher_gen: CypherGenerator):
 
 
 def test_three_consecutive_triples(cypher_gen: CypherGenerator):
+    """Variables used in previous triples (query order) shall be passed forward even if they are not used in the current triple"""
     first_triple = Triple(subject='abbrev:uri',
                           predicate='abbrev:uri', object='?o')
     second_triple = Triple(subject='?s', predicate='abbrev:uri', object='lit')
@@ -136,6 +149,7 @@ def test_three_consecutive_triples(cypher_gen: CypherGenerator):
 
 
 def test_four_consecutive_triples(cypher_gen: CypherGenerator):
+    """Variables reused shall be passed forward from the most recent triples"""
     first_triple = Triple(subject='abbrev:uri',
                           predicate='abbrev:uri', object='?o')
     second_triple = Triple(subject='?s', predicate='abbrev:uri', object='lit')

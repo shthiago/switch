@@ -7,6 +7,7 @@ from transpiler.structures.nodes import Namespace, Triple
 # Generation of where clauses
 
 def test_gen_where_case_obj_var_var_var(cypher_gen: CypherGenerator):
+    """No filters when predicate and object are variables"""
     triple = Triple(subject="?s", predicate="?p", object="?o")
 
     where_clause = cypher_gen.case_object_where_clause(triple)
@@ -15,6 +16,7 @@ def test_gen_where_case_obj_var_var_var(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_obj_var_var_lit(cypher_gen: CypherGenerator):
+    """No filters when the object is a literal, once the triple is not a edge"""
     triple = Triple(subject="?s", predicate="?p", object="BR")
 
     where_clause = cypher_gen.case_object_where_clause(triple)
@@ -23,6 +25,7 @@ def test_gen_where_case_obj_var_var_lit(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_obj_var_var_uri(cypher_gen: CypherGenerator):
+    """If the object is a URI, the uri prop of the object shall be used to filter"""
     triple = Triple(subject="?s", predicate="?p", object="place:BR")
     namespaces = [Namespace(abbrev="place",  full="placefull")]
     cypher_gen.setup_namespaces(namespaces)
@@ -33,6 +36,7 @@ def test_gen_where_case_obj_var_var_uri(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_obj_var_uri_var(cypher_gen: CypherGenerator):
+    """When predicate is a URI, it shall be used to filter based on type of the edge"""
     triple = Triple(subject="?s", predicate="rdfs:partOf", object="?o")
     namespaces = [Namespace(abbrev="rdfs", full="rdfsfull")]
     cypher_gen.setup_namespaces(namespaces)

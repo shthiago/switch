@@ -1,10 +1,11 @@
 from enum import Enum, auto
 from typing import Any, List, Optional
 
-from transpiler.structures.nodes.namespace import Namespace
+from loguru import logger
 
+from transpiler.structures.nodes.namespace import Namespace
 from .parser import SelectSparqlParser
-from .structures.query import Query, Triple
+from .structures.query import Query, Triple, GraphPattern
 
 
 class CypherGenerationException(Exception):
@@ -157,6 +158,9 @@ class CypherGenerator:
 
         sub_var = self.cypher_var_for(triple.subject)
 
+        if sub_var in self.used_variables:
+            return ''
+
         clause = f'MATCH ({sub_var})'
 
         if subject_type == TriplePartType.URI:
@@ -187,14 +191,67 @@ class CypherGenerator:
 
         return 'RETURN ' + ', '.join(return_parts)
 
+    def unwind_clause(self, triple: Triple) -> str:
+        cases = [self.filter_case_property(triple), self.filter_case_object(triple)]
+        cases = list(filter(lambda k: k is not None, cases))
+
+        return f'UNWIND ' + ' + '.join(cases) + ' AS triples'
+
+
     def parse_query(self, query: str) -> Query:
         return self.parser.parse(query)
 
     def setup_namespaces(self, namespaces: List[Namespace]):
         self.namespaces = {nm.abbrev: nm.full for nm in namespaces}
 
+    def code_block_for_triple(self, triple: Triple) -> str:
+        match_clause = self.match_clause(triple)
+        unwind_clause = self.unwind_clause(triple)
+        with_clause = self.with_clause(triple)
+
+        return '\n'.join(filter(lambda k: bool(k), [match_clause, unwind_clause, with_clause]))
+
+    def code_block_for_pattern(self, pattern: GraphPattern, query: Query) -> str:
+        codes = []
+
+        if pattern.filters is not None \
+            or pattern.minus is not None \
+            or pattern.optional is not None:
+            logger.warning('Some features used in the sparql query were not implemented yet.')
+
+        for and_triple in pattern.and_triples:
+            codes.append(self.code_block_for_triple(and_triple))
+
+        return '\n'.join(codes) + f'\n{self.return_clause(query)}'
+
+    def split_pattern(self, graph: GraphPattern) -> List[GraphPattern]:
+        """Split graph to generate queries
+
+        Given a graph pattern, split it into a list of graph 
+        pattern without or_blocks, to concatenate or blocks after
+        """
+        if graph.or_blocks is None:
+            return [graph]
+
+        to_check_blocks = [graph]
+        patterns = []
+        while to_check_blocks:
+            curr_block = to_check_blocks.pop(0)
+            if curr_block.or_blocks is not None:
+                for lst in curr_block.or_blocks:
+                    to_check_blocks.extend(lst)
+
+            patterns.append(curr_block)
+
+        return patterns
+
     def generate(self, sparql_query: str) -> str:
         """Generate cypher from sparql"""
         query = self.parse_query(sparql_query)
 
         self.setup_namespaces(query.namespaces)
+
+        patterns = self.split_pattern(query.mandatory)
+
+        
+

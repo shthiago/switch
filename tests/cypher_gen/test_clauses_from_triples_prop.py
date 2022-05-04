@@ -1,4 +1,4 @@
-"""Test cases for Cypher code generation from triples in case relation is to a property"""
+"""Test cases for Cypher code generation from triples assuming that """
 from transpiler.cypher_generator import CypherGenerator
 from transpiler.structures.nodes import Namespace, Triple
 
@@ -6,6 +6,7 @@ from transpiler.structures.nodes import Namespace, Triple
 # Where cause for block
 
 def test_gen_where_case_prop_var_var_var(cypher_gen: CypherGenerator):
+    """In case the subject and object are variables, no filter shall be applied"""
     triple = Triple(subject="?s", predicate="?p", object="?o")
     where_clause = cypher_gen.case_property_where_clause(triple)
 
@@ -13,6 +14,7 @@ def test_gen_where_case_prop_var_var_var(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_prop_var_var_lit(cypher_gen: CypherGenerator):
+    """If the object is a literal, it shall be used as filter for the property value in the node"""
     triple = Triple(subject="?s", predicate="?p", object="BR")
 
     where_clause = cypher_gen.case_property_where_clause(triple)
@@ -21,6 +23,7 @@ def test_gen_where_case_prop_var_var_lit(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_prop_var_var_uri(cypher_gen: CypherGenerator):
+    '''If object is a URI, no where clause is needed because the triple is not a property'''
     triple = Triple(subject="?s", predicate="?p", object="abbrev:any")
     namespaces = [Namespace(abbrev="abbrev", full="full")]
     cypher_gen.setup_namespaces(namespaces)
@@ -31,6 +34,7 @@ def test_gen_where_case_prop_var_var_uri(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_prop_var_uri_var(cypher_gen: CypherGenerator):
+    """If the predicate is a URI, the key name shall be used to filter"""
     triple = Triple(subject="?s", predicate="abbrev:partOf", object="?o")
     namespaces = [Namespace(abbrev="abbrev", full="full")]
     cypher_gen.setup_namespaces(namespaces)
@@ -44,6 +48,7 @@ def test_gen_where_case_prop_var_uri_var(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_prop_var_uri_lit(cypher_gen: CypherGenerator):
+    """If the predicate is a URI and object a literal, both shall be used as filters"""
     namespaces = [Namespace(abbrev="abbrev", full="full")]
     triple = Triple(subject="?s", predicate="abbrev:partOf", object="BR")
     cypher_gen.setup_namespaces(namespaces)
@@ -57,6 +62,7 @@ def test_gen_where_case_prop_var_uri_lit(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_prop_uri_var_var(cypher_gen: CypherGenerator):
+    """In case the subject and object are variables, no filter shall be applied"""
     namespaces = [Namespace(abbrev="abbrev", full="full")]
     cypher_gen.setup_namespaces(namespaces)
 
@@ -70,6 +76,7 @@ def test_gen_where_case_prop_uri_var_var(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_prop_uri_var_lit(cypher_gen: CypherGenerator):
+    """If the object is a literal, it shall be used as filter for the property value in the node"""
     namespaces = [Namespace(abbrev="abbrev", full="full")]
     cypher_gen.setup_namespaces(namespaces)
 
@@ -83,6 +90,7 @@ def test_gen_where_case_prop_uri_var_lit(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_prop_uri_var_uri(cypher_gen: CypherGenerator):
+    """If the object is a URI, no filter is needed because the triple is not a property"""
     namespaces = [Namespace(abbrev="abbrev", full="full")]
     cypher_gen.setup_namespaces(namespaces)
 
@@ -96,6 +104,7 @@ def test_gen_where_case_prop_uri_var_uri(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_prop_uri_uri_var(cypher_gen: CypherGenerator):
+    """If predicate is a URI, it shall be used to filter the key value"""
     namespaces = [Namespace(abbrev="abbrev", full="full")]
     cypher_gen.setup_namespaces(namespaces)
 
@@ -109,6 +118,7 @@ def test_gen_where_case_prop_uri_uri_var(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_prop_uri_uri_lit(cypher_gen: CypherGenerator):
+    """If the predicate is a URI and object a literal, both shall be used as filters"""
     namespaces = [Namespace(abbrev="abbrev", full="full")]
     cypher_gen.setup_namespaces(namespaces)
 
@@ -122,6 +132,7 @@ def test_gen_where_case_prop_uri_uri_lit(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_prop_uri_uri_uri(cypher_gen: CypherGenerator):
+    """If object is a URI, no filter is necessary because the triple is not a property"""
     namespaces = [Namespace(abbrev="abbrev", full="full")]
     cypher_gen.setup_namespaces(namespaces)
 

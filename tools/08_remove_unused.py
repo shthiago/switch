@@ -1,9 +1,9 @@
-from typing import Dict, List
 from collections import OrderedDict
+from typing import Dict, List
 
 
 def parse(filename: str) -> Dict[str, List[str]]:
-    last_added = ''
+    last_added = ""
     output = OrderedDict()
     with open(filename) as f:
         for row in f:
@@ -11,11 +11,11 @@ def parse(filename: str) -> Dict[str, List[str]]:
             if not row:
                 continue
 
-            if row == 'Token definitions:':
+            if row == "Token definitions:":
                 break
 
-            if row[0] != '|':
-                head, body = row.split('::=')
+            if row[0] != "|":
+                head, body = row.split("::=")
                 head = head.strip()
 
                 last_added = head
@@ -30,12 +30,12 @@ def parse(filename: str) -> Dict[str, List[str]]:
     return output
 
 
-if __name__ == '__main__':
-    grammar = parse('grammar/07 - SELECT_SPARQL.grammar')
-    print('Total starting keys: %s' % len(grammar.keys()))
+if __name__ == "__main__":
+    grammar = parse("grammar/07 - SELECT_SPARQL.grammar")
+    print("Total starting keys: %s" % len(grammar.keys()))
     initial_keys = set(grammar.keys())
 
-    initial = 'QueryUnit'
+    initial = "QueryUnit"
 
     modified = True
     while modified:
@@ -61,11 +61,12 @@ if __name__ == '__main__':
         for key in to_pop:
             grammar.pop(key)
 
-    print('Final keys: %s' % len(grammar.keys()))
-    print('Removed keys:', initial_keys - set(grammar.keys()))
+    print("Final keys: %s" % len(grammar.keys()))
+    print("Removed keys:", initial_keys - set(grammar.keys()))
 
     max_key_len = max([len(key) for key in grammar.keys()])
-    with open('grammar/08 - SELECT_SPARQL.grammar', 'w') as f:
+    with open("grammar/08 - SELECT_SPARQL.grammar", "w") as f:
         for key, value in grammar.items():
             f.write(
-                f'{key}{" " * (max_key_len - len(key))} ::= {" ".join(value)}\n')
+                f'{key}{" " * (max_key_len - len(key))} ::= {" ".join(value)}\n'
+            )

@@ -24,4 +24,3 @@ class Query:
             and set(self.namespaces) == set(other.namespaces)
             and self.returning == other.returning
         )
-

@@ -8,7 +8,7 @@
     Razão: Como as consultas não podem trazer dados de grafos além do que está carregado no banco (vide modificação #2), a utilização da palavra-chave `GRAPH` para aplicar consultas sobre determinados sub-grafos importados utilizando `FROM` não é mais possível.
 4. Remover o não-terminal `ServiceGraphPattern`.
     Razão: Como a consulta será executada em Cypher sobre dados pré-carregados, a utilização de serviços em SPARQL não é possível.
-5. Remover os não-terminais `iriOrFunction` e `FunctionCall`, substituindo a ocorrência de `iriOrFunction` como produção de `PrimaryExpression` por apenas `iri`, mantendo a capacidade deste de derivar para `iri`, agora de forma direta. 
+5. Remover os não-terminais `iriOrFunction` e `FunctionCall`, substituindo a ocorrência de `iriOrFunction` como produção de `PrimaryExpression` por apenas `iri`, mantendo a capacidade deste de derivar para `iri`, agora de forma direta.
     Razão: Esses não-terminais servem para efetuar chamadas para funções programadas pelo usuário, na forma de extensões. Inicialmente essa funcionalidade não entrará na conversão por conta da complexidade de implementação.
 6. Remover as chamadas para as funções/operadores abaixo:
     `STRBEFORE`, `STRAFTER`, `ENCODE_FOR_URI`, `LANGMATCHES`, `SAMPLE`, `GROUP_CONCAT`, `EXISTS`, `NOT EXISTS`,  `sameTerm`, `isIRI`, `isURI`, `isBLANK`, `isLITERAL`, `isNUMERIC`, `STR`, `LANG`, `DATATYPE`, `IRI`, `URI`, `BNODE`, `STRDT`, `STRLANG`, `UUID`, `STRUUID`, `BOUND`, `IF`, `MD5`, `SHA1`, `SHA256`, `SHA384`, `SHA51`.

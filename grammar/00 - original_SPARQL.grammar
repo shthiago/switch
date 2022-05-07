@@ -200,4 +200,3 @@ String                    ::= STRING_LITERAL1 | STRING_LITERAL2 | STRING_LITERAL
 iri                       ::= IRIREF | PrefixedName
 PrefixedName              ::= PNAME_LN | PNAME_NS
 BlankNode                 ::= BLANK_NODE_LABEL | ANON
-

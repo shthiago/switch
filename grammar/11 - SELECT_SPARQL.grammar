@@ -58,7 +58,7 @@ OrderClauseAux            ::= &
 OrderClauseAux            ::= OrderCondition OrderClauseAux
 
 OrderCondition            ::= Constraint
-OrderCondition            ::= Var 
+OrderCondition            ::= Var
 OrderCondition            ::= OrderConditionAux BrackettedExpression
 OrderConditionAux         ::= 'ASC'
 OrderConditionAux         ::= 'DESC'
@@ -90,9 +90,9 @@ TriplesBlockAux1          ::= &
 TriplesBlockAux2          ::= TriplesBlock
 TriplesBlockAux2          ::= &
 
-GraphPatternNotTriples    ::= GroupOrUnionGraphPattern 
-GraphPatternNotTriples    ::= OptionalGraphPattern 
-GraphPatternNotTriples    ::= MinusGraphPattern 
+GraphPatternNotTriples    ::= GroupOrUnionGraphPattern
+GraphPatternNotTriples    ::= OptionalGraphPattern
+GraphPatternNotTriples    ::= MinusGraphPattern
 GraphPatternNotTriples    ::= Filter
 
 OptionalGraphPattern      ::= 'OPTIONAL' GroupGraphPattern
@@ -173,9 +173,9 @@ PathMod                   ::= '?'
 PathMod                   ::= '*'
 PathMod                   ::= '+'
 
-PathPrimary               ::= iri 
-PathPrimary               ::= 'a' 
-PathPrimary               ::= '!' PathNegatedPropertySet 
+PathPrimary               ::= iri
+PathPrimary               ::= 'a'
+PathPrimary               ::= '!' PathNegatedPropertySet
 PathPrimary               ::= '(' Path ')'
 
 
@@ -245,13 +245,13 @@ ConditionalAndExpressionAux ::= &
 ValueLogical              ::= RelationalExpression
 
 RelationalExpression      ::= NumericExpression RelationalExpressionAux
-RelationalExpressionAux   ::= '=' NumericExpression 
-RelationalExpressionAux   ::= '!=' NumericExpression 
-RelationalExpressionAux   ::= '<' NumericExpression 
-RelationalExpressionAux   ::= '>' NumericExpression 
-RelationalExpressionAux   ::= '<=' NumericExpression 
-RelationalExpressionAux   ::= '>=' NumericExpression 
-RelationalExpressionAux   ::= 'IN' ExpressionList 
+RelationalExpressionAux   ::= '=' NumericExpression
+RelationalExpressionAux   ::= '!=' NumericExpression
+RelationalExpressionAux   ::= '<' NumericExpression
+RelationalExpressionAux   ::= '>' NumericExpression
+RelationalExpressionAux   ::= '<=' NumericExpression
+RelationalExpressionAux   ::= '>=' NumericExpression
+RelationalExpressionAux   ::= 'IN' ExpressionList
 RelationalExpressionAux   ::= 'NOT' 'IN' ExpressionList
 RelationalExpressionAux   ::= &
 
@@ -273,41 +273,41 @@ UnaryExpression           ::= '+' PrimaryExpression
 UnaryExpression           ::= '-' PrimaryExpression
 UnaryExpression           ::= PrimaryExpression
 
-PrimaryExpression         ::= BrackettedExpression 
-PrimaryExpression         ::= BuiltInCall 
-PrimaryExpression         ::= iri 
-PrimaryExpression         ::= RDFLiteral 
-PrimaryExpression         ::= NumericLiteral 
-PrimaryExpression         ::= BooleanLiteral 
+PrimaryExpression         ::= BrackettedExpression
+PrimaryExpression         ::= BuiltInCall
+PrimaryExpression         ::= iri
+PrimaryExpression         ::= RDFLiteral
+PrimaryExpression         ::= NumericLiteral
+PrimaryExpression         ::= BooleanLiteral
 PrimaryExpression         ::= Var
 
 BrackettedExpression      ::= '(' Expression ')'
 
-BuiltInCall               ::= Aggregate 
-BuiltInCall               ::= 'RAND' NIL 
-BuiltInCall               ::= 'ABS' '(' Expression ')' 
-BuiltInCall               ::= 'CEIL' '(' Expression ')' 
-BuiltInCall               ::= 'FLOOR' '(' Expression ')' 
-BuiltInCall               ::= 'ROUND' '(' Expression ')' 
-BuiltInCall               ::= 'CONCAT' ExpressionList 
-BuiltInCall               ::= SubstringExpression 
-BuiltInCall               ::= 'STRLEN' '(' Expression ')' 
-BuiltInCall               ::= StrReplaceExpression 
-BuiltInCall               ::= 'UCASE' '(' Expression ')' 
-BuiltInCall               ::= 'LCASE' '(' Expression ')' 
-BuiltInCall               ::= 'CONTAINS' '(' Expression ',' Expression ')' 
-BuiltInCall               ::= 'STRSTARTS' '(' Expression ',' Expression ')' 
-BuiltInCall               ::= 'STRENDS' '(' Expression ',' Expression ')' 
-BuiltInCall               ::= 'YEAR' '(' Expression ')' 
-BuiltInCall               ::= 'MONTH' '(' Expression ')' 
-BuiltInCall               ::= 'DAY' '(' Expression ')' 
-BuiltInCall               ::= 'HOURS' '(' Expression ')' 
-BuiltInCall               ::= 'MINUTES' '(' Expression ')' 
-BuiltInCall               ::= 'SECONDS' '(' Expression ')' 
-BuiltInCall               ::= 'TIMEZONE' '(' Expression ')' 
-BuiltInCall               ::= 'TZ' '(' Expression ')' 
-BuiltInCall               ::= 'NOW' NIL 
-BuiltInCall               ::= 'COALESCE' ExpressionList 
+BuiltInCall               ::= Aggregate
+BuiltInCall               ::= 'RAND' NIL
+BuiltInCall               ::= 'ABS' '(' Expression ')'
+BuiltInCall               ::= 'CEIL' '(' Expression ')'
+BuiltInCall               ::= 'FLOOR' '(' Expression ')'
+BuiltInCall               ::= 'ROUND' '(' Expression ')'
+BuiltInCall               ::= 'CONCAT' ExpressionList
+BuiltInCall               ::= SubstringExpression
+BuiltInCall               ::= 'STRLEN' '(' Expression ')'
+BuiltInCall               ::= StrReplaceExpression
+BuiltInCall               ::= 'UCASE' '(' Expression ')'
+BuiltInCall               ::= 'LCASE' '(' Expression ')'
+BuiltInCall               ::= 'CONTAINS' '(' Expression ',' Expression ')'
+BuiltInCall               ::= 'STRSTARTS' '(' Expression ',' Expression ')'
+BuiltInCall               ::= 'STRENDS' '(' Expression ',' Expression ')'
+BuiltInCall               ::= 'YEAR' '(' Expression ')'
+BuiltInCall               ::= 'MONTH' '(' Expression ')'
+BuiltInCall               ::= 'DAY' '(' Expression ')'
+BuiltInCall               ::= 'HOURS' '(' Expression ')'
+BuiltInCall               ::= 'MINUTES' '(' Expression ')'
+BuiltInCall               ::= 'SECONDS' '(' Expression ')'
+BuiltInCall               ::= 'TIMEZONE' '(' Expression ')'
+BuiltInCall               ::= 'TZ' '(' Expression ')'
+BuiltInCall               ::= 'NOW' NIL
+BuiltInCall               ::= 'COALESCE' ExpressionList
 BuiltInCall               ::= RegexExpression
 
 RegexExpression           ::= 'REGEX' '(' Expression ',' Expression RegexExpressionAux ')'
@@ -341,31 +341,31 @@ NumericLiteral            ::= NumericLiteralUnsigned
 NumericLiteral            ::= NumericLiteralPositive
 NumericLiteral            ::= NumericLiteralNegative
 
-NumericLiteralUnsigned    ::= INTEGER 
-NumericLiteralUnsigned    ::= DECIMAL 
+NumericLiteralUnsigned    ::= INTEGER
+NumericLiteralUnsigned    ::= DECIMAL
 NumericLiteralUnsigned    ::= DOUBLE
 
-NumericLiteralPositive    ::= INTEGER_POSITIVE 
-NumericLiteralPositive    ::= DECIMAL_POSITIVE 
+NumericLiteralPositive    ::= INTEGER_POSITIVE
+NumericLiteralPositive    ::= DECIMAL_POSITIVE
 NumericLiteralPositive    ::= DOUBLE_POSITIVE
 
-NumericLiteralNegative    ::= INTEGER_NEGATIVE 
-NumericLiteralNegative    ::= DECIMAL_NEGATIVE 
+NumericLiteralNegative    ::= INTEGER_NEGATIVE
+NumericLiteralNegative    ::= DECIMAL_NEGATIVE
 NumericLiteralNegative    ::= DOUBLE_NEGATIVE]
- 
+
 BooleanLiteral            ::= 'true'
 BooleanLiteral            ::= 'false'
 
-String                    ::= STRING_LITERAL1 
-String                    ::= STRING_LITERAL2 
-String                    ::= STRING_LITERAL_LONG1 
+String                    ::= STRING_LITERAL1
+String                    ::= STRING_LITERAL2
+String                    ::= STRING_LITERAL_LONG1
 String                    ::= STRING_LITERAL_LONG2
 
-iri                       ::= IRIREF 
+iri                       ::= IRIREF
 iri                       ::= PrefixedName
 
-PrefixedName              ::= PNAME_LN 
+PrefixedName              ::= PNAME_LN
 PrefixedName              ::= PNAME_NS
 
-BlankNode                 ::= BLANK_NODE_LABEL 
+BlankNode                 ::= BLANK_NODE_LABEL
 BlankNode                 ::= ANON

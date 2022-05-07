@@ -47,7 +47,7 @@
 'STRAFTER' '(' Expression ',' Expression ')'                                   -> X
 'ENCODE_FOR_URI' '(' Expression ')'                                            -> X
 'LANGMATCHES' '(' Expression ',' Expression ')'                                -> X
-'SAMPLE' '(' 'DISTINCT'? Expression ')'                                        -> X                                     
+'SAMPLE' '(' 'DISTINCT'? Expression ')'                                        -> X
 'GROUP_CONCAT' '(' 'DISTINCT'? Expression ( ';' 'SEPARATOR' '=' String )? ')'  -> X
 'EXISTS' GroupGraphPattern                              -> X
 'NOT' 'EXISTS' GroupGraphPattern                        -> X

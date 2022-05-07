@@ -4,8 +4,9 @@ from typing import Any, List, Optional
 from loguru import logger
 
 from transpiler.structures.nodes.namespace import Namespace
+
 from .parser import SelectSparqlParser
-from .structures.query import Query, Triple, GraphPattern
+from .structures.query import GraphPattern, Query, Triple
 
 
 class CypherGenerationException(Exception):
@@ -48,18 +49,19 @@ class CypherGenerator:
             var = triple_part[1:]
 
         elif part_type == TriplePartType.URI:
-            var = triple_part.replace(':', '_')
+            var = triple_part.replace(":", "_")
 
         else:
             raise CypherGenerationException(
-                f'Cannot generate var for a literal: {triple_part}')
+                f"Cannot generate var for a literal: {triple_part}"
+            )
 
         return var
 
     def case_property_where_clause(self, triple: Triple) -> str:
         obj_type = self.get_triple_part_type(triple.object)
         if obj_type == TriplePartType.URI:
-            return ''
+            return ""
 
         pred_type = self.get_triple_part_type(triple.predicate)
 
@@ -73,34 +75,35 @@ class CypherGenerator:
             filters.append(f'{sub_var}[key] = "{triple.object}"')
 
         if not filters:
-            return ''
+            return ""
 
-        base = 'WHERE '
+        base = "WHERE "
 
-        return base + ' AND '.join(filters) + ' '
+        return base + " AND ".join(filters) + " "
 
     def case_object_where_clause(self, triple: Triple) -> str:
         obj_type = self.get_triple_part_type(triple.object)
         if obj_type == TriplePartType.LIT:
-            return ''
+            return ""
 
         pred_type = self.get_triple_part_type(triple.predicate)
 
         filters = []
         if pred_type == TriplePartType.URI:
             filters.append(
-                f'type(_relation) = {self.full_uri(triple.predicate)}')
+                f"type(_relation) = {self.full_uri(triple.predicate)}"
+            )
 
         if obj_type == TriplePartType.URI:
             obj_var = self.cypher_var_for(triple.object)
-            filters.append(f'{obj_var}.uri = {self.full_uri(triple.object)}')
+            filters.append(f"{obj_var}.uri = {self.full_uri(triple.object)}")
 
         if not filters:
-            return ''
+            return ""
 
-        base = 'WHERE '
+        base = "WHERE "
 
-        return base + ' AND '.join(filters) + ' '
+        return base + " AND ".join(filters) + " "
 
     def filter_case_property(self, triple: Triple) -> Optional[str]:
         obj_type = self.get_triple_part_type(triple.object)
@@ -111,7 +114,7 @@ class CypherGenerator:
         where_clause = self.case_property_where_clause(triple)
         subject = self.cypher_var_for(triple.subject)
 
-        return f'[key in keys({subject}) {where_clause}| [{subject}, key, {subject}[key]]]'
+        return f"[key in keys({subject}) {where_clause}| [{subject}, key, {subject}[key]]]"
 
     def filter_case_object(self, triple: Triple) -> Optional[str]:
         object_type = self.get_triple_part_type(triple.object)
@@ -123,7 +126,7 @@ class CypherGenerator:
         subject = self.cypher_var_for(triple.subject)
         obj = self.cypher_var_for(triple.object)
 
-        return f'[({subject})-[_relation]-({obj}) {where_clause}| [{subject}, _relation, {obj}]]'
+        return f"[({subject})-[_relation]-({obj}) {where_clause}| [{subject}, _relation, {obj}]]"
 
     def with_clause(self, triple: Triple) -> Optional[str]:
         parts = [triple.subject, triple.predicate, triple.object]
@@ -135,11 +138,11 @@ class CypherGenerator:
             if type_ == TriplePartType.VAR:
                 varname = self.cypher_var_for(part)
                 used.append(varname)
-                with_parts.append(f'triples[{i}] AS {varname}')
+                with_parts.append(f"triples[{i}] AS {varname}")
 
         for var in reversed(self.used_variables):
             if var not in used:
-                with_parts.insert(0, f'{var} AS {var}')
+                with_parts.insert(0, f"{var} AS {var}")
 
         for used_var in used:
             if used_var not in self.used_variables:
@@ -148,23 +151,23 @@ class CypherGenerator:
         if not with_parts:
             return None
 
-        return 'WITH ' + ', '.join(with_parts)
+        return "WITH " + ", ".join(with_parts)
 
     def match_clause(self, triple: Triple) -> str:
         subject_type = self.get_triple_part_type(triple.subject)
 
         if subject_type == TriplePartType.LIT:
-            raise CypherGenerationException('Subject cannot be a literal')
+            raise CypherGenerationException("Subject cannot be a literal")
 
         sub_var = self.cypher_var_for(triple.subject)
 
         if sub_var in self.used_variables:
-            return ''
+            return ""
 
-        clause = f'MATCH ({sub_var})'
+        clause = f"MATCH ({sub_var})"
 
         if subject_type == TriplePartType.URI:
-            clause += f' WHERE {sub_var}.uri = {self.full_uri(triple.subject)}'
+            clause += f" WHERE {sub_var}.uri = {self.full_uri(triple.subject)}"
 
         return clause
 
@@ -173,30 +176,32 @@ class CypherGenerator:
         return_parts = []
         for var in variables:
             if var.alias is None:
-                suffix = ''
+                suffix = ""
 
             else:
-                suffix = f' AS {self.cypher_var_for(var.alias)}'
+                suffix = f" AS {self.cypher_var_for(var.alias)}"
 
             if isinstance(var.value, str):
-                if var.value == '*':
-                    varname = '*'
+                if var.value == "*":
+                    varname = "*"
                 else:
                     varname = self.cypher_var_for(var.value)
 
-                return_parts.append(f'{varname}{suffix}')
+                return_parts.append(f"{varname}{suffix}")
 
             else:
                 raise NotImplementedError
 
-        return 'RETURN ' + ', '.join(return_parts)
+        return "RETURN " + ", ".join(return_parts)
 
     def unwind_clause(self, triple: Triple) -> str:
-        cases = [self.filter_case_property(triple), self.filter_case_object(triple)]
+        cases = [
+            self.filter_case_property(triple),
+            self.filter_case_object(triple),
+        ]
         cases = list(filter(lambda k: k is not None, cases))
 
-        return f'UNWIND ' + ' + '.join(cases) + ' AS triples'
-
+        return f"UNWIND " + " + ".join(cases) + " AS triples"
 
     def parse_query(self, query: str) -> Query:
         return self.parser.parse(query)
@@ -209,25 +214,35 @@ class CypherGenerator:
         unwind_clause = self.unwind_clause(triple)
         with_clause = self.with_clause(triple)
 
-        return '\n'.join(filter(lambda k: bool(k), [match_clause, unwind_clause, with_clause]))
+        return "\n".join(
+            filter(
+                lambda k: bool(k), [match_clause, unwind_clause, with_clause]
+            )
+        )
 
-    def code_block_for_pattern(self, pattern: GraphPattern, query: Query) -> str:
+    def code_block_for_pattern(
+        self, pattern: GraphPattern, query: Query
+    ) -> str:
         codes = []
 
-        if pattern.filters is not None \
-            or pattern.minus is not None \
-            or pattern.optional is not None:
-            logger.warning('Some features used in the sparql query were not implemented yet.')
+        if (
+            pattern.filters is not None
+            or pattern.minus is not None
+            or pattern.optional is not None
+        ):
+            logger.warning(
+                "Some features used in the sparql query were not implemented yet."
+            )
 
         for and_triple in pattern.and_triples:
             codes.append(self.code_block_for_triple(and_triple))
 
-        return '\n'.join(codes) + f'\n{self.return_clause(query)}'
+        return "\n".join(codes) + f"\n{self.return_clause(query)}"
 
     def split_pattern(self, graph: GraphPattern) -> List[GraphPattern]:
         """Split graph to generate queries
 
-        Given a graph pattern, split it into a list of graph 
+        Given a graph pattern, split it into a list of graph
         pattern without or_blocks, to concatenate or blocks after
         """
         if graph.or_blocks is None:
@@ -252,6 +267,3 @@ class CypherGenerator:
         self.setup_namespaces(query.namespaces)
 
         patterns = self.split_pattern(query.mandatory)
-
-        
-

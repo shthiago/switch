@@ -1,9 +1,9 @@
 from tempfile import NamedTemporaryFile
 
 import pytest
-from neo4j import GraphDatabase
 
-from transpiler import lexer, parser, cypher_generator
+from neo4j import GraphDatabase
+from transpiler import cypher_generator, lexer, parser
 
 
 @pytest.fixture
@@ -18,7 +18,7 @@ def switch_parser() -> parser.SelectSparqlParser:
 
 @pytest.fixture
 def cypher_exec():
-    driver = GraphDatabase.driver('neo4j://localhost:7687')
+    driver = GraphDatabase.driver("neo4j://localhost:7687")
 
     def _caller(query: str):
         session = driver.session()
@@ -29,6 +29,6 @@ def cypher_exec():
     return _caller
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def cypher_gen() -> cypher_generator.CypherGenerator:
     return cypher_generator.CypherGenerator()

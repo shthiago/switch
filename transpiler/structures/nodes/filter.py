@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Union
 
-from .expression import OrExpression, BuiltInFunction
+from .expression import BuiltInFunction, OrExpression
 
 
 @dataclass

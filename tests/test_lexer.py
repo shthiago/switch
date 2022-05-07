@@ -20,8 +20,8 @@ def test_detect_builtins(switch_lexer: lexer.SelectSparqlLexer):
 
 def test_detect_var(switch_lexer: lexer.SelectSparqlLexer):
     """Check if lexer can detect a variable"""
-    switch_lexer.input('?var1')
-    assert switch_lexer.token().type == 'VAR1'
+    switch_lexer.input("?var1")
+    assert switch_lexer.token().type == "VAR1"
 
-    switch_lexer.input('$var2')
-    assert switch_lexer.token().type == 'VAR2'
+    switch_lexer.input("$var2")
+    assert switch_lexer.token().type == "VAR2"

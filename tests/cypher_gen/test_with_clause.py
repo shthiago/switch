@@ -6,96 +6,96 @@ from transpiler.structures.nodes import Triple
 
 def test_with_clause_var_var_var(cypher_gen: CypherGenerator):
     """All variables should be passewd forward in the WITH"""
-    triple = Triple(subject='?s', predicate='?p', object='?o')
+    triple = Triple(subject="?s", predicate="?p", object="?o")
 
     clause = cypher_gen.with_clause(triple)
 
-    assert clause == 'WITH triples[0] AS s, triples[1] AS p, triples[2] AS o'
+    assert clause == "WITH triples[0] AS s, triples[1] AS p, triples[2] AS o"
 
 
 def test_with_clause_var_var_lit(cypher_gen: CypherGenerator):
     """Literals shall not be passed forward"""
-    triple = Triple(subject='?s', predicate='?p', object='lit')
+    triple = Triple(subject="?s", predicate="?p", object="lit")
 
     clause = cypher_gen.with_clause(triple)
 
-    assert clause == 'WITH triples[0] AS s, triples[1] AS p'
+    assert clause == "WITH triples[0] AS s, triples[1] AS p"
 
 
 def test_with_clause_var_var_uri(cypher_gen: CypherGenerator):
     """URIs shall not be passed forward"""
-    triple = Triple(subject='?s', predicate='?p', object='abbrev:uri')
+    triple = Triple(subject="?s", predicate="?p", object="abbrev:uri")
 
     clause = cypher_gen.with_clause(triple)
 
-    assert clause == 'WITH triples[0] AS s, triples[1] AS p'
+    assert clause == "WITH triples[0] AS s, triples[1] AS p"
 
 
 def test_with_clause_var_uri_var(cypher_gen: CypherGenerator):
     """URIs shall not be passed forward"""
-    triple = Triple(subject='?s', predicate='abbrev:uri', object='?o')
+    triple = Triple(subject="?s", predicate="abbrev:uri", object="?o")
 
     clause = cypher_gen.with_clause(triple)
 
-    assert clause == 'WITH triples[0] AS s, triples[2] AS o'
+    assert clause == "WITH triples[0] AS s, triples[2] AS o"
 
 
 def test_with_clause_var_uri_lit(cypher_gen: CypherGenerator):
     """URIs ahd literals shall not be passed forward"""
-    triple = Triple(subject='?s', predicate='abbrev:uri', object='lit')
+    triple = Triple(subject="?s", predicate="abbrev:uri", object="lit")
 
     clause = cypher_gen.with_clause(triple)
 
-    assert clause == 'WITH triples[0] AS s'
+    assert clause == "WITH triples[0] AS s"
 
 
 def test_with_clause_var_uri_uri(cypher_gen: CypherGenerator):
-    triple = Triple(subject='?s', predicate='abbrev:uri', object='abbrev:uri')
+    triple = Triple(subject="?s", predicate="abbrev:uri", object="abbrev:uri")
 
     clause = cypher_gen.with_clause(triple)
 
-    assert clause == 'WITH triples[0] AS s'
+    assert clause == "WITH triples[0] AS s"
 
 
 def test_with_clause_uri_var_var(cypher_gen: CypherGenerator):
     """URIs shall not be passed forward"""
-    triple = Triple(subject='abbrev:uri', predicate='?p', object='?o')
+    triple = Triple(subject="abbrev:uri", predicate="?p", object="?o")
 
     clause = cypher_gen.with_clause(triple)
 
-    assert clause == 'WITH triples[1] AS p, triples[2] AS o'
+    assert clause == "WITH triples[1] AS p, triples[2] AS o"
 
 
 def test_with_clause_uri_var_lit(cypher_gen: CypherGenerator):
     """URIs and literals shall not be passed forward"""
-    triple = Triple(subject='abbrev:uri', predicate='?p', object='lit')
+    triple = Triple(subject="abbrev:uri", predicate="?p", object="lit")
 
     clause = cypher_gen.with_clause(triple)
 
-    assert clause == 'WITH triples[1] AS p'
+    assert clause == "WITH triples[1] AS p"
 
 
 def test_with_clause_uri_var_uri(cypher_gen: CypherGenerator):
     """URIs shall not be passed forward"""
-    triple = Triple(subject='abbrev:uri', predicate='?p', object='abbrev:uri')
+    triple = Triple(subject="abbrev:uri", predicate="?p", object="abbrev:uri")
 
     clause = cypher_gen.with_clause(triple)
 
-    assert clause == 'WITH triples[1] AS p'
+    assert clause == "WITH triples[1] AS p"
 
 
 def test_with_clause_uri_uri_var(cypher_gen: CypherGenerator):
     """URIs shall not be passed forward"""
-    triple = Triple(subject='abbrev:uri', predicate='abbrev:uri', object='?o')
+    triple = Triple(subject="abbrev:uri", predicate="abbrev:uri", object="?o")
 
     clause = cypher_gen.with_clause(triple)
 
-    assert clause == 'WITH triples[2] AS o'
+    assert clause == "WITH triples[2] AS o"
 
 
 def test_with_clause_uri_uri_lit(cypher_gen: CypherGenerator):
     """If nothing shall be passed forward, the clause shall be None"""
-    triple = Triple(subject='abbrev:uri', predicate='abbrev:uri', object='lit')
+    triple = Triple(subject="abbrev:uri", predicate="abbrev:uri", object="lit")
 
     clause = cypher_gen.with_clause(triple)
 
@@ -104,8 +104,9 @@ def test_with_clause_uri_uri_lit(cypher_gen: CypherGenerator):
 
 def test_with_clause_uri_uri_uri(cypher_gen: CypherGenerator):
     """If nothing shall be passed forward, the clause shall be None"""
-    triple = Triple(subject='abbrev:uri',
-                    predicate='abbrev:uri', object='abbrev:uri')
+    triple = Triple(
+        subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri"
+    )
 
     clause = cypher_gen.with_clause(triple)
 
@@ -114,62 +115,68 @@ def test_with_clause_uri_uri_uri(cypher_gen: CypherGenerator):
 
 def test_two_consecutive_triples(cypher_gen: CypherGenerator):
     """Variables used in previous triples (query order) shall be passed forward even if they are not used in the current triple"""
-    first_triple = Triple(subject='abbrev:uri',
-                          predicate='abbrev:uri', object='?o')
-    second_triple = Triple(subject='?s', predicate='abbrev:uri', object='lit')
+    first_triple = Triple(
+        subject="abbrev:uri", predicate="abbrev:uri", object="?o"
+    )
+    second_triple = Triple(subject="?s", predicate="abbrev:uri", object="lit")
 
     first_with = cypher_gen.with_clause(first_triple)
 
-    assert first_with == 'WITH triples[2] AS o'
+    assert first_with == "WITH triples[2] AS o"
 
     second_with = cypher_gen.with_clause(second_triple)
 
-    assert second_with == 'WITH o AS o, triples[0] AS s'
+    assert second_with == "WITH o AS o, triples[0] AS s"
 
 
 def test_three_consecutive_triples(cypher_gen: CypherGenerator):
     """Variables used in previous triples (query order) shall be passed forward even if they are not used in the current triple"""
-    first_triple = Triple(subject='abbrev:uri',
-                          predicate='abbrev:uri', object='?o')
-    second_triple = Triple(subject='?s', predicate='abbrev:uri', object='lit')
-    third_triple = Triple(subject='abbrev:uri',
-                          predicate='abbrev:uri', object='abbrev:uri')
+    first_triple = Triple(
+        subject="abbrev:uri", predicate="abbrev:uri", object="?o"
+    )
+    second_triple = Triple(subject="?s", predicate="abbrev:uri", object="lit")
+    third_triple = Triple(
+        subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri"
+    )
 
     first_with = cypher_gen.with_clause(first_triple)
 
-    assert first_with == 'WITH triples[2] AS o'
+    assert first_with == "WITH triples[2] AS o"
 
     second_with = cypher_gen.with_clause(second_triple)
 
-    assert second_with == 'WITH o AS o, triples[0] AS s'
+    assert second_with == "WITH o AS o, triples[0] AS s"
 
     third_with = cypher_gen.with_clause(third_triple)
 
-    assert third_with == 'WITH o AS o, s AS s'
+    assert third_with == "WITH o AS o, s AS s"
 
 
 def test_four_consecutive_triples(cypher_gen: CypherGenerator):
     """Variables reused shall be passed forward from the most recent triples"""
-    first_triple = Triple(subject='abbrev:uri',
-                          predicate='abbrev:uri', object='?o')
-    second_triple = Triple(subject='?s', predicate='abbrev:uri', object='lit')
-    third_triple = Triple(subject='abbrev:uri',
-                          predicate='abbrev:uri', object='abbrev:uri')
-    forth_triple = Triple(subject='?s',
-                          predicate='abbrev:uri', object='abbrev:uri')
+    first_triple = Triple(
+        subject="abbrev:uri", predicate="abbrev:uri", object="?o"
+    )
+    second_triple = Triple(subject="?s", predicate="abbrev:uri", object="lit")
+    third_triple = Triple(
+        subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri"
+    )
+    forth_triple = Triple(
+        subject="?s", predicate="abbrev:uri", object="abbrev:uri"
+    )
 
     first_with = cypher_gen.with_clause(first_triple)
 
-    assert first_with == 'WITH triples[2] AS o'
+    assert first_with == "WITH triples[2] AS o"
 
     second_with = cypher_gen.with_clause(second_triple)
 
-    assert second_with == 'WITH o AS o, triples[0] AS s'
+    assert second_with == "WITH o AS o, triples[0] AS s"
 
     third_with = cypher_gen.with_clause(third_triple)
 
-    assert third_with == 'WITH o AS o, s AS s'
+    assert third_with == "WITH o AS o, s AS s"
 
     forth_with = cypher_gen.with_clause(forth_triple)
 
-    assert forth_with == 'WITH o AS o, triples[0] AS s'
+    assert forth_with == "WITH o AS o, triples[0] AS s"

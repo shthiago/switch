@@ -1,7 +1,7 @@
 """Extract places dataset, used in the tests"""
-import re
-import os
 import multiprocessing
+import os
+import re
 import xml
 from typing import List
 
@@ -9,7 +9,7 @@ import requests
 from loguru import logger
 from rdflib import Graph
 
-BASE_URL = 'https://ontologi.es/place/'
+BASE_URL = "https://ontologi.es/place/"
 DATASET_DIR = "dataset"
 WORKERS = multiprocessing.cpu_count() * 2 + 1
 
@@ -29,16 +29,16 @@ def data_file_path(filename: str) -> str:
 
 
 def save_file(filename: str, content: str):
-    with open(data_file_path(filename), 'w') as fp:
+    with open(data_file_path(filename), "w") as fp:
         fp.write(content)
 
 
 def download_base_url() -> List[str]:
     """Download base URL and return list of other URLs"""
-    logger.info(f'Downloading the base URL: {BASE_URL}')
+    logger.info(f"Downloading the base URL: {BASE_URL}")
 
     text = requests.get(BASE_URL).text
-    save_file('base.rdf', text)
+    save_file("base.rdf", text)
 
     urls = re.findall(r'(?<=rdf:about=").+(?=" s)', text)
     return urls
@@ -46,13 +46,12 @@ def download_base_url() -> List[str]:
 
 def download_url(url: str):
     logger.info(f"Downloading {url}")
-    filename = url.split('/')[-1] + '.rdf'
+    filename = url.split("/")[-1] + ".rdf"
 
     try:
         r = requests.get(url)
         if r.status_code != 200:
-            logger.error(
-                f"Failed to fetch {url}: status_codes={r.status_code}")
+            logger.error(f"Failed to fetch {url}: status_codes={r.status_code}")
             return
         text = r.text
 
@@ -64,8 +63,9 @@ def download_url(url: str):
 
 
 def fuse_dataset(filename: str):
-    files = [os.path.join(DATASET_DIR, file)
-             for file in os.listdir(DATASET_DIR)]
+    files = [
+        os.path.join(DATASET_DIR, file) for file in os.listdir(DATASET_DIR)
+    ]
     graph = Graph()
     for file in files:
         try:
@@ -74,11 +74,10 @@ def fuse_dataset(filename: str):
             logger.error(f"Failed to parse: {file}")
             logger.info("Skiping...")
 
-    graph.serialize(data_file_path(filename),
-                    format="application/rdf+xml")
+    graph.serialize(data_file_path(filename), format="application/rdf+xml")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     setup_dir()
     urls = download_base_url()
 
@@ -87,4 +86,4 @@ if __name__ == '__main__':
 
     logger.info("Fusing dataset")
 
-    fuse_dataset('dataset.rdf')
+    fuse_dataset("dataset.rdf")

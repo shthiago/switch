@@ -45,7 +45,7 @@ def test_match_uri_any_any(cypher_gen: CypherGenerator):
 
         assert (
             match
-            == 'MATCH (abbrev_uri) WHERE abbrev_uri.uri = n10s.rdf.shortFormFromFullUri("abbrevfull") + "uri"'
+            == 'MATCH (abbrev_uri) WHERE abbrev_uri.uri = "abbrevfulluri"'
         )
 
 

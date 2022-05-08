@@ -59,7 +59,7 @@ class SelectSparqlParser:
 
     def p_production_11(self, p):
         """PrefixDecl : KW_PREFIX PNAME_NS IRIREF"""
-        self.query.namespaces.append(nodes.Namespace(p[2], p[3]))
+        self.query.namespaces.append(nodes.Namespace(p[2].replace(':', ''), p[3].replace('<', '').replace('>', '')))
 
     def p_production_13(self, p):
         """SelectQuery : SelectClause WhereClause SolutionModifier"""
@@ -504,7 +504,7 @@ class SelectSparqlParser:
 
     def p_production_171(self, p):
         """PropertyListPathNotEmptyAux1 : VerbPath"""
-        p[0] = p[1].value
+        p[0] = p[1]
 
     def p_production_172(self, p):
         """PropertyListPathNotEmptyAux1 : VerbSimple"""
@@ -1256,11 +1256,11 @@ class SelectSparqlParser:
 
     def p_production_402(self, p):
         """iri : IRIREF"""
-        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.IRI, p[1])
+        p[0] = p[1]
 
     def p_production_403(self, p):
         """iri : PrefixedName"""
-        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.IRI, p[1])
+        p[0] = p[1]
 
     def p_production_405(self, p):
         """PrefixedName : PNAME_LN"""

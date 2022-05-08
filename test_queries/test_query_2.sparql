@@ -1,0 +1,12 @@
+PREFIX b:<http://ontologi.es/place/>
+PREFIX dct:<http://purl.org/dc/terms/>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?stateName WHERE {
+    {
+        b:BR dct:hasPart ?brazilState .
+        ?brazilState rdfs:label ?stateName
+    } UNION {
+        b:US dct:hasPart ?usaState .
+        ?usaState rdfs:label ?stateName
+    }
+}

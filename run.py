@@ -1,7 +1,21 @@
-from transpiler.parser import SelectSparqlParser
+import argparse
+
+from transpiler.cypher_generator import CypherGenerator
+
+def main(filename: str):
+    with open(filename) as f:
+        content = f.read()
+
+    generator = CypherGenerator()
+    cypher = generator.generate(content)
+
+    print(cypher)
 
 if __name__ == "__main__":
-    parser = SelectSparqlParser()
-    result = parser.parse("SELECT * WHERE { ?s ?p ?o }")
+    parser = argparse.ArgumentParser(description='CLI for Switch')
 
-    print(result)
+    parser.add_argument('filename')
+
+    args = parser.parse_args()
+
+    main(args.filename)

@@ -218,7 +218,7 @@ def test_query_prefixed(switch_parser: SelectSparqlParser):
             Var("?s"),
             Var("?o"),
         ],
-        namespaces=[Namespace("nmspc:", "<http://name.io#>")],
+        namespaces=[Namespace("nmspc", "http://name.io#")],
         returning=[SelectedVar(value="?s")],
     )
 

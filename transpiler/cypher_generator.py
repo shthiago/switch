@@ -2,6 +2,7 @@ from enum import Enum, auto
 from typing import Any, List, Optional
 
 from loguru import logger
+from transpiler.structures.nodes import modifiers
 from transpiler.structures.nodes.modifiers import ModifiersNode, OrderNode
 
 from transpiler.structures.nodes.namespace import Namespace
@@ -25,6 +26,9 @@ class CypherGenerator:
 
         self.used_variables: List[str] = []
 
+    def reset_variables(self):
+        self.used_variables = []
+
     def get_triple_part_type(self, part: Any) -> TriplePartType:
         if not isinstance(part, str):
             return TriplePartType.LIT
@@ -37,7 +41,7 @@ class CypherGenerator:
 
         return TriplePartType.LIT
 
-    def full_uri(self, abbev_uri: str) -> str:
+    def ns_uri(self, abbev_uri: str) -> str:
         nms, name = abbev_uri.split(":")
         full_nms = self.namespaces[nms]
 
@@ -67,7 +71,7 @@ class CypherGenerator:
         filters = []
 
         if pred_type == TriplePartType.URI:
-            filters.append(f"key = {self.full_uri(triple.predicate)}")
+            filters.append(f"key = {self.ns_uri(triple.predicate)}")
 
         if obj_type == TriplePartType.LIT:
             sub_var = self.cypher_var_for(triple.subject)
@@ -90,7 +94,7 @@ class CypherGenerator:
         filters = []
         if pred_type == TriplePartType.URI:
             filters.append(
-                f'type(_relation) = {self.full_uri(triple.predicate)}')
+                f'type(_relation) = {self.ns_uri(triple.predicate)}')
 
         if obj_type == TriplePartType.URI:
             obj_var = self.cypher_var_for(triple.object)
@@ -169,6 +173,12 @@ class CypherGenerator:
 
         return clause
 
+    def full_uri(self, uri: str) -> str:
+        abbrev, name = uri.split(':')
+        base = self.namespaces[abbrev]
+
+        return f'"{base + name}"'
+
     def return_clause(self, query: Query) -> str:
         variables = query.returning
         return_parts = []
@@ -202,7 +212,8 @@ class CypherGenerator:
     def result_modifier(self, modifiers: ModifiersNode) -> Optional[str]:
         """Given a result modifiers node, generate the code block"""
         if modifiers.group is not None or modifiers.having is not None:
-            raise CypherGenerationException('Group By and having not implemented')
+            raise CypherGenerationException(
+                'Group By and having not implemented')
 
         mods = []
 
@@ -222,12 +233,13 @@ class CypherGenerator:
 
     def order_by_clause(self, order_node: OrderNode) -> str:
         base = 'ORDER BY '
-        
+
         cases: List[str] = []
 
         for cond in order_node.conditions:
             if cond.var is None and cond.exp is not None:
-                raise CypherGenerationException('Order condition by function call not implemented yet')
+                raise CypherGenerationException(
+                    'Order condition by function call not implemented yet')
 
             cases.append(f'{self.cypher_var_for(cond.var)} {cond.order}')
 
@@ -253,11 +265,12 @@ class CypherGenerator:
         return '\n'.join(filter(lambda k: bool(k), [match_clause, unwind_clause, with_clause]))
 
     def code_block_for_pattern(self, pattern: GraphPattern, query: Query) -> str:
+        self.reset_variables()
         codes = []
 
-        if pattern.filters is not None \
-                or pattern.minus is not None \
-                or pattern.optional is not None:
+        if pattern.filters \
+                or pattern.minus \
+                or pattern.optionals:
             logger.warning(
                 'Some features used in the sparql query were not implemented yet.')
 
@@ -290,7 +303,22 @@ class CypherGenerator:
     def generate(self, sparql_query: str) -> str:
         """Generate cypher from sparql"""
         query = self.parse_query(sparql_query)
-
         self.setup_namespaces(query.namespaces)
 
         patterns = self.split_pattern(query.mandatory)
+
+        code_blocks = [self.code_block_for_pattern(p, query)
+                       for p in patterns
+                       if len(p.and_triples) > 0]
+
+        united_code = '\nUNION\n'.join(code_blocks)
+
+        modifiers = self.result_modifier(query.modifiers)
+
+        if modifiers is not None:
+            modified_code = 'CALL {\n' + united_code + '\n}\n' + modifiers
+
+        else:
+            modified_code = united_code
+
+        return modified_code

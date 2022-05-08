@@ -110,7 +110,7 @@ def test_unwind_clause_1(cypher_gen: CypherGenerator):
 
     assert (
         unwind
-        == 'UNWIND [(s)-[_relation]-(abbrev_uri) WHERE abbrev_uri.uri = n10s.rdf.shortFormFromFullUri("full") + "uri" | [s, _relation, abbrev_uri]] AS triples'
+        == 'UNWIND [(s)-[_relation]-(abbrev_uri) WHERE abbrev_uri.uri = "fulluri" | [s, _relation, abbrev_uri]] AS triples'
     )
 
 

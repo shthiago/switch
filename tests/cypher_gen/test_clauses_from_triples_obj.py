@@ -34,7 +34,7 @@ def test_gen_where_case_obj_var_var_uri(cypher_gen: CypherGenerator):
 
     assert (
         where_clause
-        == 'WHERE place_BR.uri = n10s.rdf.shortFormFromFullUri("placefull") + "BR" '
+        == 'WHERE place_BR.uri = "placefullBR" '
     )
 
 
@@ -71,7 +71,7 @@ def test_gen_where_case_obj_var_uri_uri(cypher_gen: CypherGenerator):
 
     assert (
         where_clause
-        == 'WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("rdfsfull") + "partOf" AND _place.uri = n10s.rdf.shortFormFromFullUri("rdfsfull") + "place" '
+        == 'WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("rdfsfull") + "partOf" AND _place.uri = "rdfsfullplace" '
     )
 
 
@@ -104,7 +104,7 @@ def test_gen_where_case_obj_uri_var_uri(cypher_gen: CypherGenerator):
 
     assert (
         where_clause
-        == 'WHERE abbrev_US.uri = n10s.rdf.shortFormFromFullUri("abbrevfull") + "US" '
+        == 'WHERE abbrev_US.uri = "abbrevfullUS" '
     )
 
 
@@ -144,7 +144,7 @@ def test_gen_where_case_obj_uri_uri_uri(cypher_gen: CypherGenerator):
 
     assert (
         where_clause
-        == 'WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("abbrevfull") + "BLA" AND abbrev_US.uri = n10s.rdf.shortFormFromFullUri("abbrevfull") + "US" '
+        == 'WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("abbrevfull") + "BLA" AND abbrev_US.uri = "abbrevfullUS" '
     )
 
 
@@ -177,7 +177,7 @@ def test_gen_all_var_var_uri(cypher_gen: CypherGenerator):
 
     assert (
         full_clause
-        == '[(s)-[_relation]-(abbrev_uri) WHERE abbrev_uri.uri = n10s.rdf.shortFormFromFullUri("full") + "uri" | [s, _relation, abbrev_uri]]'
+        == '[(s)-[_relation]-(abbrev_uri) WHERE abbrev_uri.uri = "fulluri" | [s, _relation, abbrev_uri]]'
     )
 
 
@@ -213,7 +213,7 @@ def test_gen_all_var_uri_uri(cypher_gen: CypherGenerator):
 
     assert (
         full_clause
-        == '[(s)-[_relation]-(abbrev_uri) WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("full") + "uri" AND abbrev_uri.uri = n10s.rdf.shortFormFromFullUri("full") + "uri" | [s, _relation, abbrev_uri]]'
+        == '[(s)-[_relation]-(abbrev_uri) WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("full") + "uri" AND abbrev_uri.uri = "fulluri" | [s, _relation, abbrev_uri]]'
     )
 
 
@@ -249,7 +249,7 @@ def test_gen_all_uri_var_uri(cypher_gen: CypherGenerator):
 
     assert (
         full_clause
-        == '[(abbrev_uri)-[_relation]-(abbrev_uri) WHERE abbrev_uri.uri = n10s.rdf.shortFormFromFullUri("full") + "uri" | [abbrev_uri, _relation, abbrev_uri]]'
+        == '[(abbrev_uri)-[_relation]-(abbrev_uri) WHERE abbrev_uri.uri = "fulluri" | [abbrev_uri, _relation, abbrev_uri]]'
     )
 
 
@@ -287,5 +287,5 @@ def test_gen_all_uri_uri_uri(cypher_gen: CypherGenerator):
 
     assert (
         full_clause
-        == '[(abbrev_uri)-[_relation]-(abbrev_uri) WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("full") + "uri" AND abbrev_uri.uri = n10s.rdf.shortFormFromFullUri("full") + "uri" | [abbrev_uri, _relation, abbrev_uri]]'
+        == '[(abbrev_uri)-[_relation]-(abbrev_uri) WHERE type(_relation) = n10s.rdf.shortFormFromFullUri("full") + "uri" AND abbrev_uri.uri = "fulluri" | [abbrev_uri, _relation, abbrev_uri]]'
     )

@@ -316,7 +316,8 @@ class CypherGenerator:
         modifiers = self.result_modifier(query.modifiers)
 
         if modifiers is not None:
-            modified_code = 'CALL {\n' + united_code + '\n}\n' + modifiers
+            ret_clause = self.return_clause(query)
+            modified_code = 'CALL {\n' + united_code + '\n}\n' + ret_clause + '\n' + modifiers
 
         else:
             modified_code = united_code

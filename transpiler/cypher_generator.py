@@ -3,7 +3,6 @@ from typing import Any, List, Optional
 
 from loguru import logger
 
-from transpiler.structures.nodes import modifiers
 from transpiler.structures.nodes.modifiers import ModifiersNode, OrderNode
 from transpiler.structures.nodes.namespace import Namespace
 
@@ -117,7 +116,9 @@ class CypherGenerator:
         where_clause = self.case_property_where_clause(triple)
         subject = self.cypher_var_for(triple.subject)
 
-        return f"[key in keys({subject}) {where_clause}| [{subject}, key, {subject}[key]]]"
+        return (
+            f"[key in keys({subject}) {where_clause}| [{subject}, key, {subject}[key]]]"
+        )
 
     def filter_case_object(self, triple: Triple) -> Optional[str]:
         object_type = self.get_triple_part_type(triple.object)
@@ -210,14 +211,12 @@ class CypherGenerator:
         ]
         cases = list(filter(lambda k: k is not None, cases))
 
-        return f"UNWIND " + " + ".join(cases) + " AS triples"
+        return "UNWIND " + " + ".join(cases) + " AS triples"
 
     def result_modifier(self, modifiers: ModifiersNode) -> Optional[str]:
         """Given a result modifiers node, generate the code block"""
         if modifiers.group is not None or modifiers.having is not None:
-            raise CypherGenerationException(
-                "Group By and having not implemented"
-            )
+            raise CypherGenerationException("Group By and having not implemented")
 
         mods = []
 
@@ -268,14 +267,10 @@ class CypherGenerator:
         with_clause = self.with_clause(triple)
 
         return "\n".join(
-            filter(
-                lambda k: bool(k), [match_clause, unwind_clause, with_clause]
-            )
+            filter(lambda k: bool(k), [match_clause, unwind_clause, with_clause])
         )
 
-    def code_block_for_pattern(
-        self, pattern: GraphPattern, query: Query
-    ) -> str:
+    def code_block_for_pattern(self, pattern: GraphPattern, query: Query) -> str:
         self.reset_variables()
         codes = []
 
@@ -298,15 +293,18 @@ class CypherGenerator:
         if graph.or_blocks is None:
             return [graph]
 
-        to_check_blocks = [graph]
+        to_check_graphs = [graph]
         patterns = []
-        while to_check_blocks:
-            curr_block = to_check_blocks.pop(0)
-            if curr_block.or_blocks is not None:
-                for lst in curr_block.or_blocks:
-                    to_check_blocks.extend(lst)
+        while to_check_graphs:
+            curr_graph = to_check_graphs.pop(0)
+            if curr_graph.or_blocks:
+                for block in curr_graph.or_blocks:
+                    for pattern in block:
+                        pattern.and_triples.extend(curr_graph.and_triples)
+                        to_check_graphs.append(pattern)
 
-            patterns.append(curr_block)
+            elif curr_graph.and_triples:
+                patterns.append(curr_graph)
 
         return patterns
 
@@ -316,7 +314,6 @@ class CypherGenerator:
         self.setup_namespaces(query.namespaces)
 
         patterns = self.split_pattern(query.mandatory)
-        # t1 & (t2 or t3)32
 
         code_blocks = [
             self.code_block_for_pattern(p, query)
@@ -331,12 +328,7 @@ class CypherGenerator:
         if modifiers is not None:
             ret_clause = self.return_clause(query)
             modified_code = (
-                "CALL {\n"
-                + united_code
-                + "\n}\n"
-                + ret_clause
-                + "\n"
-                + modifiers
+                "CALL {\n" + united_code + "\n}\n" + ret_clause + "\n" + modifiers
             )
 
         else:

@@ -19,7 +19,7 @@ antlr4-python3-runtime = "^4.10"
 neo4j = "^4.4.2"
 
 [tool.black]
-line-length = 80
+line-length = 88
 target-version = ['py37']
 include = 'transpiler/'
 exclude = '''
@@ -36,10 +36,6 @@ exclude = '''
   | dist
 )/
 '''
-
-[tool.isort]
-profile = "black"
-
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.7"

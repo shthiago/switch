@@ -1,7 +1,6 @@
 import pytest
 
-from transpiler.cypher_generator import (CypherGenerationException,
-                                         CypherGenerator)
+from transpiler.cypher_generator import CypherGenerationException, CypherGenerator
 from transpiler.structures.nodes import Triple
 from transpiler.structures.nodes.graph_pattern import GraphPattern
 from transpiler.structures.nodes.namespace import Namespace
@@ -69,12 +68,8 @@ def test_unroll_or_blocks(cypher_gen: CypherGenerator):
                 GraphPattern(
                     or_blocks=[
                         [
-                            GraphPattern(
-                                and_triples=[Triple("?s1", "?p2", "?o")]
-                            ),
-                            GraphPattern(
-                                and_triples=[Triple("?s", "?p2", "?o")]
-                            ),
+                            GraphPattern(and_triples=[Triple("?s1", "?p2", "?o")]),
+                            GraphPattern(and_triples=[Triple("?s", "?p2", "?o")]),
                         ]
                     ]
                 ),
@@ -85,7 +80,47 @@ def test_unroll_or_blocks(cypher_gen: CypherGenerator):
 
     unrolled = cypher_gen.split_pattern(graph)
 
-    assert len(unrolled) == 5
+    assert len(unrolled) == 3
+
+
+def test_unroll_or_blocks_2(cypher_gen: CypherGenerator):
+    """The internal graph patterns shall be transformed in a list of GraphPatterns without or_blocks
+
+    But every block shall be unrolled considering the and_triples as a distributive to or_blocks.
+
+    (triple1 & triple2) & (triple3 or triple4) -> (triple1 & triple2 & triple3) or (triple1 & triple2 & triple4)
+    """
+    graph = GraphPattern(
+        and_triples=[Triple("?s1", "?p1", "?o1"), Triple("?s1", "?p2", "?o2")],
+        or_blocks=[
+            [
+                GraphPattern(
+                    or_blocks=[
+                        [
+                            GraphPattern(and_triples=[Triple("?s1", "?p3", "?o3")]),
+                            GraphPattern(and_triples=[Triple("?s1", "?p4", "?o4")]),
+                        ]
+                    ]
+                )
+            ]
+        ],
+    )
+
+    unrolled = cypher_gen.split_pattern(graph)
+
+    assert len(unrolled) == 2
+
+    assert set(unrolled[0].and_triples) == {
+        Triple("?s1", "?p1", "?o1"),
+        Triple("?s1", "?p2", "?o2"),
+        Triple("?s1", "?p3", "?o3"),
+    }
+
+    assert set(unrolled[1].and_triples) == {
+        Triple("?s1", "?p1", "?o1"),
+        Triple("?s1", "?p2", "?o2"),
+        Triple("?s1", "?p4", "?o4"),
+    }
 
 
 def test_unwind_clause_0(cypher_gen: CypherGenerator):

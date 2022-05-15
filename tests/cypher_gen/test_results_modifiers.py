@@ -18,7 +18,7 @@ def test_gen_order_by_one_var(cypher_gen: CypherGenerator):
 
     result = cypher_gen.result_modifier(node)
 
-    assert result == 'ORDER BY s DESC'
+    assert result == 'ORDER BY s ASC'
 
 
 def test_gen_order_by_two_var(cypher_gen: CypherGenerator):
@@ -29,17 +29,17 @@ def test_gen_order_by_two_var(cypher_gen: CypherGenerator):
 
     result = cypher_gen.result_modifier(node)
 
-    assert result == 'ORDER BY s DESC, p DESC'
+    assert result == 'ORDER BY s ASC, p ASC'
 
 def test_gen_order_by_two_var_asc(cypher_gen: CypherGenerator):
     """The order by shall be transformed into the ORDER BY clause"""
-    cond1 = OrderCondition(var='?s', order='ASC')
+    cond1 = OrderCondition(var='?s', order='DESC')
     cond2 = OrderCondition(var='?p')
     node = ModifiersNode(order=OrderNode(conditions=[cond1, cond2]))
 
     result = cypher_gen.result_modifier(node)
 
-    assert result == 'ORDER BY s ASC, p DESC'
+    assert result == 'ORDER BY s DESC, p ASC'
 
 def test_gen_limit(cypher_gen: CypherGenerator):
     """The limit shall be transformed into LIMIT clause"""

@@ -306,6 +306,7 @@ class CypherGenerator:
         self.setup_namespaces(query.namespaces)
 
         patterns = self.split_pattern(query.mandatory)
+        # t1 & (t2 or t3)32
 
         code_blocks = [self.code_block_for_pattern(p, query)
                        for p in patterns
@@ -323,3 +324,5 @@ class CypherGenerator:
             modified_code = united_code
 
         return modified_code
+
+

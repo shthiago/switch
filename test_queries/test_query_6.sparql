@@ -1,0 +1,4 @@
+PREFIX b:<http://www.geonames.org/ontology#>
+SELECT ?brazil WHERE {
+    ?brazil b:name "Brazil" 
+}

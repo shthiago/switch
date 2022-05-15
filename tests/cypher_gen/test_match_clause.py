@@ -44,8 +44,7 @@ def test_match_uri_any_any(cypher_gen: CypherGenerator):
         match = cypher_gen.match_clause(triple)
 
         assert (
-            match
-            == 'MATCH (abbrev_uri) WHERE abbrev_uri.uri = "abbrevfulluri"'
+            match == 'MATCH (abbrev_uri) WHERE abbrev_uri.uri = "abbrevfulluri"'
         )
 
 

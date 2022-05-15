@@ -59,7 +59,11 @@ class SelectSparqlParser:
 
     def p_production_11(self, p):
         """PrefixDecl : KW_PREFIX PNAME_NS IRIREF"""
-        self.query.namespaces.append(nodes.Namespace(p[2].replace(':', ''), p[3].replace('<', '').replace('>', '')))
+        self.query.namespaces.append(
+            nodes.Namespace(
+                p[2].replace(":", ""), p[3].replace("<", "").replace(">", "")
+            )
+        )
 
     def p_production_13(self, p):
         """SelectQuery : SelectClause WhereClause SolutionModifier"""

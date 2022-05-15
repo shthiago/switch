@@ -32,10 +32,7 @@ def test_gen_where_case_obj_var_var_uri(cypher_gen: CypherGenerator):
 
     where_clause = cypher_gen.case_object_where_clause(triple)
 
-    assert (
-        where_clause
-        == 'WHERE place_BR.uri = "placefullBR" '
-    )
+    assert where_clause == 'WHERE place_BR.uri = "placefullBR" '
 
 
 def test_gen_where_case_obj_var_uri_var(cypher_gen: CypherGenerator):
@@ -102,10 +99,7 @@ def test_gen_where_case_obj_uri_var_uri(cypher_gen: CypherGenerator):
 
     where_clause = cypher_gen.case_object_where_clause(triple)
 
-    assert (
-        where_clause
-        == 'WHERE abbrev_US.uri = "abbrevfullUS" '
-    )
+    assert where_clause == 'WHERE abbrev_US.uri = "abbrevfullUS" '
 
 
 def test_gen_where_case_obj_uri_uri_var(cypher_gen: CypherGenerator):

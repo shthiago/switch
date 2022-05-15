@@ -37,6 +37,10 @@ exclude = '''
 )/
 '''
 
+[tool.isort]
+profile = "black"
+
+
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.7"
 mypy = "^0.910"

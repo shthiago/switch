@@ -2,6 +2,7 @@ import argparse
 
 from transpiler.cypher_generator import CypherGenerator
 
+
 def main(filename: str):
     with open(filename) as f:
         content = f.read()
@@ -11,10 +12,11 @@ def main(filename: str):
 
     print(cypher)
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='CLI for Switch')
 
-    parser.add_argument('filename')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="CLI for Switch")
+
+    parser.add_argument("filename")
 
     args = parser.parse_args()
 

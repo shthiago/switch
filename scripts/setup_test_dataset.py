@@ -63,9 +63,7 @@ def download_url(url: str):
 
 
 def fuse_dataset(filename: str):
-    files = [
-        os.path.join(DATASET_DIR, file) for file in os.listdir(DATASET_DIR)
-    ]
+    files = [os.path.join(DATASET_DIR, file) for file in os.listdir(DATASET_DIR)]
     graph = Graph()
     for file in files:
         try:

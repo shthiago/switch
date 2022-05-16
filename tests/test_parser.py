@@ -1,6 +1,29 @@
 """Test parser to construct the query description structure"""
 from transpiler.parser import SelectSparqlParser
-from transpiler.structures.nodes import *
+from transpiler.structures.nodes import (
+    AdditiveExpression,
+    AndExpression,
+    BuiltInFunction,
+    ExpressionNode,
+    GraphPattern,
+    GroupClauseNode,
+    GroupCondition,
+    HavingClauseNode,
+    LogOperator,
+    ModifiersNode,
+    MultiplicativeExpression,
+    Namespace,
+    OrderCondition,
+    OrderNode,
+    OrExpression,
+    PrimaryExpression,
+    PrimaryType,
+    RelationalExpression,
+    SelectedVar,
+    Triple,
+    UnaryExpression,
+    Var,
+)
 from transpiler.structures.query import Query
 
 
@@ -105,12 +128,8 @@ def test_query_union_3(switch_parser: SelectSparqlParser):
                     GraphPattern(
                         or_blocks=[
                             [
-                                GraphPattern(
-                                    and_triples=[Triple("?s1", "?p2", "?o")]
-                                ),
-                                GraphPattern(
-                                    and_triples=[Triple("?s", "?p2", "?o")]
-                                ),
+                                GraphPattern(and_triples=[Triple("?s1", "?p2", "?o")]),
+                                GraphPattern(and_triples=[Triple("?s", "?p2", "?o")]),
                             ]
                         ]
                     ),
@@ -270,9 +289,7 @@ def test_modifiers_limit_offset(switch_parser: SelectSparqlParser):
         returning=[SelectedVar(value="*")],
     )
 
-    result = switch_parser.parse(
-        "SELECT * WHERE {?s ?p ?o} OFFSET 10 LIMIT 100"
-    )
+    result = switch_parser.parse("SELECT * WHERE {?s ?p ?o} OFFSET 10 LIMIT 100")
 
     assert answer == result  # nosec
 
@@ -286,9 +303,7 @@ def test_modifiers_offset_limit(switch_parser: SelectSparqlParser):
         returning=[SelectedVar(value="*")],
     )
 
-    result = switch_parser.parse(
-        "SELECT * WHERE {?s ?p ?o} LIMIT 10 OFFSET 100"
-    )
+    result = switch_parser.parse("SELECT * WHERE {?s ?p ?o} LIMIT 10 OFFSET 100")
 
     assert answer == result  # nosec
 
@@ -334,9 +349,7 @@ def test_modifiers_group_by_var(switch_parser: SelectSparqlParser):
     answer = Query(
         mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o")],
-        modifiers=ModifiersNode(
-            group=GroupClauseNode([GroupCondition(value="?s")])
-        ),
+        modifiers=ModifiersNode(group=GroupClauseNode([GroupCondition(value="?s")])),
         returning=[SelectedVar(value="*")],
     )
 
@@ -372,9 +385,7 @@ def test_modifiers_group_by_with_aggregation(switch_parser: SelectSparqlParser):
     answer = Query(
         mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o"), Var("?count")],
-        modifiers=ModifiersNode(
-            group=GroupClauseNode([GroupCondition(value="?s")])
-        ),
+        modifiers=ModifiersNode(group=GroupClauseNode([GroupCondition(value="?s")])),
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(

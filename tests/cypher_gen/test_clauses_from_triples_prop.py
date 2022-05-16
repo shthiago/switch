@@ -42,8 +42,7 @@ def test_gen_where_case_prop_var_uri_var(cypher_gen: CypherGenerator):
     where_clause = cypher_gen.case_property_where_clause(triple)
 
     assert (
-        where_clause
-        == 'WHERE key = n10s.rdf.shortFormFromFullUri("full") + "partOf" '
+        where_clause == 'WHERE key = n10s.rdf.shortFormFromFullUri("full") + "partOf" '
     )
 
 
@@ -106,10 +105,7 @@ def test_gen_where_case_prop_uri_uri_var(cypher_gen: CypherGenerator):
 
     where_clause = cypher_gen.case_property_where_clause(triple)
 
-    assert (
-        where_clause
-        == 'WHERE key = n10s.rdf.shortFormFromFullUri("full") + "uri" '
-    )
+    assert where_clause == 'WHERE key = n10s.rdf.shortFormFromFullUri("full") + "uri" '
 
 
 def test_gen_where_case_prop_uri_uri_lit(cypher_gen: CypherGenerator):
@@ -132,9 +128,7 @@ def test_gen_where_case_prop_uri_uri_uri(cypher_gen: CypherGenerator):
     namespaces = [Namespace(abbrev="abbrev", full="full")]
     cypher_gen.setup_namespaces(namespaces)
 
-    triple = Triple(
-        subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri"
-    )
+    triple = Triple(subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri")
 
     where_clause = cypher_gen.case_property_where_clause(triple)
 
@@ -158,8 +152,7 @@ def test_gen_all_case_prop_var_var_lit(cypher_gen: CypherGenerator):
 
     case_prop = cypher_gen.filter_case_property(triple)
     assert (
-        case_prop
-        == '[key in keys(s) WHERE s[key] = "Little Label" | [s, key, s[key]]]'
+        case_prop == '[key in keys(s) WHERE s[key] = "Little Label" | [s, key, s[key]]]'
     )
 
 
@@ -214,9 +207,7 @@ def test_gen_all_case_prop_uri_var_var(cypher_gen: CypherGenerator):
     cypher_gen.setup_namespaces(namespaces)
 
     case_prop = cypher_gen.filter_case_property(triple)
-    assert (
-        case_prop == "[key in keys(place_BR) | [place_BR, key, place_BR[key]]]"
-    )
+    assert case_prop == "[key in keys(place_BR) | [place_BR, key, place_BR[key]]]"
 
 
 def test_gen_all_case_prop_uri_var_lit(cypher_gen: CypherGenerator):
@@ -265,9 +256,7 @@ def test_gen_all_case_prop_uri_uri_lit(cypher_gen: CypherGenerator):
 
 
 def test_gen_all_case_prop_uri_uri_uri(cypher_gen: CypherGenerator):
-    triple = Triple(
-        subject="place:BR", predicate="place:part", object="place:bla"
-    )
+    triple = Triple(subject="place:BR", predicate="place:part", object="place:bla")
     namespaces = [Namespace(abbrev="place", full="placefull")]
     cypher_gen.setup_namespaces(namespaces)
 

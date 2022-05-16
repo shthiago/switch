@@ -54,6 +54,5 @@ def test_gen_case_prop_var_uri_var(
     where_clause = cypher_gen.case_property_where_clause(triple)
 
     assert (
-        where_clause
-        == 'WHERE key = n10s.rdf.shortFormFromFullUri("full") + "partOf" '
+        where_clause == 'WHERE key = n10s.rdf.shortFormFromFullUri("full") + "partOf" '
     )

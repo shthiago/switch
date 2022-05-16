@@ -33,9 +33,7 @@ def test_match_uri_any_any(cypher_gen: CypherGenerator):
         Triple(subject="abbrev:uri", predicate="?var", object="abbrev:uri"),
         Triple(subject="abbrev:uri", predicate="abbrev:uri", object="?var"),
         Triple(subject="abbrev:uri", predicate="abbrev:uri", object="lit"),
-        Triple(
-            subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri"
-        ),
+        Triple(subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri"),
     ]
 
     for triple in triples:
@@ -43,9 +41,7 @@ def test_match_uri_any_any(cypher_gen: CypherGenerator):
         cypher_gen.setup_namespaces(namespaces)
         match = cypher_gen.match_clause(triple)
 
-        assert (
-            match == 'MATCH (abbrev_uri) WHERE abbrev_uri.uri = "abbrevfulluri"'
-        )
+        assert match == 'MATCH (abbrev_uri) WHERE abbrev_uri.uri = "abbrevfulluri"'
 
 
 def test_match_var_reused(cypher_gen: CypherGenerator):

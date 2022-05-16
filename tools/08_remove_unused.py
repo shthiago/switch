@@ -67,6 +67,4 @@ if __name__ == "__main__":
     max_key_len = max([len(key) for key in grammar.keys()])
     with open("grammar/08 - SELECT_SPARQL.grammar", "w") as f:
         for key, value in grammar.items():
-            f.write(
-                f'{key}{" " * (max_key_len - len(key))} ::= {" ".join(value)}\n'
-            )
+            f.write(f'{key}{" " * (max_key_len - len(key))} ::= {" ".join(value)}\n')

@@ -116,9 +116,7 @@ def test_gen_where_case_obj_uri_uri_var(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_obj_uri_uri_lit(cypher_gen: CypherGenerator):
-    triple = Triple(
-        subject="abbrev:BR", predicate="abbrev:BLA", object="Literal"
-    )
+    triple = Triple(subject="abbrev:BR", predicate="abbrev:BLA", object="Literal")
     namespaces = [Namespace(abbrev="abbrev", full="abbrevfull")]
     cypher_gen.setup_namespaces(namespaces)
 
@@ -128,9 +126,7 @@ def test_gen_where_case_obj_uri_uri_lit(cypher_gen: CypherGenerator):
 
 
 def test_gen_where_case_obj_uri_uri_uri(cypher_gen: CypherGenerator):
-    triple = Triple(
-        subject="abbrev:BR", predicate="abbrev:BLA", object="abbrev:US"
-    )
+    triple = Triple(subject="abbrev:BR", predicate="abbrev:BLA", object="abbrev:US")
     namespaces = [Namespace(abbrev="abbrev", full="abbrevfull")]
     cypher_gen.setup_namespaces(namespaces)
 
@@ -218,10 +214,7 @@ def test_gen_all_uri_var_var(cypher_gen: CypherGenerator):
 
     full_clause = cypher_gen.filter_case_object(triple)
 
-    assert (
-        full_clause
-        == "[(abbrev_uri)-[_relation]-(o) | [abbrev_uri, _relation, o]]"
-    )
+    assert full_clause == "[(abbrev_uri)-[_relation]-(o) | [abbrev_uri, _relation, o]]"
 
 
 def test_gen_all_uri_var_lit(cypher_gen: CypherGenerator):
@@ -271,9 +264,7 @@ def test_gen_all_uri_uri_lit(cypher_gen: CypherGenerator):
 
 
 def test_gen_all_uri_uri_uri(cypher_gen: CypherGenerator):
-    triple = Triple(
-        subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri"
-    )
+    triple = Triple(subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri")
     namespaces = [Namespace(abbrev="abbrev", full="full")]
     cypher_gen.setup_namespaces(namespaces)
 

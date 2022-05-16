@@ -104,9 +104,7 @@ def test_with_clause_uri_uri_lit(cypher_gen: CypherGenerator):
 
 def test_with_clause_uri_uri_uri(cypher_gen: CypherGenerator):
     """If nothing shall be passed forward, the clause shall be None"""
-    triple = Triple(
-        subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri"
-    )
+    triple = Triple(subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri")
 
     clause = cypher_gen.with_clause(triple)
 
@@ -115,9 +113,7 @@ def test_with_clause_uri_uri_uri(cypher_gen: CypherGenerator):
 
 def test_two_consecutive_triples(cypher_gen: CypherGenerator):
     """Variables used in previous triples (query order) shall be passed forward even if they are not used in the current triple"""
-    first_triple = Triple(
-        subject="abbrev:uri", predicate="abbrev:uri", object="?o"
-    )
+    first_triple = Triple(subject="abbrev:uri", predicate="abbrev:uri", object="?o")
     second_triple = Triple(subject="?s", predicate="abbrev:uri", object="lit")
 
     first_with = cypher_gen.with_clause(first_triple)
@@ -131,9 +127,7 @@ def test_two_consecutive_triples(cypher_gen: CypherGenerator):
 
 def test_three_consecutive_triples(cypher_gen: CypherGenerator):
     """Variables used in previous triples (query order) shall be passed forward even if they are not used in the current triple"""
-    first_triple = Triple(
-        subject="abbrev:uri", predicate="abbrev:uri", object="?o"
-    )
+    first_triple = Triple(subject="abbrev:uri", predicate="abbrev:uri", object="?o")
     second_triple = Triple(subject="?s", predicate="abbrev:uri", object="lit")
     third_triple = Triple(
         subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri"
@@ -154,16 +148,12 @@ def test_three_consecutive_triples(cypher_gen: CypherGenerator):
 
 def test_four_consecutive_triples(cypher_gen: CypherGenerator):
     """Variables reused shall be passed forward from the most recent triples"""
-    first_triple = Triple(
-        subject="abbrev:uri", predicate="abbrev:uri", object="?o"
-    )
+    first_triple = Triple(subject="abbrev:uri", predicate="abbrev:uri", object="?o")
     second_triple = Triple(subject="?s", predicate="abbrev:uri", object="lit")
     third_triple = Triple(
         subject="abbrev:uri", predicate="abbrev:uri", object="abbrev:uri"
     )
-    forth_triple = Triple(
-        subject="?s", predicate="abbrev:uri", object="abbrev:uri"
-    )
+    forth_triple = Triple(subject="?s", predicate="abbrev:uri", object="abbrev:uri")
 
     first_with = cypher_gen.with_clause(first_triple)
 

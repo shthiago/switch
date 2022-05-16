@@ -192,13 +192,7 @@ class SelectSparqlLexer:
     t_PNAME_NS = PN_PREFIX + r":"
     t_PNAME_LN = t_PNAME_NS + PN_LOCAL
     t_BLANK_NODE_LABEL = (
-        r"_:(("
-        + PN_CHARS_U
-        + r")|[0-9])((("
-        + PN_CHARS
-        + r")|.)("
-        + PN_CHARS
-        + r"))?"
+        r"_:((" + PN_CHARS_U + r")|[0-9])(((" + PN_CHARS + r")|.)(" + PN_CHARS + r"))?"
     )
     t_STRING_LITERAL_LONG1 = r"'''(.|\n)*'''"
     t_STRING_LITERAL_LONG2 = r'"""(.|\n)*"""'

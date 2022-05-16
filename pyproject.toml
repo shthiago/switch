@@ -6,7 +6,7 @@ authors = ["Thiago Sant Helena <shthiago@users.noreply.github.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 pytest = "^6.2.5"
 pylint = "^2.11.1"
 ply = "^3.11"
@@ -20,7 +20,7 @@ neo4j = "^4.4.2"
 
 [tool.black]
 line-length = 88
-target-version = ['py37']
+target-version = ['py310']
 include = 'transpiler/'
 exclude = '''
 /(

@@ -408,3 +408,195 @@ def test_detect_not_only_iri_5(handler: ExpressionHandler):
     )
 
     assert not handler.is_iri(struct)
+
+
+def test_detect_only_builtincall(handler: ExpressionHandler):
+    struct = OrExpression(
+        AndExpression(
+            RelationalExpression(
+                first=AdditiveExpression(
+                    MultiplicativeExpression(
+                        UnaryExpression(
+                            value=PrimaryExpression(
+                                type=PrimaryType.FUNC,
+                                value=BuiltInFunction(name="COUNT", params=["*"]),
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    assert handler.is_builtincall(struct)
+
+
+def test_detect_not_only_builtincall_0(handler: ExpressionHandler):
+    struct = OrExpression(
+        AndExpression(
+            RelationalExpression(
+                first=AdditiveExpression(
+                    MultiplicativeExpression(
+                        UnaryExpression(
+                            value=PrimaryExpression(
+                                type=PrimaryType.STR_LITERAL, value="val"
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    assert not handler.is_builtincall(struct)
+
+
+def test_detect_not_only_builtincall_1(handler: ExpressionHandler):
+    struct = OrExpression(
+        AndExpression(
+            RelationalExpression(
+                first=AdditiveExpression(
+                    MultiplicativeExpression(
+                        UnaryExpression(
+                            value=PrimaryExpression(
+                                type=PrimaryType.FUNC,
+                                value=BuiltInFunction(name="COUNT", params=["*"]),
+                            )
+                        )
+                    )
+                ),
+                second=(
+                    LogOperator.EQ,
+                    AdditiveExpression(
+                        MultiplicativeExpression(
+                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
+                        )
+                    ),
+                ),
+            )
+        )
+    )
+
+    assert not handler.is_builtincall(struct)
+
+
+def test_detect_not_only_builtincall_2(handler: ExpressionHandler):
+    struct = OrExpression(
+        AndExpression(
+            RelationalExpression(
+                first=AdditiveExpression(
+                    MultiplicativeExpression(
+                        UnaryExpression(
+                            value=PrimaryExpression(
+                                type=PrimaryType.FUNC,
+                                value=BuiltInFunction(name="COUNT", params=["*"]),
+                            )
+                        )
+                    ),
+                    others=[
+                        (
+                            AdditiveOperator.SUM,
+                            MultiplicativeExpression(
+                                UnaryExpression(
+                                    PrimaryExpression(PrimaryType.NUM_LITERAL, 10)
+                                )
+                            ),
+                        )
+                    ],
+                )
+            )
+        )
+    )
+
+    assert not handler.is_builtincall(struct)
+
+
+def test_detect_not_only_builtincall_3(handler: ExpressionHandler):
+    struct = OrExpression(
+        AndExpression(
+            RelationalExpression(
+                first=AdditiveExpression(
+                    MultiplicativeExpression(
+                        UnaryExpression(
+                            value=PrimaryExpression(
+                                type=PrimaryType.FUNC,
+                                value=BuiltInFunction(name="COUNT", params=["*"]),
+                            )
+                        ),
+                        [
+                            (
+                                MultiplicativeOperator.MULT,
+                                UnaryExpression(
+                                    PrimaryExpression(PrimaryType.NUM_LITERAL, 10)
+                                ),
+                            )
+                        ],
+                    )
+                )
+            )
+        )
+    )
+
+    assert not handler.is_builtincall(struct)
+
+
+def test_detect_not_only_builtincall_4(handler: ExpressionHandler):
+    struct = OrExpression(
+        AndExpression(
+            RelationalExpression(
+                first=AdditiveExpression(
+                    MultiplicativeExpression(
+                        UnaryExpression(
+                            value=PrimaryExpression(
+                                type=PrimaryType.FUNC,
+                                value=BuiltInFunction(name="COUNT", params=["*"]),
+                            )
+                        )
+                    )
+                )
+            ),
+            [
+                RelationalExpression(
+                    AdditiveExpression(
+                        MultiplicativeExpression(
+                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
+                        )
+                    )
+                )
+            ],
+        )
+    )
+
+    assert not handler.is_builtincall(struct)
+
+
+def test_detect_not_only_builtincall_5(handler: ExpressionHandler):
+    struct = OrExpression(
+        AndExpression(
+            RelationalExpression(
+                first=AdditiveExpression(
+                    MultiplicativeExpression(
+                        UnaryExpression(
+                            value=PrimaryExpression(
+                                type=PrimaryType.FUNC,
+                                value=BuiltInFunction(name="COUNT", params=["*"]),
+                            )
+                        )
+                    )
+                )
+            ),
+        ),
+        [
+            AndExpression(
+                RelationalExpression(
+                    AdditiveExpression(
+                        MultiplicativeExpression(
+                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
+                        )
+                    )
+                )
+            )
+        ],
+    )
+
+    assert not handler.is_builtincall(struct)

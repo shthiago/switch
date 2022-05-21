@@ -24,7 +24,11 @@ class SelectSparqlParser:
         """QueryUnit : Query"""
         # Mark selected variables
         if self.selecteds == "*":
-            is_selected = lambda *args: True
+
+            def always_true(*_):
+                return True
+
+            is_selected = always_true
         else:
 
             def is_selected(name):
@@ -1164,7 +1168,21 @@ class SelectSparqlParser:
 
     def p_production_370(self, p):
         """AggregateAux2 : SYMB_ASTERISK"""
-        p[0] = p[1]
+        p[0] = nodes.OrExpression(
+            nodes.AndExpression(
+                nodes.RelationalExpression(
+                    first=nodes.AdditiveExpression(
+                        nodes.MultiplicativeExpression(
+                            nodes.UnaryExpression(
+                                value=nodes.PrimaryExpression(
+                                    type=nodes.PrimaryType.STR_LITERAL, value="*"
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
 
     def p_production_371(self, p):
         """AggregateAux2 : Expression"""

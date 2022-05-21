@@ -399,7 +399,25 @@ def test_modifiers_group_by_with_aggregation(switch_parser: SelectSparqlParser):
                                             value=PrimaryExpression(
                                                 type=PrimaryType.FUNC,
                                                 value=BuiltInFunction(
-                                                    name="COUNT", params=["*"]
+                                                    name="COUNT",
+                                                    params=[
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.STR_LITERAL,
+                                                                                    value="*",
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        )
+                                                    ],
                                                 ),
                                             )
                                         )
@@ -477,7 +495,25 @@ def test_modifiers_having(switch_parser: SelectSparqlParser):
                                             value=PrimaryExpression(
                                                 type=PrimaryType.FUNC,
                                                 value=BuiltInFunction(
-                                                    name="COUNT", params=["*"]
+                                                    name="COUNT",
+                                                    params=[
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.STR_LITERAL,
+                                                                                    value="*",
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        )
+                                                    ],
                                                 ),
                                             )
                                         )

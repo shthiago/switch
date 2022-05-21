@@ -24,7 +24,7 @@ def handler() -> ExpressionHandler:
     return ExpressionHandler()
 
 
-def test_detect_only_var(handler: ExpressionHandler):
+def test_gen_count(handler: ExpressionHandler):
     struct = OrExpression(
         AndExpression(
             RelationalExpression(
@@ -32,202 +32,29 @@ def test_detect_only_var(handler: ExpressionHandler):
                     MultiplicativeExpression(
                         UnaryExpression(
                             value=PrimaryExpression(
-                                type=PrimaryType.VAR,
-                                value="?o",
-                            ),
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    assert handler.is_var(struct)
-
-
-def test_detect_not_only_var_0(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.STR_LITERAL,
-                                value="o",
-                            ),
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    assert not handler.is_var(struct)
-
-
-def test_detect_not_only_var_1(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.VAR,
-                                value="?o",
-                            ),
-                        )
-                    )
-                ),
-                second=(
-                    LogOperator.EQ,
-                    AdditiveExpression(
-                        MultiplicativeExpression(
-                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
-                        )
-                    ),
-                ),
-            )
-        )
-    )
-
-    assert not handler.is_var(struct)
-
-
-def test_detect_not_only_var_2(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.VAR,
-                                value="?o",
-                            )
-                        )
-                    ),
-                    others=[
-                        (
-                            AdditiveOperator.SUM,
-                            MultiplicativeExpression(
-                                UnaryExpression(
-                                    PrimaryExpression(PrimaryType.NUM_LITERAL, 10)
-                                )
-                            ),
-                        )
-                    ],
-                )
-            )
-        )
-    )
-
-    assert not handler.is_var(struct)
-
-
-def test_detect_not_only_var_3(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.VAR,
-                                value="?o",
-                            )
-                        ),
-                        [
-                            (
-                                MultiplicativeOperator.MULT,
-                                UnaryExpression(
-                                    PrimaryExpression(PrimaryType.NUM_LITERAL, 10)
+                                type=PrimaryType.FUNC,
+                                value=BuiltInFunction(
+                                    name="COUNT",
+                                    params=[
+                                        OrExpression(
+                                            AndExpression(
+                                                RelationalExpression(
+                                                    first=AdditiveExpression(
+                                                        MultiplicativeExpression(
+                                                            UnaryExpression(
+                                                                value=PrimaryExpression(
+                                                                    type=PrimaryType.STR_LITERAL,
+                                                                    value="*",
+                                                                )
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    ],
                                 ),
                             )
-                        ],
-                    )
-                )
-            )
-        )
-    )
-
-    assert not handler.is_var(struct)
-
-
-def test_detect_not_only_var_4(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.VAR,
-                                value="?o",
-                            )
-                        )
-                    )
-                )
-            ),
-            [
-                RelationalExpression(
-                    AdditiveExpression(
-                        MultiplicativeExpression(
-                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
-                        )
-                    )
-                )
-            ],
-        )
-    )
-
-    assert not handler.is_var(struct)
-
-
-def test_detect_not_only_var_5(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.VAR,
-                                value="?o",
-                            )
-                        )
-                    )
-                )
-            ),
-        ),
-        [
-            AndExpression(
-                RelationalExpression(
-                    AdditiveExpression(
-                        MultiplicativeExpression(
-                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
-                        )
-                    )
-                )
-            )
-        ],
-    )
-
-    assert not handler.is_var(struct)
-
-
-def test_detect_only_iri(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.IRI,
-                                value="abbrev:thing",
-                            ),
                         )
                     )
                 )
@@ -235,10 +62,10 @@ def test_detect_only_iri(handler: ExpressionHandler):
         )
     )
 
-    assert handler.is_iri(struct)
+    assert handler.value_orexpression(struct) == "count(*)"
 
 
-def test_detect_not_only_iri_0(handler: ExpressionHandler):
+def test_gen_sum(handler: ExpressionHandler):
     struct = OrExpression(
         AndExpression(
             RelationalExpression(
@@ -246,171 +73,40 @@ def test_detect_not_only_iri_0(handler: ExpressionHandler):
                     MultiplicativeExpression(
                         UnaryExpression(
                             value=PrimaryExpression(
-                                type=PrimaryType.STR_LITERAL,
-                                value="o",
-                            ),
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    assert not handler.is_iri(struct)
-
-
-def test_detect_not_only_iri_1(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.IRI,
-                                value="abbrev:thing",
-                            ),
-                        )
-                    )
-                ),
-                second=(
-                    LogOperator.EQ,
-                    AdditiveExpression(
-                        MultiplicativeExpression(
-                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
-                        )
-                    ),
-                ),
-            )
-        )
-    )
-
-    assert not handler.is_iri(struct)
-
-
-def test_detect_not_only_iri_2(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.IRI,
-                                value="abbrev:thing",
-                            )
-                        )
-                    ),
-                    others=[
-                        (
-                            AdditiveOperator.SUM,
-                            MultiplicativeExpression(
-                                UnaryExpression(
-                                    PrimaryExpression(PrimaryType.NUM_LITERAL, 10)
-                                )
-                            ),
-                        )
-                    ],
-                )
-            )
-        )
-    )
-
-    assert not handler.is_iri(struct)
-
-
-def test_detect_not_only_iri_3(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.IRI,
-                                value="abbrev:thing",
-                            )
-                        ),
-                        [
-                            (
-                                MultiplicativeOperator.MULT,
-                                UnaryExpression(
-                                    PrimaryExpression(PrimaryType.NUM_LITERAL, 10)
+                                type=PrimaryType.FUNC,
+                                value=BuiltInFunction(
+                                    name="SUM",
+                                    params=[
+                                        OrExpression(
+                                            AndExpression(
+                                                RelationalExpression(
+                                                    first=AdditiveExpression(
+                                                        MultiplicativeExpression(
+                                                            UnaryExpression(
+                                                                value=PrimaryExpression(
+                                                                    type=PrimaryType.VAR,
+                                                                    value="?s",
+                                                                )
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    ],
                                 ),
                             )
-                        ],
+                        )
                     )
                 )
             )
         )
     )
 
-    assert not handler.is_iri(struct)
+    assert handler.value_orexpression(struct) == "sum(s)"
 
 
-def test_detect_not_only_iri_4(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.IRI,
-                                value="abbrev:thing",
-                            )
-                        )
-                    )
-                )
-            ),
-            [
-                RelationalExpression(
-                    AdditiveExpression(
-                        MultiplicativeExpression(
-                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
-                        )
-                    )
-                )
-            ],
-        )
-    )
-
-    assert not handler.is_iri(struct)
-
-
-def test_detect_not_only_iri_5(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.IRI,
-                                value="abbrev:thing",
-                            )
-                        )
-                    )
-                )
-            ),
-        ),
-        [
-            AndExpression(
-                RelationalExpression(
-                    AdditiveExpression(
-                        MultiplicativeExpression(
-                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
-                        )
-                    )
-                )
-            )
-        ],
-    )
-
-    assert not handler.is_iri(struct)
-
-
-def test_detect_only_builtincall(handler: ExpressionHandler):
+def test_gen_min(handler: ExpressionHandler):
     struct = OrExpression(
         AndExpression(
             RelationalExpression(
@@ -419,128 +115,39 @@ def test_detect_only_builtincall(handler: ExpressionHandler):
                         UnaryExpression(
                             value=PrimaryExpression(
                                 type=PrimaryType.FUNC,
-                                value=BuiltInFunction(name="COUNT", params=["*"]),
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    assert handler.is_builtincall(struct)
-
-
-def test_detect_not_only_builtincall_0(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.STR_LITERAL, value="val"
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    assert not handler.is_builtincall(struct)
-
-
-def test_detect_not_only_builtincall_1(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.FUNC,
-                                value=BuiltInFunction(name="COUNT", params=["*"]),
-                            )
-                        )
-                    )
-                ),
-                second=(
-                    LogOperator.EQ,
-                    AdditiveExpression(
-                        MultiplicativeExpression(
-                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
-                        )
-                    ),
-                ),
-            )
-        )
-    )
-
-    assert not handler.is_builtincall(struct)
-
-
-def test_detect_not_only_builtincall_2(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.FUNC,
-                                value=BuiltInFunction(name="COUNT", params=["*"]),
-                            )
-                        )
-                    ),
-                    others=[
-                        (
-                            AdditiveOperator.SUM,
-                            MultiplicativeExpression(
-                                UnaryExpression(
-                                    PrimaryExpression(PrimaryType.NUM_LITERAL, 10)
-                                )
-                            ),
-                        )
-                    ],
-                )
-            )
-        )
-    )
-
-    assert not handler.is_builtincall(struct)
-
-
-def test_detect_not_only_builtincall_3(handler: ExpressionHandler):
-    struct = OrExpression(
-        AndExpression(
-            RelationalExpression(
-                first=AdditiveExpression(
-                    MultiplicativeExpression(
-                        UnaryExpression(
-                            value=PrimaryExpression(
-                                type=PrimaryType.FUNC,
-                                value=BuiltInFunction(name="COUNT", params=["*"]),
-                            )
-                        ),
-                        [
-                            (
-                                MultiplicativeOperator.MULT,
-                                UnaryExpression(
-                                    PrimaryExpression(PrimaryType.NUM_LITERAL, 10)
+                                value=BuiltInFunction(
+                                    name="MIN",
+                                    params=[
+                                        OrExpression(
+                                            AndExpression(
+                                                RelationalExpression(
+                                                    first=AdditiveExpression(
+                                                        MultiplicativeExpression(
+                                                            UnaryExpression(
+                                                                value=PrimaryExpression(
+                                                                    type=PrimaryType.VAR,
+                                                                    value="?s",
+                                                                )
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    ],
                                 ),
                             )
-                        ],
+                        )
                     )
                 )
             )
         )
     )
 
-    assert not handler.is_builtincall(struct)
+    assert handler.value_orexpression(struct) == "min(s)"
 
 
-def test_detect_not_only_builtincall_4(handler: ExpressionHandler):
+def test_gen_max(handler: ExpressionHandler):
     struct = OrExpression(
         AndExpression(
             RelationalExpression(
@@ -549,28 +156,39 @@ def test_detect_not_only_builtincall_4(handler: ExpressionHandler):
                         UnaryExpression(
                             value=PrimaryExpression(
                                 type=PrimaryType.FUNC,
-                                value=BuiltInFunction(name="COUNT", params=["*"]),
+                                value=BuiltInFunction(
+                                    name="MAX",
+                                    params=[
+                                        OrExpression(
+                                            AndExpression(
+                                                RelationalExpression(
+                                                    first=AdditiveExpression(
+                                                        MultiplicativeExpression(
+                                                            UnaryExpression(
+                                                                value=PrimaryExpression(
+                                                                    type=PrimaryType.VAR,
+                                                                    value="?s",
+                                                                )
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    ],
+                                ),
                             )
                         )
                     )
                 )
-            ),
-            [
-                RelationalExpression(
-                    AdditiveExpression(
-                        MultiplicativeExpression(
-                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
-                        )
-                    )
-                )
-            ],
+            )
         )
     )
 
-    assert not handler.is_builtincall(struct)
+    assert handler.value_orexpression(struct) == "max(s)"
 
 
-def test_detect_not_only_builtincall_5(handler: ExpressionHandler):
+def test_gen_avg(handler: ExpressionHandler):
     struct = OrExpression(
         AndExpression(
             RelationalExpression(
@@ -579,24 +197,33 @@ def test_detect_not_only_builtincall_5(handler: ExpressionHandler):
                         UnaryExpression(
                             value=PrimaryExpression(
                                 type=PrimaryType.FUNC,
-                                value=BuiltInFunction(name="COUNT", params=["*"]),
+                                value=BuiltInFunction(
+                                    name="AVG",
+                                    params=[
+                                        OrExpression(
+                                            AndExpression(
+                                                RelationalExpression(
+                                                    first=AdditiveExpression(
+                                                        MultiplicativeExpression(
+                                                            UnaryExpression(
+                                                                value=PrimaryExpression(
+                                                                    type=PrimaryType.VAR,
+                                                                    value="?s",
+                                                                )
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    ],
+                                ),
                             )
                         )
                     )
                 )
-            ),
-        ),
-        [
-            AndExpression(
-                RelationalExpression(
-                    AdditiveExpression(
-                        MultiplicativeExpression(
-                            UnaryExpression(PrimaryExpression(PrimaryType.VAR, "?s"))
-                        )
-                    )
-                )
             )
-        ],
+        )
     )
 
-    assert not handler.is_builtincall(struct)
+    assert handler.value_orexpression(struct) == "avg(s)"

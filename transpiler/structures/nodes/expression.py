@@ -90,8 +90,3 @@ class AndExpression:
 class OrExpression:
     base: AndExpression
     others: List[AndExpression] = field(default_factory=list)
-
-
-@dataclass
-class ExpressionNode:
-    exp: OrExpression

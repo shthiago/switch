@@ -159,3 +159,33 @@ def test_unwind_clause_2(cypher_gen: CypherGenerator):
         unwind
         == 'UNWIND [key in keys(s) WHERE s[key] = "literal" | [s, key, s[key]]] AS triples'
     )
+
+
+def test_special_match_case(cypher_gen: CypherGenerator):
+    """The rdf:type is converted to a Label in Neo4j, so the search is different"""
+    namespaces = [Namespace(abbrev="b", full="fullb")]
+    triple = Triple(subject="?s", predicate="rdf:type", object="b:Country")
+
+    cypher_gen.setup_namespaces(namespaces)
+
+    code = cypher_gen.match_clause(triple)
+
+    assert (
+        code
+        == 'MATCH (s) WHERE n10s.rdf.shortFormFromFullUri("fullb") + "Country" IN labels(s)'
+    )
+
+
+def test_special_full_block(cypher_gen: CypherGenerator):
+    """The rdf:type is converted to a Label in Neo4j, so the search is different"""
+    namespaces = [Namespace(abbrev="b", full="fullb")]
+    triple = Triple(subject="?s", predicate="rdf:type", object="b:Country")
+
+    cypher_gen.setup_namespaces(namespaces)
+
+    code = cypher_gen.code_block_for_triple(triple)
+
+    assert (
+        code
+        == 'MATCH (s) WHERE n10s.rdf.shortFormFromFullUri("fullb") + "Country" IN labels(s)\nWITH s AS s'
+    )

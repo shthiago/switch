@@ -4,13 +4,9 @@ import pytest
 from transpiler.expression_handler import ExpressionHandler
 from transpiler.structures.nodes.expression import (
     AdditiveExpression,
-    AdditiveOperator,
     AndExpression,
     BuiltInFunction,
-    ExpressionNode,
-    LogOperator,
     MultiplicativeExpression,
-    MultiplicativeOperator,
     OrExpression,
     PrimaryExpression,
     PrimaryType,

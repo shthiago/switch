@@ -4,7 +4,6 @@ from transpiler.structures.nodes import (
     AdditiveExpression,
     AndExpression,
     BuiltInFunction,
-    ExpressionNode,
     GraphPattern,
     GroupClauseNode,
     GroupCondition,
@@ -389,37 +388,35 @@ def test_modifiers_group_by_with_aggregation(switch_parser: SelectSparqlParser):
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
-                value=ExpressionNode(
-                    exp=OrExpression(
-                        base=AndExpression(
-                            base=RelationalExpression(
-                                first=AdditiveExpression(
-                                    base=MultiplicativeExpression(
-                                        base=UnaryExpression(
-                                            value=PrimaryExpression(
-                                                type=PrimaryType.FUNC,
-                                                value=BuiltInFunction(
-                                                    name="COUNT",
-                                                    params=[
-                                                        OrExpression(
-                                                            AndExpression(
-                                                                RelationalExpression(
-                                                                    first=AdditiveExpression(
-                                                                        MultiplicativeExpression(
-                                                                            UnaryExpression(
-                                                                                value=PrimaryExpression(
-                                                                                    type=PrimaryType.STR_LITERAL,
-                                                                                    value="*",
-                                                                                )
+                value=OrExpression(
+                    base=AndExpression(
+                        base=RelationalExpression(
+                            first=AdditiveExpression(
+                                base=MultiplicativeExpression(
+                                    base=UnaryExpression(
+                                        value=PrimaryExpression(
+                                            type=PrimaryType.FUNC,
+                                            value=BuiltInFunction(
+                                                name="COUNT",
+                                                params=[
+                                                    OrExpression(
+                                                        AndExpression(
+                                                            RelationalExpression(
+                                                                first=AdditiveExpression(
+                                                                    MultiplicativeExpression(
+                                                                        UnaryExpression(
+                                                                            value=PrimaryExpression(
+                                                                                type=PrimaryType.STR_LITERAL,
+                                                                                value="*",
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
                                                         )
-                                                    ],
-                                                ),
-                                            )
+                                                    )
+                                                ],
+                                            ),
                                         )
                                     )
                                 )
@@ -448,34 +445,32 @@ def test_modifiers_having(switch_parser: SelectSparqlParser):
             group=GroupClauseNode([GroupCondition(value="?s")]),
             having=HavingClauseNode(
                 [
-                    ExpressionNode(
-                        exp=OrExpression(
-                            base=AndExpression(
-                                base=RelationalExpression(
-                                    first=AdditiveExpression(
+                    OrExpression(
+                        base=AndExpression(
+                            base=RelationalExpression(
+                                first=AdditiveExpression(
+                                    base=MultiplicativeExpression(
+                                        base=UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.VAR,
+                                                value="?count",
+                                            )
+                                        )
+                                    )
+                                ),
+                                second=(
+                                    LogOperator.GT,
+                                    AdditiveExpression(
                                         base=MultiplicativeExpression(
                                             base=UnaryExpression(
                                                 value=PrimaryExpression(
-                                                    type=PrimaryType.VAR,
-                                                    value="?count",
+                                                    type=PrimaryType.NUM_LITERAL,
+                                                    value=2,
                                                 )
                                             )
                                         )
                                     ),
-                                    second=(
-                                        LogOperator.GT,
-                                        AdditiveExpression(
-                                            base=MultiplicativeExpression(
-                                                base=UnaryExpression(
-                                                    value=PrimaryExpression(
-                                                        type=PrimaryType.NUM_LITERAL,
-                                                        value=2,
-                                                    )
-                                                )
-                                            )
-                                        ),
-                                    ),
-                                )
+                                ),
                             )
                         )
                     )
@@ -485,37 +480,35 @@ def test_modifiers_having(switch_parser: SelectSparqlParser):
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
-                value=ExpressionNode(
-                    exp=OrExpression(
-                        base=AndExpression(
-                            base=RelationalExpression(
-                                first=AdditiveExpression(
-                                    base=MultiplicativeExpression(
-                                        base=UnaryExpression(
-                                            value=PrimaryExpression(
-                                                type=PrimaryType.FUNC,
-                                                value=BuiltInFunction(
-                                                    name="COUNT",
-                                                    params=[
-                                                        OrExpression(
-                                                            AndExpression(
-                                                                RelationalExpression(
-                                                                    first=AdditiveExpression(
-                                                                        MultiplicativeExpression(
-                                                                            UnaryExpression(
-                                                                                value=PrimaryExpression(
-                                                                                    type=PrimaryType.STR_LITERAL,
-                                                                                    value="*",
-                                                                                )
+                value=OrExpression(
+                    base=AndExpression(
+                        base=RelationalExpression(
+                            first=AdditiveExpression(
+                                base=MultiplicativeExpression(
+                                    base=UnaryExpression(
+                                        value=PrimaryExpression(
+                                            type=PrimaryType.FUNC,
+                                            value=BuiltInFunction(
+                                                name="COUNT",
+                                                params=[
+                                                    OrExpression(
+                                                        AndExpression(
+                                                            RelationalExpression(
+                                                                first=AdditiveExpression(
+                                                                    MultiplicativeExpression(
+                                                                        UnaryExpression(
+                                                                            value=PrimaryExpression(
+                                                                                type=PrimaryType.STR_LITERAL,
+                                                                                value="*",
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
                                                         )
-                                                    ],
-                                                ),
-                                            )
+                                                    )
+                                                ],
+                                            ),
                                         )
                                     )
                                 )

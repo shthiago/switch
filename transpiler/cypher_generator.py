@@ -6,6 +6,7 @@ from loguru import logger
 from transpiler.structures.nodes.modifiers import ModifiersNode, OrderNode
 from transpiler.structures.nodes.namespace import Namespace
 
+from .expression_handler import ExpressionHandler
 from .parser import SelectSparqlParser
 from .structures.query import GraphPattern, Query, Triple
 
@@ -25,6 +26,8 @@ class CypherGenerator:
         self.parser = SelectSparqlParser()
 
         self.used_variables: List[str] = []
+
+        self.expression_handler = ExpressionHandler()
 
     def reset_variables(self):
         self.used_variables = []
@@ -132,6 +135,16 @@ class CypherGenerator:
 
         return f"[({subject})-[_relation]-({obj}) {where_clause}| [{subject}, _relation, {obj}]]"
 
+    def with_clause_rdf_type(self, triple: Triple) -> str:
+        self.used_variables.append(self.cypher_var_for(triple.subject))
+
+        with_parts: List[str] = []
+
+        for var in reversed(self.used_variables):
+            with_parts.insert(0, f"{var} AS {var}")
+
+        return "WITH " + ", ".join(with_parts)
+
     def with_clause(self, triple: Triple) -> Optional[str]:
         parts = [triple.subject, triple.predicate, triple.object]
         types = list(map(self.get_triple_part_type, parts))
@@ -170,10 +183,16 @@ class CypherGenerator:
 
         clause = f"MATCH ({sub_var})"
 
-        if subject_type == TriplePartType.URI:
+        if self.is_rdf_type(triple):
+            clause += f" WHERE {self.ns_uri(triple.object)} IN labels({sub_var})"
+
+        elif subject_type == TriplePartType.URI:
             clause += f" WHERE {sub_var}.uri = {self.full_uri(triple.subject)}"
 
         return clause
+
+    def is_rdf_type(self, triple: Triple) -> bool:
+        return triple.predicate == "rdf:type"
 
     def full_uri(self, uri: str) -> str:
         abbrev, name = uri.split(":")
@@ -193,14 +212,14 @@ class CypherGenerator:
 
             if isinstance(var.value, str):
                 if var.value == "*":
-                    varname = "*"
+                    value = "*"
                 else:
-                    varname = self.cypher_var_for(var.value)
-
-                return_parts.append(f"{varname}{suffix}")
+                    value = self.cypher_var_for(var.value)
 
             else:
-                raise NotImplementedError
+                value = self.expression_handler.value_orexpression(var.value)
+
+            return_parts.append(f"{value}{suffix}")
 
         return "RETURN " + ", ".join(return_parts)
 
@@ -215,7 +234,7 @@ class CypherGenerator:
 
     def result_modifier(self, modifiers: ModifiersNode) -> Optional[str]:
         """Given a result modifiers node, generate the code block"""
-        if modifiers.group is not None or modifiers.having is not None:
+        if modifiers.having is not None:
             raise CypherGenerationException("Group By and having not implemented")
 
         mods = []
@@ -263,8 +282,13 @@ class CypherGenerator:
 
     def code_block_for_triple(self, triple: Triple) -> str:
         match_clause = self.match_clause(triple)
-        unwind_clause = self.unwind_clause(triple)
-        with_clause = self.with_clause(triple)
+        if self.is_rdf_type(triple):
+            unwind_clause = None
+            with_clause = self.with_clause_rdf_type(triple)
+
+        else:
+            unwind_clause = self.unwind_clause(triple)
+            with_clause = self.with_clause(triple)
 
         return "\n".join(
             filter(lambda k: bool(k), [match_clause, unwind_clause, with_clause])
@@ -326,7 +350,7 @@ class CypherGenerator:
         modifiers = self.result_modifier(query.modifiers)
 
         if modifiers is not None:
-            ret_clause = self.return_clause(query)
+            ret_clause = "RETURN *"
             modified_code = (
                 "CALL {\n" + united_code + "\n}\n" + ret_clause + "\n" + modifiers
             )

@@ -2,13 +2,13 @@
 from dataclasses import dataclass
 from typing import List, Optional, Union
 
-from .expression import BuiltInFunction, ExpressionNode
+from .expression import BuiltInFunction, OrExpression
 from .variables import Var
 
 
 @dataclass
 class GroupCondition:
-    value: Union[str, ExpressionNode, BuiltInFunction]
+    value: Union[str, OrExpression, BuiltInFunction]
     alias: Optional[str] = None
 
 
@@ -19,7 +19,7 @@ class GroupClauseNode:
 
 @dataclass
 class OrderCondition:
-    exp: Optional[Union[ExpressionNode, BuiltInFunction]] = None
+    exp: Optional[Union[OrExpression, BuiltInFunction]] = None
     var: Optional[str] = None
     order: str = "ASC"
 
@@ -31,7 +31,7 @@ class OrderNode:
 
 @dataclass
 class HavingClauseNode:
-    constraints: List[Union[ExpressionNode, BuiltInFunction]]
+    constraints: List[Union[OrExpression, BuiltInFunction]]
 
 
 @dataclass

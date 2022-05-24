@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from typing import List, Optional, Union
+from typing import Optional, Union
 
-from .expression import ExpressionNode
+from .expression import OrExpression
 
 
 @dataclass
@@ -14,5 +14,5 @@ class Var:
 
 @dataclass
 class SelectedVar:
-    value: Union[str, ExpressionNode]
+    value: Union[str, OrExpression]
     alias: Optional[str] = None

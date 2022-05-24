@@ -1,6 +1,22 @@
 """Check if every sparql function call is being processed"""
 from transpiler.parser import SelectSparqlParser
-from transpiler.structures.nodes import *
+from transpiler.structures.nodes import (
+    AdditiveExpression,
+    AndExpression,
+    BuiltInFunction,
+    FilterNode,
+    GraphPattern,
+    LogOperator,
+    MultiplicativeExpression,
+    OrExpression,
+    PrimaryExpression,
+    PrimaryType,
+    RelationalExpression,
+    SelectedVar,
+    Triple,
+    UnaryExpression,
+    Var,
+)
 from transpiler.structures.query import Query
 
 
@@ -11,38 +27,34 @@ def test_query_rand(switch_parser: SelectSparqlParser):
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            op=None,
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.VAR,
+                                                value="?o",
+                                            ),
+                                        )
+                                    )
+                                ),
+                                second=(
+                                    LogOperator.GT,
+                                    AdditiveExpression(
                                         MultiplicativeExpression(
                                             UnaryExpression(
                                                 op=None,
                                                 value=PrimaryExpression(
-                                                    type=PrimaryType.VAR,
-                                                    value="?o",
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction("RAND", []),
                                                 ),
                                             )
                                         )
                                     ),
-                                    second=(
-                                        LogOperator.GT,
-                                        AdditiveExpression(
-                                            MultiplicativeExpression(
-                                                UnaryExpression(
-                                                    op=None,
-                                                    value=PrimaryExpression(
-                                                        type=PrimaryType.FUNC,
-                                                        value=BuiltInFunction(
-                                                            "RAND", []
-                                                        ),
-                                                    ),
-                                                )
-                                            )
-                                        ),
-                                    ),
-                                )
+                                ),
                             )
                         )
                     )
@@ -72,58 +84,52 @@ def test_query_abs(switch_parser: SelectSparqlParser):
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
-                                        MultiplicativeExpression(
-                                            UnaryExpression(
-                                                value=PrimaryExpression(
-                                                    type=PrimaryType.FUNC,
-                                                    value=BuiltInFunction(
-                                                        "ABS",
-                                                        [
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?o",
-                                                                                        )
-                                                                                    )
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "ABS",
+                                                    [
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?o",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
-                                                        ],
-                                                    ),
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                ),
+                                second=(
+                                    LogOperator.GT,
+                                    AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(
+                                                value=PrimaryExpression(
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction("RAND", []),
                                                 )
                                             )
                                         )
                                     ),
-                                    second=(
-                                        LogOperator.GT,
-                                        AdditiveExpression(
-                                            MultiplicativeExpression(
-                                                UnaryExpression(
-                                                    value=PrimaryExpression(
-                                                        type=PrimaryType.FUNC,
-                                                        value=BuiltInFunction(
-                                                            "RAND", []
-                                                        ),
-                                                    )
-                                                )
-                                            )
-                                        ),
-                                    ),
-                                )
+                                ),
                             )
                         )
                     )
@@ -153,58 +159,52 @@ def test_query_ceil(switch_parser: SelectSparqlParser):
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
-                                        MultiplicativeExpression(
-                                            UnaryExpression(
-                                                value=PrimaryExpression(
-                                                    type=PrimaryType.FUNC,
-                                                    value=BuiltInFunction(
-                                                        "CEIL",
-                                                        [
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?o",
-                                                                                        )
-                                                                                    )
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "CEIL",
+                                                    [
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?o",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
-                                                        ],
-                                                    ),
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                ),
+                                second=(
+                                    LogOperator.GT,
+                                    AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(
+                                                value=PrimaryExpression(
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction("RAND", []),
                                                 )
                                             )
                                         )
                                     ),
-                                    second=(
-                                        LogOperator.GT,
-                                        AdditiveExpression(
-                                            MultiplicativeExpression(
-                                                UnaryExpression(
-                                                    value=PrimaryExpression(
-                                                        type=PrimaryType.FUNC,
-                                                        value=BuiltInFunction(
-                                                            "RAND", []
-                                                        ),
-                                                    )
-                                                )
-                                            )
-                                        ),
-                                    ),
-                                )
+                                ),
                             )
                         )
                     )
@@ -234,58 +234,52 @@ def test_query_floor(switch_parser: SelectSparqlParser):
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
-                                        MultiplicativeExpression(
-                                            UnaryExpression(
-                                                value=PrimaryExpression(
-                                                    type=PrimaryType.FUNC,
-                                                    value=BuiltInFunction(
-                                                        "FLOOR",
-                                                        [
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?o",
-                                                                                        )
-                                                                                    )
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "FLOOR",
+                                                    [
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?o",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
-                                                        ],
-                                                    ),
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                ),
+                                second=(
+                                    LogOperator.GT,
+                                    AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(
+                                                value=PrimaryExpression(
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction("RAND", []),
                                                 )
                                             )
                                         )
                                     ),
-                                    second=(
-                                        LogOperator.GT,
-                                        AdditiveExpression(
-                                            MultiplicativeExpression(
-                                                UnaryExpression(
-                                                    value=PrimaryExpression(
-                                                        type=PrimaryType.FUNC,
-                                                        value=BuiltInFunction(
-                                                            "RAND", []
-                                                        ),
-                                                    )
-                                                )
-                                            )
-                                        ),
-                                    ),
-                                )
+                                ),
                             )
                         )
                     )
@@ -308,65 +302,59 @@ def test_query_floor(switch_parser: SelectSparqlParser):
     assert answer == result  # nosec
 
 
-def test_query_ceil(switch_parser: SelectSparqlParser):
+def test_query_round(switch_parser: SelectSparqlParser):
     """Test query using the CEIL function"""
     answer = Query(
         mandatory=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
-                                        MultiplicativeExpression(
-                                            UnaryExpression(
-                                                value=PrimaryExpression(
-                                                    type=PrimaryType.FUNC,
-                                                    value=BuiltInFunction(
-                                                        "ROUND",
-                                                        [
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?o",
-                                                                                        )
-                                                                                    )
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "ROUND",
+                                                    [
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?o",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
-                                                        ],
-                                                    ),
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                ),
+                                second=(
+                                    LogOperator.GT,
+                                    AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(
+                                                value=PrimaryExpression(
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction("RAND", []),
                                                 )
                                             )
                                         )
                                     ),
-                                    second=(
-                                        LogOperator.GT,
-                                        AdditiveExpression(
-                                            MultiplicativeExpression(
-                                                UnaryExpression(
-                                                    value=PrimaryExpression(
-                                                        type=PrimaryType.FUNC,
-                                                        value=BuiltInFunction(
-                                                            "RAND", []
-                                                        ),
-                                                    )
-                                                )
-                                            )
-                                        ),
-                                    ),
-                                )
+                                ),
                             )
                         )
                     )
@@ -396,76 +384,68 @@ def test_query_concat(switch_parser: SelectSparqlParser):
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "CONCAT",
+                                                    [
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?o",
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        ),
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?s",
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        ),
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                ),
+                                second=(
+                                    LogOperator.GT,
+                                    AdditiveExpression(
                                         MultiplicativeExpression(
                                             UnaryExpression(
                                                 value=PrimaryExpression(
                                                     type=PrimaryType.FUNC,
-                                                    value=BuiltInFunction(
-                                                        "CONCAT",
-                                                        [
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?o",
-                                                                                        )
-                                                                                    )
-                                                                                )
-                                                                            )
-                                                                        )
-                                                                    )
-                                                                )
-                                                            ),
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?s",
-                                                                                        )
-                                                                                    )
-                                                                                )
-                                                                            )
-                                                                        )
-                                                                    )
-                                                                )
-                                                            ),
-                                                        ],
-                                                    ),
+                                                    value=BuiltInFunction("RAND", []),
                                                 )
                                             )
                                         )
                                     ),
-                                    second=(
-                                        LogOperator.GT,
-                                        AdditiveExpression(
-                                            MultiplicativeExpression(
-                                                UnaryExpression(
-                                                    value=PrimaryExpression(
-                                                        type=PrimaryType.FUNC,
-                                                        value=BuiltInFunction(
-                                                            "RAND", []
-                                                        ),
-                                                    )
-                                                )
-                                            )
-                                        ),
-                                    ),
-                                )
+                                ),
                             )
                         )
                     )
@@ -495,58 +475,52 @@ def test_query_strlen(switch_parser: SelectSparqlParser):
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
-                                        MultiplicativeExpression(
-                                            UnaryExpression(
-                                                value=PrimaryExpression(
-                                                    type=PrimaryType.FUNC,
-                                                    value=BuiltInFunction(
-                                                        "STRLEN",
-                                                        [
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?o",
-                                                                                        )
-                                                                                    )
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "STRLEN",
+                                                    [
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?o",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
-                                                        ],
-                                                    ),
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                ),
+                                second=(
+                                    LogOperator.GT,
+                                    AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(
+                                                value=PrimaryExpression(
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction("RAND", []),
                                                 )
                                             )
                                         )
                                     ),
-                                    second=(
-                                        LogOperator.GT,
-                                        AdditiveExpression(
-                                            MultiplicativeExpression(
-                                                UnaryExpression(
-                                                    value=PrimaryExpression(
-                                                        type=PrimaryType.FUNC,
-                                                        value=BuiltInFunction(
-                                                            "RAND", []
-                                                        ),
-                                                    )
-                                                )
-                                            )
-                                        ),
-                                    ),
-                                )
+                                ),
                             )
                         )
                     )
@@ -576,58 +550,52 @@ def test_query_ucase(switch_parser: SelectSparqlParser):
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
-                                        MultiplicativeExpression(
-                                            UnaryExpression(
-                                                value=PrimaryExpression(
-                                                    type=PrimaryType.FUNC,
-                                                    value=BuiltInFunction(
-                                                        "UCASE",
-                                                        [
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?o",
-                                                                                        )
-                                                                                    )
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "UCASE",
+                                                    [
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?o",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
-                                                        ],
-                                                    ),
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                ),
+                                second=(
+                                    LogOperator.GT,
+                                    AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(
+                                                value=PrimaryExpression(
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction("RAND", []),
                                                 )
                                             )
                                         )
                                     ),
-                                    second=(
-                                        LogOperator.GT,
-                                        AdditiveExpression(
-                                            MultiplicativeExpression(
-                                                UnaryExpression(
-                                                    value=PrimaryExpression(
-                                                        type=PrimaryType.FUNC,
-                                                        value=BuiltInFunction(
-                                                            "RAND", []
-                                                        ),
-                                                    )
-                                                )
-                                            )
-                                        ),
-                                    ),
-                                )
+                                ),
                             )
                         )
                     )
@@ -657,58 +625,52 @@ def test_query_lcase(switch_parser: SelectSparqlParser):
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
-                                        MultiplicativeExpression(
-                                            UnaryExpression(
-                                                value=PrimaryExpression(
-                                                    type=PrimaryType.FUNC,
-                                                    value=BuiltInFunction(
-                                                        "LCASE",
-                                                        [
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?o",
-                                                                                        )
-                                                                                    )
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "LCASE",
+                                                    [
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?o",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
-                                                        ],
-                                                    ),
+                                                        )
+                                                    ],
+                                                ),
+                                            )
+                                        )
+                                    )
+                                ),
+                                second=(
+                                    LogOperator.GT,
+                                    AdditiveExpression(
+                                        MultiplicativeExpression(
+                                            UnaryExpression(
+                                                value=PrimaryExpression(
+                                                    type=PrimaryType.FUNC,
+                                                    value=BuiltInFunction("RAND", []),
                                                 )
                                             )
                                         )
                                     ),
-                                    second=(
-                                        LogOperator.GT,
-                                        AdditiveExpression(
-                                            MultiplicativeExpression(
-                                                UnaryExpression(
-                                                    value=PrimaryExpression(
-                                                        type=PrimaryType.FUNC,
-                                                        value=BuiltInFunction(
-                                                            "RAND", []
-                                                        ),
-                                                    )
-                                                )
-                                            )
-                                        ),
-                                    ),
-                                )
+                                ),
                             )
                         )
                     )
@@ -738,57 +700,51 @@ def test_query_contains(switch_parser: SelectSparqlParser):
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
-                                        MultiplicativeExpression(
-                                            UnaryExpression(
-                                                value=PrimaryExpression(
-                                                    type=PrimaryType.FUNC,
-                                                    value=BuiltInFunction(
-                                                        "CONTAINS",
-                                                        [
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?o",
-                                                                                        )
-                                                                                    )
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "CONTAINS",
+                                                    [
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?o",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
-                                                            ),
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.STR_LITERAL,
-                                                                                            value="abacate",
-                                                                                        )
-                                                                                    )
+                                                            )
+                                                        ),
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.STR_LITERAL,
+                                                                                    value="abacate",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
-                                                            ),
-                                                        ],
-                                                    ),
-                                                )
+                                                            )
+                                                        ),
+                                                    ],
+                                                ),
                                             )
                                         )
                                     )
@@ -822,57 +778,51 @@ def test_query_strstarts(switch_parser: SelectSparqlParser):
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
-                                        MultiplicativeExpression(
-                                            UnaryExpression(
-                                                value=PrimaryExpression(
-                                                    type=PrimaryType.FUNC,
-                                                    value=BuiltInFunction(
-                                                        "STRSTARTS",
-                                                        [
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?o",
-                                                                                        )
-                                                                                    )
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "STRSTARTS",
+                                                    [
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?o",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
-                                                            ),
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.STR_LITERAL,
-                                                                                            value="ab",
-                                                                                        )
-                                                                                    )
+                                                            )
+                                                        ),
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.STR_LITERAL,
+                                                                                    value="ab",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
-                                                            ),
-                                                        ],
-                                                    ),
-                                                )
+                                                            )
+                                                        ),
+                                                    ],
+                                                ),
                                             )
                                         )
                                     )
@@ -906,57 +856,51 @@ def test_query_strends(switch_parser: SelectSparqlParser):
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
-                    ExpressionNode(
-                        OrExpression(
-                            AndExpression(
-                                RelationalExpression(
-                                    first=AdditiveExpression(
-                                        MultiplicativeExpression(
-                                            UnaryExpression(
-                                                value=PrimaryExpression(
-                                                    type=PrimaryType.FUNC,
-                                                    value=BuiltInFunction(
-                                                        "STRENDS",
-                                                        [
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.VAR,
-                                                                                            value="?o",
-                                                                                        )
-                                                                                    )
+                    OrExpression(
+                        AndExpression(
+                            RelationalExpression(
+                                first=AdditiveExpression(
+                                    MultiplicativeExpression(
+                                        UnaryExpression(
+                                            value=PrimaryExpression(
+                                                type=PrimaryType.FUNC,
+                                                value=BuiltInFunction(
+                                                    "STRENDS",
+                                                    [
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.VAR,
+                                                                                    value="?o",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
-                                                            ),
-                                                            ExpressionNode(
-                                                                OrExpression(
-                                                                    AndExpression(
-                                                                        RelationalExpression(
-                                                                            first=AdditiveExpression(
-                                                                                MultiplicativeExpression(
-                                                                                    UnaryExpression(
-                                                                                        value=PrimaryExpression(
-                                                                                            type=PrimaryType.STR_LITERAL,
-                                                                                            value="te",
-                                                                                        )
-                                                                                    )
+                                                            )
+                                                        ),
+                                                        OrExpression(
+                                                            AndExpression(
+                                                                RelationalExpression(
+                                                                    first=AdditiveExpression(
+                                                                        MultiplicativeExpression(
+                                                                            UnaryExpression(
+                                                                                value=PrimaryExpression(
+                                                                                    type=PrimaryType.STR_LITERAL,
+                                                                                    value="te",
                                                                                 )
                                                                             )
                                                                         )
                                                                     )
                                                                 )
-                                                            ),
-                                                        ],
-                                                    ),
-                                                )
+                                                            )
+                                                        ),
+                                                    ],
+                                                ),
                                             )
                                         )
                                     )
@@ -993,17 +937,15 @@ def test_query_now(switch_parser: SelectSparqlParser):
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
-                value=ExpressionNode(
-                    OrExpression(
-                        AndExpression(
-                            RelationalExpression(
-                                first=AdditiveExpression(
-                                    MultiplicativeExpression(
-                                        UnaryExpression(
-                                            value=PrimaryExpression(
-                                                type=PrimaryType.FUNC,
-                                                value=BuiltInFunction("NOW"),
-                                            )
+                value=OrExpression(
+                    AndExpression(
+                        RelationalExpression(
+                            first=AdditiveExpression(
+                                MultiplicativeExpression(
+                                    UnaryExpression(
+                                        value=PrimaryExpression(
+                                            type=PrimaryType.FUNC,
+                                            value=BuiltInFunction("NOW"),
                                         )
                                     )
                                 )
@@ -1037,39 +979,35 @@ def test_query_year(switch_parser: SelectSparqlParser):
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
-                value=ExpressionNode(
-                    OrExpression(
-                        AndExpression(
-                            RelationalExpression(
-                                first=AdditiveExpression(
-                                    MultiplicativeExpression(
-                                        UnaryExpression(
-                                            value=PrimaryExpression(
-                                                type=PrimaryType.FUNC,
-                                                value=BuiltInFunction(
-                                                    "YEAR",
-                                                    [
-                                                        ExpressionNode(
-                                                            OrExpression(
-                                                                AndExpression(
-                                                                    RelationalExpression(
-                                                                        first=AdditiveExpression(
-                                                                            MultiplicativeExpression(
-                                                                                UnaryExpression(
-                                                                                    value=PrimaryExpression(
-                                                                                        type=PrimaryType.VAR,
-                                                                                        value="?o",
-                                                                                    )
-                                                                                )
+                value=OrExpression(
+                    AndExpression(
+                        RelationalExpression(
+                            first=AdditiveExpression(
+                                MultiplicativeExpression(
+                                    UnaryExpression(
+                                        value=PrimaryExpression(
+                                            type=PrimaryType.FUNC,
+                                            value=BuiltInFunction(
+                                                "YEAR",
+                                                [
+                                                    OrExpression(
+                                                        AndExpression(
+                                                            RelationalExpression(
+                                                                first=AdditiveExpression(
+                                                                    MultiplicativeExpression(
+                                                                        UnaryExpression(
+                                                                            value=PrimaryExpression(
+                                                                                type=PrimaryType.VAR,
+                                                                                value="?o",
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
                                                         )
-                                                    ],
-                                                ),
-                                            )
+                                                    )
+                                                ],
+                                            ),
                                         )
                                     )
                                 )
@@ -1103,39 +1041,35 @@ def test_query_month(switch_parser: SelectSparqlParser):
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
-                value=ExpressionNode(
-                    OrExpression(
-                        AndExpression(
-                            RelationalExpression(
-                                first=AdditiveExpression(
-                                    MultiplicativeExpression(
-                                        UnaryExpression(
-                                            value=PrimaryExpression(
-                                                type=PrimaryType.FUNC,
-                                                value=BuiltInFunction(
-                                                    "MONTH",
-                                                    [
-                                                        ExpressionNode(
-                                                            OrExpression(
-                                                                AndExpression(
-                                                                    RelationalExpression(
-                                                                        first=AdditiveExpression(
-                                                                            MultiplicativeExpression(
-                                                                                UnaryExpression(
-                                                                                    value=PrimaryExpression(
-                                                                                        type=PrimaryType.VAR,
-                                                                                        value="?o",
-                                                                                    )
-                                                                                )
+                value=OrExpression(
+                    AndExpression(
+                        RelationalExpression(
+                            first=AdditiveExpression(
+                                MultiplicativeExpression(
+                                    UnaryExpression(
+                                        value=PrimaryExpression(
+                                            type=PrimaryType.FUNC,
+                                            value=BuiltInFunction(
+                                                "MONTH",
+                                                [
+                                                    OrExpression(
+                                                        AndExpression(
+                                                            RelationalExpression(
+                                                                first=AdditiveExpression(
+                                                                    MultiplicativeExpression(
+                                                                        UnaryExpression(
+                                                                            value=PrimaryExpression(
+                                                                                type=PrimaryType.VAR,
+                                                                                value="?o",
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
                                                         )
-                                                    ],
-                                                ),
-                                            )
+                                                    )
+                                                ],
+                                            ),
                                         )
                                     )
                                 )
@@ -1169,39 +1103,35 @@ def test_query_minutes(switch_parser: SelectSparqlParser):
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
-                value=ExpressionNode(
-                    OrExpression(
-                        AndExpression(
-                            RelationalExpression(
-                                first=AdditiveExpression(
-                                    MultiplicativeExpression(
-                                        UnaryExpression(
-                                            value=PrimaryExpression(
-                                                type=PrimaryType.FUNC,
-                                                value=BuiltInFunction(
-                                                    "MINUTES",
-                                                    [
-                                                        ExpressionNode(
-                                                            OrExpression(
-                                                                AndExpression(
-                                                                    RelationalExpression(
-                                                                        first=AdditiveExpression(
-                                                                            MultiplicativeExpression(
-                                                                                UnaryExpression(
-                                                                                    value=PrimaryExpression(
-                                                                                        type=PrimaryType.VAR,
-                                                                                        value="?o",
-                                                                                    )
-                                                                                )
+                value=OrExpression(
+                    AndExpression(
+                        RelationalExpression(
+                            first=AdditiveExpression(
+                                MultiplicativeExpression(
+                                    UnaryExpression(
+                                        value=PrimaryExpression(
+                                            type=PrimaryType.FUNC,
+                                            value=BuiltInFunction(
+                                                "MINUTES",
+                                                [
+                                                    OrExpression(
+                                                        AndExpression(
+                                                            RelationalExpression(
+                                                                first=AdditiveExpression(
+                                                                    MultiplicativeExpression(
+                                                                        UnaryExpression(
+                                                                            value=PrimaryExpression(
+                                                                                type=PrimaryType.VAR,
+                                                                                value="?o",
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
                                                         )
-                                                    ],
-                                                ),
-                                            )
+                                                    )
+                                                ],
+                                            ),
                                         )
                                     )
                                 )
@@ -1235,39 +1165,35 @@ def test_query_seconds(switch_parser: SelectSparqlParser):
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
-                value=ExpressionNode(
-                    OrExpression(
-                        AndExpression(
-                            RelationalExpression(
-                                first=AdditiveExpression(
-                                    MultiplicativeExpression(
-                                        UnaryExpression(
-                                            value=PrimaryExpression(
-                                                type=PrimaryType.FUNC,
-                                                value=BuiltInFunction(
-                                                    "SECONDS",
-                                                    [
-                                                        ExpressionNode(
-                                                            OrExpression(
-                                                                AndExpression(
-                                                                    RelationalExpression(
-                                                                        first=AdditiveExpression(
-                                                                            MultiplicativeExpression(
-                                                                                UnaryExpression(
-                                                                                    value=PrimaryExpression(
-                                                                                        type=PrimaryType.VAR,
-                                                                                        value="?o",
-                                                                                    )
-                                                                                )
+                value=OrExpression(
+                    AndExpression(
+                        RelationalExpression(
+                            first=AdditiveExpression(
+                                MultiplicativeExpression(
+                                    UnaryExpression(
+                                        value=PrimaryExpression(
+                                            type=PrimaryType.FUNC,
+                                            value=BuiltInFunction(
+                                                "SECONDS",
+                                                [
+                                                    OrExpression(
+                                                        AndExpression(
+                                                            RelationalExpression(
+                                                                first=AdditiveExpression(
+                                                                    MultiplicativeExpression(
+                                                                        UnaryExpression(
+                                                                            value=PrimaryExpression(
+                                                                                type=PrimaryType.VAR,
+                                                                                value="?o",
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
                                                         )
-                                                    ],
-                                                ),
-                                            )
+                                                    )
+                                                ],
+                                            ),
                                         )
                                     )
                                 )
@@ -1301,39 +1227,35 @@ def test_query_timezone(switch_parser: SelectSparqlParser):
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
-                value=ExpressionNode(
-                    OrExpression(
-                        AndExpression(
-                            RelationalExpression(
-                                first=AdditiveExpression(
-                                    MultiplicativeExpression(
-                                        UnaryExpression(
-                                            value=PrimaryExpression(
-                                                type=PrimaryType.FUNC,
-                                                value=BuiltInFunction(
-                                                    "TIMEZONE",
-                                                    [
-                                                        ExpressionNode(
-                                                            OrExpression(
-                                                                AndExpression(
-                                                                    RelationalExpression(
-                                                                        first=AdditiveExpression(
-                                                                            MultiplicativeExpression(
-                                                                                UnaryExpression(
-                                                                                    value=PrimaryExpression(
-                                                                                        type=PrimaryType.VAR,
-                                                                                        value="?o",
-                                                                                    )
-                                                                                )
+                value=OrExpression(
+                    AndExpression(
+                        RelationalExpression(
+                            first=AdditiveExpression(
+                                MultiplicativeExpression(
+                                    UnaryExpression(
+                                        value=PrimaryExpression(
+                                            type=PrimaryType.FUNC,
+                                            value=BuiltInFunction(
+                                                "TIMEZONE",
+                                                [
+                                                    OrExpression(
+                                                        AndExpression(
+                                                            RelationalExpression(
+                                                                first=AdditiveExpression(
+                                                                    MultiplicativeExpression(
+                                                                        UnaryExpression(
+                                                                            value=PrimaryExpression(
+                                                                                type=PrimaryType.VAR,
+                                                                                value="?o",
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
                                                         )
-                                                    ],
-                                                ),
-                                            )
+                                                    )
+                                                ],
+                                            ),
                                         )
                                     )
                                 )
@@ -1367,39 +1289,35 @@ def test_query_tz(switch_parser: SelectSparqlParser):
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
-                value=ExpressionNode(
-                    OrExpression(
-                        AndExpression(
-                            RelationalExpression(
-                                first=AdditiveExpression(
-                                    MultiplicativeExpression(
-                                        UnaryExpression(
-                                            value=PrimaryExpression(
-                                                type=PrimaryType.FUNC,
-                                                value=BuiltInFunction(
-                                                    "TZ",
-                                                    [
-                                                        ExpressionNode(
-                                                            OrExpression(
-                                                                AndExpression(
-                                                                    RelationalExpression(
-                                                                        first=AdditiveExpression(
-                                                                            MultiplicativeExpression(
-                                                                                UnaryExpression(
-                                                                                    value=PrimaryExpression(
-                                                                                        type=PrimaryType.VAR,
-                                                                                        value="?o",
-                                                                                    )
-                                                                                )
+                value=OrExpression(
+                    AndExpression(
+                        RelationalExpression(
+                            first=AdditiveExpression(
+                                MultiplicativeExpression(
+                                    UnaryExpression(
+                                        value=PrimaryExpression(
+                                            type=PrimaryType.FUNC,
+                                            value=BuiltInFunction(
+                                                "TZ",
+                                                [
+                                                    OrExpression(
+                                                        AndExpression(
+                                                            RelationalExpression(
+                                                                first=AdditiveExpression(
+                                                                    MultiplicativeExpression(
+                                                                        UnaryExpression(
+                                                                            value=PrimaryExpression(
+                                                                                type=PrimaryType.VAR,
+                                                                                value="?o",
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
                                                         )
-                                                    ],
-                                                ),
-                                            )
+                                                    )
+                                                ],
+                                            ),
                                         )
                                     )
                                 )
@@ -1433,57 +1351,51 @@ def test_query_coalesce(switch_parser: SelectSparqlParser):
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
-                value=ExpressionNode(
-                    OrExpression(
-                        AndExpression(
-                            RelationalExpression(
-                                first=AdditiveExpression(
-                                    MultiplicativeExpression(
-                                        UnaryExpression(
-                                            value=PrimaryExpression(
-                                                type=PrimaryType.FUNC,
-                                                value=BuiltInFunction(
-                                                    "COALESCE",
-                                                    [
-                                                        ExpressionNode(
-                                                            OrExpression(
-                                                                AndExpression(
-                                                                    RelationalExpression(
-                                                                        first=AdditiveExpression(
-                                                                            MultiplicativeExpression(
-                                                                                UnaryExpression(
-                                                                                    value=PrimaryExpression(
-                                                                                        type=PrimaryType.VAR,
-                                                                                        value="?o",
-                                                                                    )
-                                                                                )
+                value=OrExpression(
+                    AndExpression(
+                        RelationalExpression(
+                            first=AdditiveExpression(
+                                MultiplicativeExpression(
+                                    UnaryExpression(
+                                        value=PrimaryExpression(
+                                            type=PrimaryType.FUNC,
+                                            value=BuiltInFunction(
+                                                "COALESCE",
+                                                [
+                                                    OrExpression(
+                                                        AndExpression(
+                                                            RelationalExpression(
+                                                                first=AdditiveExpression(
+                                                                    MultiplicativeExpression(
+                                                                        UnaryExpression(
+                                                                            value=PrimaryExpression(
+                                                                                type=PrimaryType.VAR,
+                                                                                value="?o",
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
-                                                        ),
-                                                        ExpressionNode(
-                                                            OrExpression(
-                                                                AndExpression(
-                                                                    RelationalExpression(
-                                                                        first=AdditiveExpression(
-                                                                            MultiplicativeExpression(
-                                                                                UnaryExpression(
-                                                                                    value=PrimaryExpression(
-                                                                                        type=PrimaryType.STR_LITERAL,
-                                                                                        value="abacate",
-                                                                                    )
-                                                                                )
+                                                        )
+                                                    ),
+                                                    OrExpression(
+                                                        AndExpression(
+                                                            RelationalExpression(
+                                                                first=AdditiveExpression(
+                                                                    MultiplicativeExpression(
+                                                                        UnaryExpression(
+                                                                            value=PrimaryExpression(
+                                                                                type=PrimaryType.STR_LITERAL,
+                                                                                value="abacate",
                                                                             )
                                                                         )
                                                                     )
                                                                 )
                                                             )
-                                                        ),
-                                                    ],
-                                                ),
-                                            )
+                                                        )
+                                                    ),
+                                                ],
+                                            ),
                                         )
                                     )
                                 )

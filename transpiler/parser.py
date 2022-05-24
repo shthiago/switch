@@ -644,8 +644,7 @@ class SelectSparqlParser:
 
     def p_production_210(self, p):
         """PathPrimary : SYMB_a"""
-        # TODO
-        raise NotImplementedError
+        p[0] = "rdf:type"
 
     def p_production_211(self, p):
         """PathPrimary : SYMB_EXCLAMATION PathNegatedPropertySet"""
@@ -694,8 +693,7 @@ class SelectSparqlParser:
 
     def p_production_223(self, p):
         """PathOneInPropertySet : SYMB_a"""
-        # TODO
-        raise NotImplementedError
+        p[0] = "rdf:type"
 
     def p_production_224(self, p):
         """PathOneInPropertySet : SYMB_CIRCUMFLEX PathOneInPropertySetAux"""
@@ -709,8 +707,7 @@ class SelectSparqlParser:
 
     def p_production_226(self, p):
         """PathOneInPropertySetAux : SYMB_a"""
-        # TODO
-        raise NotImplementedError
+        p[0] = "rdf:type"
 
     def p_production_228(self, p):
         """TriplesNode : Collection"""
@@ -838,7 +835,7 @@ class SelectSparqlParser:
 
     def p_production_268(self, p):
         """Expression : ConditionalOrExpression"""
-        p[0] = nodes.ExpressionNode(p[1])
+        p[0] = p[1]
 
     def p_production_270(self, p):
         """ConditionalOrExpression : ConditionalAndExpression ConditionalOrExpressionAux"""

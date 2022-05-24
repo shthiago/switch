@@ -1,8 +1,8 @@
 """Main node for the structure"""
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import List, Optional
 
-from .nodes import *
+from .nodes import GraphPattern, ModifiersNode, Namespace, SelectedVar, Var
 
 
 @dataclass

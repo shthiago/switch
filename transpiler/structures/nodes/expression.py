@@ -18,11 +18,23 @@ class BuiltInFunction:
     name: str
     params: List["OrExpression"] = field(default_factory=list)
 
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, BuiltInFunction):
+            return False
+
+        return self.name == __o.name and self.params == __o.params
+
 
 @dataclass
 class PrimaryExpression:
     type: PrimaryType
     value: Union[str, int, float, "OrExpression", BuiltInFunction]
+
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, PrimaryExpression):
+            return False
+
+        return self.type == __o.type and self.value == __o.value
 
 
 class UnaryOperator(Enum):
@@ -35,6 +47,12 @@ class UnaryOperator(Enum):
 class UnaryExpression:
     value: PrimaryExpression
     op: Optional[UnaryOperator] = None
+
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, UnaryExpression):
+            return False
+
+        return self.value == __o.value and self.op == __o.op
 
 
 class MultiplicativeOperator(Enum):
@@ -49,6 +67,12 @@ class MultiplicativeExpression:
         default_factory=list
     )
 
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, MultiplicativeExpression):
+            return False
+
+        return self.base == __o.base and set(self.others) == set(__o.others)
+
 
 class AdditiveOperator(Enum):
     SUM = auto()
@@ -61,6 +85,12 @@ class AdditiveExpression:
     others: List[Tuple[AdditiveOperator, MultiplicativeExpression]] = field(
         default_factory=list
     )
+
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, AdditiveExpression):
+            return False
+
+        return self.base == __o.base and set(self.others) == set(__o.others)
 
 
 class LogOperator(Enum):
@@ -79,14 +109,32 @@ class RelationalExpression:
     first: AdditiveExpression
     second: Optional[Tuple[LogOperator, AdditiveExpression]] = None
 
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, RelationalExpression):
+            return False
+
+        return self.first == __o.first and self.second == __o.second
+
 
 @dataclass
 class AndExpression:
     base: RelationalExpression
     others: List[RelationalExpression] = field(default_factory=list)
 
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, AndExpression):
+            return False
+
+        return self.base == __o.base and set(self.others) == set(__o.others)
+
 
 @dataclass
 class OrExpression:
     base: AndExpression
     others: List[AndExpression] = field(default_factory=list)
+
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, OrExpression):
+            return False
+
+        return self.base == __o.base and set(self.others) == set(__o.others)

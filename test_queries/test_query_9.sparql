@@ -1,0 +1,9 @@
+PREFIX b:<http://www.geonames.org/ontology#>
+PREFIX dct:<http://purl.org/dc/terms/>
+SELECT ?name (COUNT(?state) AS ?stateCount) WHERE {
+    ?country a b:Country .
+    ?country dct:hasPart ?state .
+    ?country b:name ?name
+} GROUP BY ?name
+HAVING (COUNT(?state) > 20)
+ORDER BY DESC (?stateCount)

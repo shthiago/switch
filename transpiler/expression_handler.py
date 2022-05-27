@@ -80,7 +80,7 @@ class ExpressionHandler:
             second = self.value_additiveexpression(value)
             fmt_string = self._log_operator_fmt_str(op)
 
-            return f"({fmt_string.format((first, second))})"
+            return f"({fmt_string.format(first, second)})"
 
         return first
 
@@ -206,7 +206,7 @@ class ExpressionHandler:
         raise NotImplementedError
 
     def _gen_call_for_now(self, params: List[OrExpression]):
-        raise NotImplementedError
+        return "datetime()"
 
     def _gen_call_for_year(self, params: List[OrExpression]):
         raise NotImplementedError

@@ -3,12 +3,15 @@ from typing import Any, List, Optional
 
 from loguru import logger
 
+from transpiler.structures.nodes.expression import BuiltInFunction, OrExpression
 from transpiler.structures.nodes.modifiers import ModifiersNode, OrderNode
 from transpiler.structures.nodes.namespace import Namespace
+from transpiler.structures.nodes.variables import SelectedVar
 
 from .expression_handler import ExpressionHandler
 from .parser import SelectSparqlParser
-from .structures.query import GraphPattern, Query, Triple
+from .structures.nodes import Triple
+from .structures.query import GraphPattern, Query
 
 
 class CypherGenerationException(Exception):
@@ -232,11 +235,8 @@ class CypherGenerator:
 
         return "UNWIND " + " + ".join(cases) + " AS triples"
 
-    def result_modifier(self, modifiers: ModifiersNode) -> Optional[str]:
+    def result_modifier(self, modifiers: ModifiersNode) -> str:
         """Given a result modifiers node, generate the code block"""
-        if modifiers.having is not None:
-            raise CypherGenerationException("Group By and having not implemented")
-
         mods = []
 
         if modifiers.order:
@@ -249,7 +249,7 @@ class CypherGenerator:
             mods.append(self.limit_clause(modifiers.limit))
 
         if not mods:
-            return None
+            return ""
 
         return "\n".join(mods)
 
@@ -259,12 +259,16 @@ class CypherGenerator:
         cases: List[str] = []
 
         for cond in order_node.conditions:
-            if cond.var is None and cond.exp is not None:
-                raise CypherGenerationException(
-                    "Order condition by function call not implemented yet"
-                )
+            if cond.var:
+                value = self.cypher_var_for(cond.var)
 
-            cases.append(f"{self.cypher_var_for(cond.var)} {cond.order}")
+            elif isinstance(cond.exp, OrExpression):
+                value = self.expression_handler.value_orexpression(cond.exp)
+
+            else:
+                value = self.expression_handler.builtinfunction_to_cypher(cond.exp)
+
+            cases.append(f"{value} {cond.order}")
 
         return base + ", ".join(cases)
 
@@ -332,9 +336,44 @@ class CypherGenerator:
 
         return patterns
 
+    def having_clause(self, node: ModifiersNode) -> str:
+        if node.having is None:
+            return ""
+
+        conditions: List[str] = []
+        for cond in node.having.constraints:
+            if isinstance(cond, OrExpression):
+                converted = self.expression_handler.value_orexpression(cond)
+
+            elif isinstance(cond, BuiltInFunction):
+                converted = self.expression_handler.builtinfunction_to_cypher(cond)
+
+            for exp, alias in self.exp_aliases:
+                converted = converted.replace(exp, alias)
+
+            conditions.append(converted)
+
+        return "WITH *\nWHERE " + " AND ".join(conditions)
+
+    def setup_aliases(self, ret_vars: List[SelectedVar]):
+        """Setup aliases to use in having clause for replacing values"""
+        self.exp_aliases = [
+            (
+                self.cypher_var_for(var.value)
+                if isinstance(var.value, str)
+                else self.expression_handler.value_orexpression(var.value),
+                self.cypher_var_for(var.alias),
+            )
+            for var in ret_vars
+            if var.alias
+        ]
+
     def generate(self, sparql_query: str) -> str:
         """Generate cypher from sparql"""
         query = self.parse_query(sparql_query)
+
+        self.setup_aliases(query.returning)
+
         self.setup_namespaces(query.namespaces)
 
         patterns = self.split_pattern(query.mandatory)
@@ -348,11 +387,18 @@ class CypherGenerator:
         united_code = "\nUNION\n".join(code_blocks)
 
         modifiers = self.result_modifier(query.modifiers)
+        having_part = self.having_clause(query.modifiers)
 
-        if modifiers is not None:
+        if modifiers or having_part:
             ret_clause = "RETURN *"
             modified_code = (
-                "CALL {\n" + united_code + "\n}\n" + ret_clause + "\n" + modifiers
+                "CALL {\n"
+                + united_code
+                + "\n}"
+                + ("\n" + having_part if having_part else "")
+                + "\n"
+                + ret_clause
+                + ("\n" + modifiers if modifiers else "")
             )
 
         else:

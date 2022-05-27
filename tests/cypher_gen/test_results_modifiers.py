@@ -13,7 +13,7 @@ def test_gen_none(cypher_gen: CypherGenerator):
 
     result = cypher_gen.result_modifier(node)
 
-    assert result is None
+    assert result == ""
 
 
 def test_gen_order_by_one_var(cypher_gen: CypherGenerator):

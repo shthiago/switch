@@ -1,10 +1,10 @@
 # Modificações sobre a gramática original
 
-1. Remover os não-terminais `ConstructQuery`, `DescribeQuery` e `AskQuery` da gramática. Dessa forma, a lingaugem faz apenas leitura de dados, sem escrita, atualização ou deleção.
+1. Remover os não-terminais `ConstructQuery`, `DescribeQuery` e `AskQuery` da gramática. Dessa forma, a linguagem faz apenas leitura de dados, sem escrita, atualização ou deleção.
     Razão: Simplificar a linguagem, removendo produções que precisem ser trabalhadas nos próximos passos. Removendo o não-terminal `ConstructQuery` também elimina-se a capacidade da consulta de retornar grafos explicitamente, mantendo apenas a capacidade de retornar tuplas compostas pelas variáveis definidas na consulta.
 2. Remover o não-terminal `DatasetClause`.
     Razão: As consultas em Cypher serão executadas apenas sobre dados previamente carregados, não havendo a possibilidade de carregar dados de fontes externas com `FROM` em SPARQL.
-3. Remover o não-terminal `GraphGraphPattern`.
+3. Remover o não-terminal `por GroupGraphPattern`.
     Razão: Como as consultas não podem trazer dados de grafos além do que está carregado no banco (vide modificação #2), a utilização da palavra-chave `GRAPH` para aplicar consultas sobre determinados sub-grafos importados utilizando `FROM` não é mais possível.
 4. Remover o não-terminal `ServiceGraphPattern`.
     Razão: Como a consulta será executada em Cypher sobre dados pré-carregados, a utilização de serviços em SPARQL não é possível.
@@ -18,9 +18,9 @@
     Razão: Simplificar a linguagem
 8. Remover não-terminais não utilizados no corpo de alguma produção.
     `Load`, `DeleteClause`, `GraphOrDefault`, `NamedGraphClause`, `DeleteData`, `Clear`, `Update1`, `Drop`, `ConstructTriples`, `Update`, `TriplesTemplate`, `ConstructTemplate`, `Copy`, `Add`, `InsertClause`, `Quads`, `DefaultGraphClause`, `GraphRefAll`, `TriplesSameSubject`, `ArgList`, `UsingClause`, `GraphRef`, `Move`, `Modify`, `Integer`, `DeleteWhere`, `UpdateUnit`, `QuadsNotTriples`, `QuadPattern`, `Create`, `InsertData`, `QuadData`, `SourceSelector`, `PropertyList`
-9. Remover `( NumericLiteralPositive | NumericLiteralNegative ) ( ( '*' UnaryExpression ) | ( '/' UnaryExpression ) )*` da produção de `AdditiveExpression`.
+9. \item 
     Razão: eliminar ambiguidade.
 10. Remover os não-terminais `InlineData`, `Bind` e  `ValuesClause`
     Razão: simplificação, uma vez que Cypher não tem suporte para declaração de variáveis com valores específicos
 11. Normalizar as produções, substituindo as notações *, + e ? por novas produções que expressem a intenção porém apenas com produções simples.
-    Razão: Ficará mais fácil de estabelecer as ações semânticas.
+    Razão: Ficará mais fácil de estabelecer as ações semânticas. 

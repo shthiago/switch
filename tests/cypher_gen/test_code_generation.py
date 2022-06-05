@@ -6,7 +6,7 @@ from transpiler.cypher_generator import CypherGenerator
 def test_code_all_var_0(cypher_gen: CypherGenerator):
     query = cypher_gen.parse_query("SELECT ?s WHERE { ?s ?p ?o}")
 
-    pattern = query.mandatory
+    pattern = query.graph_pattern
 
     cypher_query = cypher_gen.code_block_for_pattern(pattern, query)
 
@@ -25,7 +25,7 @@ def test_code_all_var_0(cypher_gen: CypherGenerator):
 def test_code_all_var_1(cypher_gen: CypherGenerator):
     query = cypher_gen.parse_query("SELECT * WHERE { ?s ?p ?o}")
 
-    pattern = query.mandatory
+    pattern = query.graph_pattern
 
     cypher_query = cypher_gen.code_block_for_pattern(pattern, query)
 
@@ -44,7 +44,7 @@ def test_code_all_var_1(cypher_gen: CypherGenerator):
 def test_code_all_var_2(cypher_gen: CypherGenerator):
     query = cypher_gen.parse_query("SELECT * WHERE { ?s ?p1 ?o1. ?s ?p2 ?o2 }")
 
-    pattern = query.mandatory
+    pattern = query.graph_pattern
 
     cypher_query = cypher_gen.code_block_for_pattern(pattern, query)
 

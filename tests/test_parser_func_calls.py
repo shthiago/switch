@@ -23,7 +23,7 @@ from transpiler.structures.query import Query
 def test_query_rand(switch_parser: SelectSparqlParser):
     """Try to construct a query calling RAND function structure"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -80,7 +80,7 @@ def test_query_rand(switch_parser: SelectSparqlParser):
 def test_query_abs(switch_parser: SelectSparqlParser):
     """Test query using the ABS function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -155,7 +155,7 @@ def test_query_abs(switch_parser: SelectSparqlParser):
 def test_query_ceil(switch_parser: SelectSparqlParser):
     """Test query using the CEIL function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -230,7 +230,7 @@ def test_query_ceil(switch_parser: SelectSparqlParser):
 def test_query_floor(switch_parser: SelectSparqlParser):
     """Test query using the FLOOR function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -305,7 +305,7 @@ def test_query_floor(switch_parser: SelectSparqlParser):
 def test_query_round(switch_parser: SelectSparqlParser):
     """Test query using the CEIL function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -380,7 +380,7 @@ def test_query_round(switch_parser: SelectSparqlParser):
 def test_query_concat(switch_parser: SelectSparqlParser):
     """Test query using the CONCAT function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -471,7 +471,7 @@ def test_query_concat(switch_parser: SelectSparqlParser):
 def test_query_strlen(switch_parser: SelectSparqlParser):
     """Test query using the STRLEN function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -546,7 +546,7 @@ def test_query_strlen(switch_parser: SelectSparqlParser):
 def test_query_ucase(switch_parser: SelectSparqlParser):
     """Test query using the UCASE function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -621,7 +621,7 @@ def test_query_ucase(switch_parser: SelectSparqlParser):
 def test_query_lcase(switch_parser: SelectSparqlParser):
     """Test query using the LCASE function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -696,7 +696,7 @@ def test_query_lcase(switch_parser: SelectSparqlParser):
 def test_query_contains(switch_parser: SelectSparqlParser):
     """Test query using the CONTAINS function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -774,7 +774,7 @@ def test_query_contains(switch_parser: SelectSparqlParser):
 def test_query_strstarts(switch_parser: SelectSparqlParser):
     """Test query using the STRSTARTS function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -852,7 +852,7 @@ def test_query_strstarts(switch_parser: SelectSparqlParser):
 def test_query_strends(switch_parser: SelectSparqlParser):
     """Test query using the STRENDS function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
             filters=[
                 FilterNode(
@@ -930,7 +930,7 @@ def test_query_strends(switch_parser: SelectSparqlParser):
 def test_query_now(switch_parser: SelectSparqlParser):
     """Test query using the NOW function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
         variables=[Var("?s"), Var("?now"), Var("?p"), Var("?o")],
@@ -972,7 +972,7 @@ def test_query_now(switch_parser: SelectSparqlParser):
 def test_query_year(switch_parser: SelectSparqlParser):
     """Test query using the YEAR function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
         variables=[Var("?s"), Var("?year"), Var("?p"), Var("?o")],
@@ -1034,7 +1034,7 @@ def test_query_year(switch_parser: SelectSparqlParser):
 def test_query_month(switch_parser: SelectSparqlParser):
     """Test query using the MONTH function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
         variables=[Var("?s"), Var("?month"), Var("?p"), Var("?o")],
@@ -1096,7 +1096,7 @@ def test_query_month(switch_parser: SelectSparqlParser):
 def test_query_minutes(switch_parser: SelectSparqlParser):
     """Test query using the MINUTES function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
         variables=[Var("?s"), Var("?minute"), Var("?p"), Var("?o")],
@@ -1158,7 +1158,7 @@ def test_query_minutes(switch_parser: SelectSparqlParser):
 def test_query_seconds(switch_parser: SelectSparqlParser):
     """Test query using the SECONDS function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
         variables=[Var("?s"), Var("?seconds"), Var("?p"), Var("?o")],
@@ -1220,7 +1220,7 @@ def test_query_seconds(switch_parser: SelectSparqlParser):
 def test_query_timezone(switch_parser: SelectSparqlParser):
     """Test query using the TIMEZONE function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
         variables=[Var("?s"), Var("?tz"), Var("?p"), Var("?o")],
@@ -1282,7 +1282,7 @@ def test_query_timezone(switch_parser: SelectSparqlParser):
 def test_query_tz(switch_parser: SelectSparqlParser):
     """Test query using the TZ function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
         variables=[Var("?s"), Var("?tz"), Var("?p"), Var("?o")],
@@ -1344,7 +1344,7 @@ def test_query_tz(switch_parser: SelectSparqlParser):
 def test_query_coalesce(switch_parser: SelectSparqlParser):
     """Test query using the COALESCE function"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
         variables=[Var("?s"), Var("?tz"), Var("?p"), Var("?o")],

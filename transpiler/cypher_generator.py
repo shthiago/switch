@@ -376,7 +376,7 @@ class CypherGenerator:
 
         self.setup_namespaces(query.namespaces)
 
-        patterns = self.split_pattern(query.mandatory)
+        patterns = self.split_pattern(query.graph_pattern)
 
         code_blocks = [
             self.code_block_for_pattern(p, query)

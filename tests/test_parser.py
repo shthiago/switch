@@ -29,7 +29,7 @@ from transpiler.structures.query import Query
 def test_query_basic_1(switch_parser: SelectSparqlParser):
     """Try to construct a basic query structure"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o")],
         returning=[SelectedVar(value="*")],
     )
@@ -42,7 +42,7 @@ def test_query_basic_1(switch_parser: SelectSparqlParser):
 def test_query_basic_2(switch_parser: SelectSparqlParser):
     """Try to construct a basic query structure with two predicates"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p2", "?o2"), Triple("?s", "?p1", "?o1")]
         ),
         variables=[Var("?s"), Var("?p1"), Var("?o1"), Var("?p2"), Var("?o2")],
@@ -57,7 +57,7 @@ def test_query_basic_2(switch_parser: SelectSparqlParser):
 def test_query_union_1(switch_parser: SelectSparqlParser):
     """Try to parse a simple query using the UNION keyword"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             or_blocks=[
                 [
                     GraphPattern(and_triples=[Triple("?s", "?p2", "?o")]),
@@ -82,9 +82,9 @@ def test_query_union_1(switch_parser: SelectSparqlParser):
 
 
 def test_query_union_2(switch_parser: SelectSparqlParser):
-    """Try to parse a simple query using the UNION along  with mandatory nodes"""
+    """Try to parse a simple query using the UNION along  with graph_pattern nodes"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p3", "?o2")],
             or_blocks=[
                 [
@@ -120,7 +120,7 @@ def test_query_union_2(switch_parser: SelectSparqlParser):
 def test_query_union_3(switch_parser: SelectSparqlParser):
     """Try to parse a query with nested union structures"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p3", "?o2")],
             or_blocks=[
                 [
@@ -168,7 +168,7 @@ def test_query_union_3(switch_parser: SelectSparqlParser):
 def test_query_optional(switch_parser: SelectSparqlParser):
     """Try to parse a simple query with OPTIONAL keyword"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p1", "?o1")],
             optionals=[GraphPattern(and_triples=[Triple("?s", "?p2", "?o2")])],
         ),
@@ -202,7 +202,7 @@ def test_query_optional(switch_parser: SelectSparqlParser):
 def test_query_minus(switch_parser: SelectSparqlParser):
     """Try to parse a simple query with MINUS keyword"""
     answer = Query(
-        mandatory=GraphPattern(
+        graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p1", "?o")],
             minus=[GraphPattern(and_triples=[Triple("?s", "?p2", "?o")])],
         ),
@@ -231,7 +231,7 @@ def test_query_minus(switch_parser: SelectSparqlParser):
 def test_query_prefixed(switch_parser: SelectSparqlParser):
     """Try to parse a simple query using a prefix"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "nmspc:name", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "nmspc:name", "?o")]),
         variables=[
             Var("?s"),
             Var("?o"),
@@ -254,7 +254,7 @@ def test_query_prefixed(switch_parser: SelectSparqlParser):
 def test_modifiers_limit(switch_parser: SelectSparqlParser):
     """Test limit modifier identification"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o")],
         modifiers=ModifiersNode(limit=10),
         returning=[SelectedVar(value="*")],
@@ -268,7 +268,7 @@ def test_modifiers_limit(switch_parser: SelectSparqlParser):
 def test_modifiers_offset(switch_parser: SelectSparqlParser):
     """Test offset modifier identification"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o")],
         modifiers=ModifiersNode(offset=10),
         returning=[SelectedVar(value="*")],
@@ -282,7 +282,7 @@ def test_modifiers_offset(switch_parser: SelectSparqlParser):
 def test_modifiers_limit_offset(switch_parser: SelectSparqlParser):
     """Test limit followed by offset modifier identification"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o")],
         modifiers=ModifiersNode(limit=100, offset=10),
         returning=[SelectedVar(value="*")],
@@ -296,7 +296,7 @@ def test_modifiers_limit_offset(switch_parser: SelectSparqlParser):
 def test_modifiers_offset_limit(switch_parser: SelectSparqlParser):
     """Test offset followed by limit modifier identification"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o")],
         modifiers=ModifiersNode(limit=10, offset=100),
         returning=[SelectedVar(value="*")],
@@ -310,7 +310,7 @@ def test_modifiers_offset_limit(switch_parser: SelectSparqlParser):
 def test_modifiers_order_by_var(switch_parser: SelectSparqlParser):
     """Test order by modifier with a var"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o")],
         modifiers=ModifiersNode(order=OrderNode([OrderCondition(var="?s")])),
         returning=[SelectedVar(value="*")],
@@ -324,7 +324,7 @@ def test_modifiers_order_by_var(switch_parser: SelectSparqlParser):
 def test_modifiers_order_by_vars(switch_parser: SelectSparqlParser):
     """Test order by modifier with multiple vars"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o")],
         modifiers=ModifiersNode(
             order=OrderNode(
@@ -346,7 +346,7 @@ def test_modifiers_order_by_vars(switch_parser: SelectSparqlParser):
 def test_modifiers_group_by_var(switch_parser: SelectSparqlParser):
     """Test group by modifier with a var"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o")],
         modifiers=ModifiersNode(group=GroupClauseNode([GroupCondition(value="?s")])),
         returning=[SelectedVar(value="*")],
@@ -360,7 +360,7 @@ def test_modifiers_group_by_var(switch_parser: SelectSparqlParser):
 def test_modifiers_group_by_multiple_vars(switch_parser: SelectSparqlParser):
     """Test group by modifier with multiple var"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o")],
         modifiers=ModifiersNode(
             group=GroupClauseNode(
@@ -382,7 +382,7 @@ def test_modifiers_group_by_multiple_vars(switch_parser: SelectSparqlParser):
 def test_modifiers_group_by_with_aggregation(switch_parser: SelectSparqlParser):
     """Test group by modifier with multiple var"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o"), Var("?count")],
         modifiers=ModifiersNode(group=GroupClauseNode([GroupCondition(value="?s")])),
         returning=[
@@ -439,7 +439,7 @@ def test_modifiers_group_by_with_aggregation(switch_parser: SelectSparqlParser):
 def test_modifiers_having(switch_parser: SelectSparqlParser):
     """Test having var"""
     answer = Query(
-        mandatory=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
+        graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=[Var("?s"), Var("?p"), Var("?o"), Var("?count")],
         modifiers=ModifiersNode(
             group=GroupClauseNode([GroupCondition(value="?s")]),

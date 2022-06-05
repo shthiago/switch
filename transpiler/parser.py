@@ -117,11 +117,11 @@ class SelectSparqlParser:
 
     def p_production_26(self, p):
         """WhereClause : GroupGraphPattern"""
-        self.query.mandatory = p[1]
+        self.query.graph_pattern = p[1]
 
     def p_production_27(self, p):
         """WhereClause : KW_WHERE GroupGraphPattern"""
-        self.query.mandatory = p[2]
+        self.query.graph_pattern = p[2]
 
     def p_production_29(self, p):
         """SolutionModifier : SolutionModifierAux1 SolutionModifierAux2 SolutionModifierAux3 SolutionModifierAux4"""

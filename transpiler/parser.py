@@ -35,7 +35,7 @@ class SelectSparqlParser:
                 return name in self.selecteds
 
         for var in self.query.variables:
-            if is_selected(var.name):
+            if is_selected(var):
                 var.selected = True
 
         p[0] = self.query
@@ -97,19 +97,19 @@ class SelectSparqlParser:
 
     def p_production_20(self, p):
         """SelectClauseAux2 : Var SelectClauseAux3"""
-        p[0] = [nodes.SelectedVar(value=p[1].name), *p[2]]
+        p[0] = [nodes.SelectedVar(value=p[1]), *p[2]]
 
     def p_production_21(self, p):
         """SelectClauseAux2 : SYMB_LP Expression KW_AS Var SYMB_RP SelectClauseAux3"""
-        p[0] = [nodes.SelectedVar(value=p[2], alias=p[4].name), *p[6]]
+        p[0] = [nodes.SelectedVar(value=p[2], alias=p[4]), *p[6]]
 
     def p_production_22(self, p):
         """SelectClauseAux3 : Var SelectClauseAux3"""
-        p[0] = [nodes.SelectedVar(value=p[1].name), *p[2]]
+        p[0] = [nodes.SelectedVar(value=p[1]), *p[2]]
 
     def p_production_23(self, p):
         """SelectClauseAux3 : SYMB_LP Expression KW_AS Var SYMB_RP SelectClauseAux3"""
-        p[0] = [nodes.SelectedVar(value=p[2], alias=p[4].name), *p[6]]
+        p[0] = [nodes.SelectedVar(value=p[2], alias=p[4]), *p[6]]
 
     def p_production_24(self, p):
         """SelectClauseAux3 : empty"""
@@ -183,7 +183,7 @@ class SelectSparqlParser:
 
     def p_production_45(self, p):
         """GroupCondition : Var"""
-        p[0] = nodes.GroupCondition(value=p[1].name)
+        p[0] = nodes.GroupCondition(value=p[1])
 
     def p_production_46(self, p):
         """GroupConditionAux : KW_AS Var"""
@@ -233,7 +233,7 @@ class SelectSparqlParser:
 
     def p_production_60(self, p):
         """OrderCondition : Var"""
-        p[0] = nodes.OrderCondition(var=p[1].name)
+        p[0] = nodes.OrderCondition(var=p[1])
 
     def p_production_61(self, p):
         """OrderCondition : OrderConditionAux BrackettedExpression"""
@@ -543,7 +543,7 @@ class SelectSparqlParser:
 
     def p_production_180(self, p):
         """VerbSimple : Var"""
-        p[0] = p[1].name
+        p[0] = p[1]
 
     def p_production_182(self, p):
         """ObjectListPath : ObjectPath ObjectListPathAux"""
@@ -787,7 +787,7 @@ class SelectSparqlParser:
 
     def p_production_252(self, p):
         """VarOrTerm : Var"""
-        p[0] = p[1].name
+        p[0] = p[1]
 
     def p_production_253(self, p):
         """VarOrTerm : GraphTerm"""
@@ -804,7 +804,7 @@ class SelectSparqlParser:
     def p_production_258(self, p):
         """Var : VAR1
         | VAR2"""
-        p[0] = nodes.Var(p[1])
+        p[0] = p[1]
 
         if p[0] not in self.query.variables:
             self.query.variables.append(p[0])
@@ -983,7 +983,7 @@ class SelectSparqlParser:
 
     def p_production_320(self, p):
         """PrimaryExpression : Var"""
-        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.VAR, p[1].name)
+        p[0] = nodes.PrimaryExpression(nodes.PrimaryType.VAR, p[1])
 
     def p_production_322(self, p):
         """BrackettedExpression : SYMB_LP Expression SYMB_RP"""

@@ -2,13 +2,13 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from .nodes import GraphPattern, ModifiersNode, Namespace, SelectedVar, Var
+from .nodes import GraphPattern, ModifiersNode, Namespace, SelectedVar
 
 
 @dataclass
 class Query:
     graph_pattern: Optional[GraphPattern] = None
-    variables: List[Var] = field(default_factory=list)
+    variables: List[str] = field(default_factory=list)
     modifiers: ModifiersNode = field(default_factory=ModifiersNode)
     namespaces: List[Namespace] = field(default_factory=list)
     returning: List[SelectedVar] = field(default_factory=list)

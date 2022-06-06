@@ -15,7 +15,6 @@ from transpiler.structures.nodes import (
     SelectedVar,
     Triple,
     UnaryExpression,
-    Var,
 )
 from transpiler.structures.query import Query
 
@@ -61,7 +60,7 @@ def test_query_rand(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -136,7 +135,7 @@ def test_query_abs(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -211,7 +210,7 @@ def test_query_ceil(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -286,7 +285,7 @@ def test_query_floor(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -361,7 +360,7 @@ def test_query_round(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -452,7 +451,7 @@ def test_query_concat(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -527,7 +526,7 @@ def test_query_strlen(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -602,7 +601,7 @@ def test_query_ucase(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -677,7 +676,7 @@ def test_query_lcase(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -755,7 +754,7 @@ def test_query_contains(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -833,7 +832,7 @@ def test_query_strstarts(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -911,7 +910,7 @@ def test_query_strends(switch_parser: SelectSparqlParser):
                 )
             ],
         ),
-        variables=[Var("?s"), Var("?p"), Var("?o")],
+        variables=["?s", "?p", "?o"],
         returning=[SelectedVar(value="?s")],
     )
 
@@ -933,7 +932,7 @@ def test_query_now(switch_parser: SelectSparqlParser):
         graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
-        variables=[Var("?s"), Var("?now"), Var("?p"), Var("?o")],
+        variables=["?s", "?now", "?p", "?o"],
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
@@ -975,7 +974,7 @@ def test_query_year(switch_parser: SelectSparqlParser):
         graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
-        variables=[Var("?s"), Var("?year"), Var("?p"), Var("?o")],
+        variables=["?s", "?year", "?p", "?o"],
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
@@ -1037,7 +1036,7 @@ def test_query_month(switch_parser: SelectSparqlParser):
         graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
-        variables=[Var("?s"), Var("?month"), Var("?p"), Var("?o")],
+        variables=["?s", "?month", "?p", "?o"],
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
@@ -1099,7 +1098,7 @@ def test_query_minutes(switch_parser: SelectSparqlParser):
         graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
-        variables=[Var("?s"), Var("?minute"), Var("?p"), Var("?o")],
+        variables=["?s", "?minute", "?p", "?o"],
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
@@ -1161,7 +1160,7 @@ def test_query_seconds(switch_parser: SelectSparqlParser):
         graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
-        variables=[Var("?s"), Var("?seconds"), Var("?p"), Var("?o")],
+        variables=["?s", "?seconds", "?p", "?o"],
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
@@ -1223,7 +1222,7 @@ def test_query_timezone(switch_parser: SelectSparqlParser):
         graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
-        variables=[Var("?s"), Var("?tz"), Var("?p"), Var("?o")],
+        variables=["?s", "?tz", "?p", "?o"],
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
@@ -1285,7 +1284,7 @@ def test_query_tz(switch_parser: SelectSparqlParser):
         graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
-        variables=[Var("?s"), Var("?tz"), Var("?p"), Var("?o")],
+        variables=["?s", "?tz", "?p", "?o"],
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(
@@ -1347,7 +1346,7 @@ def test_query_coalesce(switch_parser: SelectSparqlParser):
         graph_pattern=GraphPattern(
             and_triples=[Triple("?s", "?p", "?o")],
         ),
-        variables=[Var("?s"), Var("?tz"), Var("?p"), Var("?o")],
+        variables=["?s", "?tz", "?p", "?o"],
         returning=[
             SelectedVar(value="?s"),
             SelectedVar(

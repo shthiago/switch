@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from typing import List, Optional, Union
 
 from .expression import BuiltInFunction, OrExpression
-from .variables import Var
 
 
 @dataclass

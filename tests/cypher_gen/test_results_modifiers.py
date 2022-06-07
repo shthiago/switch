@@ -18,7 +18,7 @@ def test_gen_none(cypher_gen: CypherGenerator):
 
 def test_gen_order_by_one_var(cypher_gen: CypherGenerator):
     """The order by shall be transformed into the ORDER BY clause"""
-    cond = OrderCondition(var="?s")
+    cond = OrderCondition(value="?s")
     node = ModifiersNode(order=OrderNode(conditions=[cond]))
 
     result = cypher_gen.result_modifier(node)
@@ -28,8 +28,8 @@ def test_gen_order_by_one_var(cypher_gen: CypherGenerator):
 
 def test_gen_order_by_two_var(cypher_gen: CypherGenerator):
     """The order by shall be transformed into the ORDER BY clause"""
-    cond1 = OrderCondition(var="?s")
-    cond2 = OrderCondition(var="?p")
+    cond1 = OrderCondition(value="?s")
+    cond2 = OrderCondition(value="?p")
     node = ModifiersNode(order=OrderNode(conditions=[cond1, cond2]))
 
     result = cypher_gen.result_modifier(node)
@@ -39,8 +39,8 @@ def test_gen_order_by_two_var(cypher_gen: CypherGenerator):
 
 def test_gen_order_by_two_var_asc(cypher_gen: CypherGenerator):
     """The order by shall be transformed into the ORDER BY clause"""
-    cond1 = OrderCondition(var="?s", order="DESC")
-    cond2 = OrderCondition(var="?p")
+    cond1 = OrderCondition(value="?s", order="DESC")
+    cond2 = OrderCondition(value="?p")
     node = ModifiersNode(order=OrderNode(conditions=[cond1, cond2]))
 
     result = cypher_gen.result_modifier(node)

@@ -311,7 +311,7 @@ def test_modifiers_order_by_var(switch_parser: SelectSparqlParser):
     answer = Query(
         graph_pattern=GraphPattern(and_triples=[Triple("?s", "?p", "?o")]),
         variables=["?s", "?p", "?o"],
-        modifiers=ModifiersNode(order=OrderNode([OrderCondition(var="?s")])),
+        modifiers=ModifiersNode(order=OrderNode([OrderCondition(value="?s")])),
         returning=[SelectedVar(value="*")],
     )
 
@@ -328,9 +328,9 @@ def test_modifiers_order_by_vars(switch_parser: SelectSparqlParser):
         modifiers=ModifiersNode(
             order=OrderNode(
                 [
-                    OrderCondition(var="?s"),
-                    OrderCondition(var="?p"),
-                    OrderCondition(var="?o"),
+                    OrderCondition(value="?s"),
+                    OrderCondition(value="?p"),
+                    OrderCondition(value="?o"),
                 ]
             )
         ),

@@ -18,8 +18,7 @@ class GroupClauseNode:
 
 @dataclass
 class OrderCondition:
-    exp: Optional[Union[OrExpression, BuiltInFunction]] = None
-    var: Optional[str] = None
+    value: Optional[Union[str, OrExpression, BuiltInFunction]] = None
     order: str = "ASC"
 
 

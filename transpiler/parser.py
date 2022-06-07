@@ -229,15 +229,15 @@ class SelectSparqlParser:
 
     def p_production_59(self, p):
         """OrderCondition : Constraint"""
-        p[0] = nodes.OrderCondition(exp=p[1])
+        p[0] = nodes.OrderCondition(value=p[1])
 
     def p_production_60(self, p):
         """OrderCondition : Var"""
-        p[0] = nodes.OrderCondition(var=p[1])
+        p[0] = nodes.OrderCondition(value=p[1])
 
     def p_production_61(self, p):
         """OrderCondition : OrderConditionAux BrackettedExpression"""
-        p[0] = nodes.OrderCondition(order=p[1], exp=p[2])
+        p[0] = nodes.OrderCondition(order=p[1], value=p[2])
 
     def p_production_62(self, p):
         """OrderConditionAux : KW_ASC"""

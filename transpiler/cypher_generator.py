@@ -259,14 +259,14 @@ class CypherGenerator:
         cases: List[str] = []
 
         for cond in order_node.conditions:
-            if cond.var:
-                value = self.cypher_var_for(cond.var)
+            if isinstance(cond.value, str):
+                value = self.cypher_var_for(cond.value)
 
-            elif isinstance(cond.exp, OrExpression):
-                value = self.expression_handler.value_orexpression(cond.exp)
+            elif isinstance(cond.value, OrExpression):
+                value = self.expression_handler.value_orexpression(cond.value)
 
             else:
-                value = self.expression_handler.builtinfunction_to_cypher(cond.exp)
+                value = self.expression_handler.builtinfunction_to_cypher(cond.value)
 
             cases.append(f"{value} {cond.order}")
 

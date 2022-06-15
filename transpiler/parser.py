@@ -15,29 +15,12 @@ class SelectSparqlParser:
         self.yacc = yacc.yacc(module=self, check_recursion=False, **kwargs)
 
         self.query = Query()
-        self.selecteds: Union[List[str], str] = []
 
     def parse(self, source_code: str) -> Query:
         return self.yacc.parse(source_code, lexer=self.lexer)
 
     def p_production_0(self, p):
         """QueryUnit : Query"""
-        # Mark selected variables
-        if self.selecteds == "*":
-
-            def always_true(*_):
-                return True
-
-            is_selected = always_true
-        else:
-
-            def is_selected(name):
-                return name in self.selecteds
-
-        for var in self.query.variables:
-            if is_selected(var):
-                var.selected = True
-
         p[0] = self.query
 
     def p_production_2(self, p):
